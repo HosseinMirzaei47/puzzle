@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="tile"
+            type="com.example.puzzleapp.Tile" />
+        <variable
+            name="onclick"
+            type="android.view.View.OnClickListener" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_margin="1dp"
+            android:layout_width="wrap_content"
+            android:scaleType="fitXY"
+            android:onClick="@{onclick}"
+            android:adjustViewBounds="true"
+            android:layout_height="wrap_content"
+            android:loadImage="@{tile.bitmap}"/>
+
+    </LinearLayout>
+</layout>
