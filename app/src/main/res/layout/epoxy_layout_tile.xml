@@ -5,7 +5,7 @@
 
         <variable
             name="tile"
-            type="com.example.puzzleapp.Tile" />
+            type="com.example.puzzleapp.PuzzlePiece" />
 
         <variable
             name="onPieceClicked"

@@ -4,15 +4,15 @@ import com.airbnb.epoxy.EpoxyAsyncUtil
 import com.airbnb.epoxy.TypedEpoxyController
 
 class Controller(private val callbacks: AdapterCallbacks) :
-    TypedEpoxyController<List<Tile>>(
+    TypedEpoxyController<List<PuzzlePiece>>(
         EpoxyAsyncUtil.getAsyncBackgroundHandler(),
         EpoxyAsyncUtil.getAsyncBackgroundHandler()
     ) {
 
-    var puzzlePieces = arrayListOf<Tile>()
+    var puzzlePieces = arrayListOf<PuzzlePiece>()
 
-    override fun buildModels(data: List<Tile>) {
-        puzzlePieces = data as ArrayList<Tile>
+    override fun buildModels(data: List<PuzzlePiece>) {
+        puzzlePieces = data as ArrayList<PuzzlePiece>
 
         data.forEachIndexed { index, tile ->
             tile {

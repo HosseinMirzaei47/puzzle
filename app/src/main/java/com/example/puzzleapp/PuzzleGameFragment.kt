@@ -17,12 +17,14 @@ class PuzzleGameFragment : Fragment(R.layout.fragment_puzzle_game), AdapterCallb
     private lateinit var binding: FragmentPuzzleGameBinding
     private val args: PuzzleGameFragmentArgs by navArgs()
 
-    private val puzzlePieces = arrayListOf<Tile>()
+    private val puzzlePieces = mutableListOf<PuzzlePiece>()
     private val controller = Controller(this)
     private var pieceNumbers = Levels.LEVEL_EASY /*Default value*/
 
-    private var anItemIsSelected = true /*Is set to -1 when second piece of puzzle is clicked*/
-    private var lastselectedindex: Int = -1
+    private var anItemIsSelected = false
+    private var firstSelectedPiecePosition: Int = -1
+
+    private val correctItemsIds = mutableSetOf<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,18 +45,18 @@ class PuzzleGameFragment : Fragment(R.layout.fragment_puzzle_game), AdapterCallb
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val bitmapToSplit = BitmapFactory.decodeResource(resources, R.drawable.puzzle_image)
+        val bitmapToSplit = BitmapFactory.decodeResource(resources, R.drawable.scarlett_johansson)
         splitImage(bitmapToSplit, pieceNumbers)
 
         showPuzzle()
     }
 
     override fun onPieceClicked(position: Int, id: Int) {
-        if (anItemIsSelected) {
-            anItemIsSelected = false
-            lastselectedindex = position
+        if (!anItemIsSelected) {
+            anItemIsSelected = true
+            firstSelectedPiecePosition = position
         } else {
-            compareSelectedTile(position)
+            compareSelectedPieces(position)
         }
     }
 
@@ -75,7 +77,7 @@ class PuzzleGameFragment : Fragment(R.layout.fragment_puzzle_game), AdapterCallb
             var xCoord = 0
             for (y in 0 until cols) {
                 puzzlePieces.add(
-                    Tile(
+                    PuzzlePiece(
                         id++,
                         Bitmap.createBitmap(
                             scaledBitmap,
@@ -92,18 +94,62 @@ class PuzzleGameFragment : Fragment(R.layout.fragment_puzzle_game), AdapterCallb
         }
         puzzlePieces.shuffle()
 
+        (0 until puzzlePieces.size).forEach { index ->
+            val element = puzzlePieces[index].id
+            if (index == element) {
+                correctItemsIds.add(element)
+            }
+        }
+
+        println("jalil ${correctItemsIds.size}")
     }
 
-    private fun compareSelectedTile(position: Int) {
-        val previousPiece = puzzlePieces[position]
-        val currentPiece = puzzlePieces[lastselectedindex]
+    private fun compareSelectedPieces(secondSelectedPiecePosition: Int) {
 
-        puzzlePieces[position] = currentPiece
-        puzzlePieces[lastselectedindex] = previousPiece
+        checkResult(secondSelectedPiecePosition)
+
+        val previousPiece = puzzlePieces[firstSelectedPiecePosition]
+        val currentPiece = puzzlePieces[secondSelectedPiecePosition]
+
+        puzzlePieces[firstSelectedPiecePosition] = currentPiece
+        puzzlePieces[secondSelectedPiecePosition] = previousPiece
 
         controller.setData(puzzlePieces)
 
-        anItemIsSelected = true
+        anItemIsSelected = false
+    }
+
+    private fun checkResult(secondSelectedPiecePosition: Int) {
+        val id1 = puzzlePieces[firstSelectedPiecePosition].id
+        val id2 = puzzlePieces[secondSelectedPiecePosition].id
+
+        if (
+            id1 == secondSelectedPiecePosition &&
+            firstSelectedPiecePosition != secondSelectedPiecePosition
+        ) {
+            correctItemsIds.add(id1)
+            if (id2 == firstSelectedPiecePosition) {
+                correctItemsIds.add(id2)
+            } else {
+                correctItemsIds.remove(id2)
+            }
+
+        } else if (
+            id2 == firstSelectedPiecePosition &&
+            firstSelectedPiecePosition != secondSelectedPiecePosition
+        ) {
+            correctItemsIds.add(id2)
+            if (id1 == secondSelectedPiecePosition) {
+                correctItemsIds.add(id1)
+            } else {
+                correctItemsIds.remove(id1)
+            }
+
+        }
+
+        if (correctItemsIds.size > pieceNumbers - 2) {
+            println("jalil bordi berar base dege")
+        }
     }
 
     private fun showPuzzle() {
