@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -17,7 +18,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/level_fragment_title"
-            android:textColor="@color/absoluteBlack"
+            android:textColor="@color/teal_700"
             android:textSize="@dimen/text_size_h1"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/levelEasyButton"
@@ -29,33 +30,46 @@
             android:id="@+id/levelEasyButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:backgroundTint="@color/easyLevel"
             android:text="@string/easy"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/levelNormalButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:targetApi="lollipop" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/levelNormalButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:backgroundTint="@color/normalLevel"
             android:text="@string/normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintBottom_toTopOf="@id/levelHardButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:targetApi="lollipop" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/levelHardButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:backgroundTint="@color/hardLevel"
             android:text="@string/hard"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/levelFragmentTitle"
+            tools:targetApi="lollipop" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
