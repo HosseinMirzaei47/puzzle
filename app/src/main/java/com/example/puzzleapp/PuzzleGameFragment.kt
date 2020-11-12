@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -101,7 +102,6 @@ class PuzzleGameFragment : Fragment(R.layout.fragment_puzzle_game), AdapterCallb
             }
         }
 
-        println("jalil ${correctItemsIds.size}")
     }
 
     private fun compareSelectedPieces(secondSelectedPiecePosition: Int) {
@@ -148,7 +148,7 @@ class PuzzleGameFragment : Fragment(R.layout.fragment_puzzle_game), AdapterCallb
         }
 
         if (correctItemsIds.size > pieceNumbers - 2) {
-            println("jalil bordi berar base dege")
+            Toast.makeText(requireContext(), "You won", Toast.LENGTH_SHORT).show()
         }
     }
 
