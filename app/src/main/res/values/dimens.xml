@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Common dimensions -->
+    <dimen name="margin_large">32dp</dimen>
+    <dimen name="margin_normal">16dp</dimen>
+    <dimen name="margin_ten">10dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_micro">5dp</dimen>
+    <dimen name="margin_two">5dp</dimen>
+
+    <dimen name="padding_very_large">100dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+    <dimen name="padding_normal">10dp</dimen>
+    <dimen name="padding_small">5dp</dimen>
+
+    <dimen name="text_size_h1">24sp</dimen>
+    <dimen name="text_size_h2">20sp</dimen>
+    <dimen name="text_size_h3">18sp</dimen>
+    <dimen name="text_size_b1">16sp</dimen>
+    <dimen name="text_size_b2">14sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_micro">10sp</dimen>
+
+    <dimen name="spacing_large">10dp</dimen>
+    <dimen name="spacing_normal">8dp</dimen>
+    <dimen name="spacing_micro">4dp</dimen>
+
+    <dimen name="zero">0dp</dimen>
+
+
+</resources>

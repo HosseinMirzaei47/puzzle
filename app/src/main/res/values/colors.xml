@@ -5,6 +5,22 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="colorPrimary">#8c45cc</color>
+    <color name="colorPrimaryDark">#813ac1</color>
+    <color name="colorAccent">#8c45cc</color>
+
+    <color name="whiteBackground">#ffffff</color>
+    <color name="whiteGlobalBackground">#f3f3f3</color>
+    <color name="black">#363636</color>
+    <color name="hint">#9e9e9e</color>
+    <color name="blueFollow">#286de6</color>
+    <color name="redButton">#ff5a5a</color>
+
+    <color name="textInputIcon">#E4E4E4</color>
+    <color name="absoluteBlack">#000</color>
+    <color name="transparentSplashBackground">#B38c45cc</color>
+    <color name="writeTagChipBackground">#f2f2f2</color>
+
 </resources>

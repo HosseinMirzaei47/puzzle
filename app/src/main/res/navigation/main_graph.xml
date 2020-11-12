@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/levelFragment">
+
+    <fragment
+        android:id="@+id/levelFragment"
+        android:name="com.example.puzzleapp.LevelFragment"
+        android:label="LevelFragment"
+        tools:layout="@layout/fragment_level">
+
+        <action
+            android:id="@+id/action_levelFragment_to_puzzleGameFragment"
+            app:destination="@id/puzzleGameFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/puzzleGameFragment"
+        android:name="com.example.puzzleapp.PuzzleGameFragment"
+        android:label="PuzzleGameFragment"
+        tools:layout="@layout/fragment_puzzle_game">
+
+        <argument
+            android:name="difficulty"
+            android:defaultValue="4"
+            app:argType="integer" />
+
+    </fragment>
+</navigation>

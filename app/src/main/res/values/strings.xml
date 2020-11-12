@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Puzzle App</string>
     <string name="todo">TODO</string>
+    <string name="hard">hard</string>
+    <string name="easy">easy</string>
+    <string name="normal">normal</string>
+    <string name="level_fragment_title">Choose difficulty</string>
 </resources>

@@ -1,5 +1,5 @@
 package com.example.puzzleapp
 
 interface AdapterCallbacks {
-    fun onClick(position: Int, id: Int)
+    fun onPieceClicked(position: Int, id: Int)
 }
