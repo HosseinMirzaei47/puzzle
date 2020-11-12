@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), AdapterCallbacks {
         controller.setData(list)
     }
 
-    private fun compareSelectedTile(position: Int, id: Int) {
+    private fun compareSelectedTile(position: Int) {
         val tileold = list[position]
         val tilenew = list[lastselectedindex]
 
@@ -52,12 +52,12 @@ class MainActivity : AppCompatActivity(), AdapterCallbacks {
         lastselected = -1
     }
 
-    override fun onClick(index: Int, id: Int) {
+    override fun onClick(position: Int, id: Int) {
         if (lastselected < 0) {
             lastselected = id
-            lastselectedindex = index
+            lastselectedindex = position
         } else {
-            compareSelectedTile(index, id)
+            compareSelectedTile(position)
         }
     }
 
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity(), AdapterCallbacks {
         chunkHeight = image.height / rows
         chunkWidth = image.width / cols
 
-        var indexof: Int = 0
+        var indexof = 0
         var yCoord = 0
         for (x in 0 until rows) {
             var xCoord = 0
@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity(), AdapterCallbacks {
                             println("lastseleceted updated $lastselected")
                         } else {
                             println("go to function by $index and $lastselected")
-                            compareSelectedTile(index, 0)
+                            compareSelectedTile(index)
                         }
                     }
                 }

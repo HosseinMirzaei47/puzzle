@@ -14,8 +14,9 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:scaleType="fitXY"
         android:layout_marginTop="10dp"
         android:adjustViewBounds="true"
-        android:src="@drawable/puzzle_image"/>
+        android:contentDescription="@string/todo"
+        android:scaleType="fitXY"
+        android:src="@drawable/puzzle_image" />
 </LinearLayout>
