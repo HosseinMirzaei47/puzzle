@@ -24,6 +24,7 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
     private val pieceNumbers by lazy { args.difficulty }
     private val puzzleSrc by lazy { args.puzzleSrc }
 
+    private var gameIsOver = false
     private var anItemIsSelected = false
     private var firstSelectedPiecePosition: Int = -1
 
@@ -58,20 +59,23 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
     }
 
     override fun onPieceClicked(position: Int, id: Int, view: View) {
-        if (!anItemIsSelected) {
-            anItemIsSelected = true
-            firstSelectedPiecePosition = position
-            firstSelectedPieceView = view
 
-            view.scaleX = .8f
-            view.scaleY = .8f
+        if (!gameIsOver) {
+            if (!anItemIsSelected) {
+                anItemIsSelected = true
+                firstSelectedPiecePosition = position
+                firstSelectedPieceView = view
 
-        } else {
+                view.scaleX = .8f
+                view.scaleY = .8f
 
-            firstSelectedPieceView.scaleX = 1f
-            firstSelectedPieceView.scaleY = 1f
+            } else {
 
-            compareSelectedPieces(position)
+                firstSelectedPieceView.scaleX = 1f
+                firstSelectedPieceView.scaleY = 1f
+
+                compareSelectedPieces(position)
+            }
         }
     }
 
@@ -128,7 +132,12 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
         puzzlePieces[firstSelectedPiecePosition] = currentPiece
         puzzlePieces[secondSelectedPiecePosition] = previousPiece
 
-        controller.setData(puzzlePieces)
+        if (gameIsOver) {
+            controller.setData(puzzlePieces)
+            Toast.makeText(requireContext(), "Yay. You won!", Toast.LENGTH_SHORT).show()
+        } else {
+            controller.setData(puzzlePieces)
+        }
 
         anItemIsSelected = false
     }
@@ -162,8 +171,10 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
         }
 
         if (correctItemsIds.size > pieceNumbers - 2) {
-            Toast.makeText(requireContext(), "You won", Toast.LENGTH_SHORT).show()
+            gameIsOver = true
+            controller.setData(puzzlePieces)
         }
+
     }
 
     private fun showPuzzle() {
