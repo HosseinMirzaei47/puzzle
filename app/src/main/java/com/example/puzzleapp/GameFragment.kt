@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.puzzleapp.databinding.FragmentGameBinding
@@ -134,7 +134,7 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
 
         if (gameIsOver) {
             controller.setData(puzzlePieces)
-            Toast.makeText(requireContext(), "Yay. You won!", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(GameFragmentDirections.actionGameFragmentToCongratsFragment())
         } else {
             controller.setData(puzzlePieces)
         }

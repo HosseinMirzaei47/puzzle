@@ -13,7 +13,7 @@
 
         <action
             android:id="@+id/action_levelFragment_to_puzzleGameFragment"
-            app:destination="@id/puzzleGameFragment"
+            app:destination="@id/gameFragment"
             app:popUpTo="@id/levelFragment"
             app:popUpToInclusive="true" />
 
@@ -24,9 +24,9 @@
     </fragment>
 
     <fragment
-        android:id="@+id/puzzleGameFragment"
+        android:id="@+id/gameFragment"
         android:name="com.example.puzzleapp.GameFragment"
-        android:label="PuzzleGameFragment"
+        android:label="gameFragment"
         tools:layout="@layout/fragment_game">
 
         <argument
@@ -36,6 +36,11 @@
         <argument
             android:name="puzzleSrc"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_gameFragment_to_congratsFragment"
+            app:destination="@id/congratsFragment"
+            app:popUpTo="@id/gameFragment"
+            app:popUpToInclusive="true" />
 
     </fragment>
 
@@ -48,6 +53,26 @@
         <action
             android:id="@+id/action_puzzlesFragment2_to_levelFragment"
             app:destination="@id/levelFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/congratsFragment"
+        android:name="com.example.puzzleapp.CongratsFragment"
+        android:label="CongratsFragment"
+        tools:layout="@layout/fragment_congrats">
+
+        <action
+            android:id="@+id/action_congratsFragment_to_levelFragment"
+            app:destination="@id/levelFragment"
+            app:popUpTo="@id/levelFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_congratsFragment_to_puzzlesFragment"
+            app:destination="@id/puzzlesFragment"
+            app:popUpTo="@id/puzzlesFragment"
+            app:popUpToInclusive="true" />
 
     </fragment>
 

@@ -26,5 +26,6 @@
     <color name="easyLevel">#20B2F4</color>
     <color name="normalLevel">#03A9F4</color>
     <color name="hardLevel">#2196F3</color>
+    <color name="green">#00a00a</color>
 
 </resources>

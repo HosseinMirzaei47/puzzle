@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="username"
+            type="String" />
+
+        <variable
+            name="gameDuration"
+            type="String" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/margin_normal"
+                android:background="@drawable/congrats_bg">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/congratsTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/congrats"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/text_size_h2"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/congratsTimeName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:text="@{username}"
+                    android:textColor="@color/absoluteBlack"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@+id/congratsTitle"
+                    app:layout_constraintStart_toStartOf="@+id/congratsTitle"
+                    app:layout_constraintTop_toBottomOf="@+id/congratsTitle" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/congratsTimeTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:text="@{gameDuration}"
+                    android:textColor="@color/absoluteBlack"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@+id/congratsTitle"
+                    app:layout_constraintStart_toStartOf="@+id/congratsTitle"
+                    app:layout_constraintTop_toBottomOf="@+id/congratsTimeName" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/congratsPlayAgain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:backgroundTint="@color/hardLevel"
+                    android:text="@string/play_again"
+                    android:textAllCaps="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/congratsHome"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/congratsTimeTime"
+                    tools:targetApi="lollipop" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/congratsHome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/easyLevel"
+                    android:text="@string/home"
+                    android:textAllCaps="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/congratsPlayAgain"
+                    app:layout_constraintTop_toBottomOf="@id/congratsTimeTime"
+                    app:layout_constraintTop_toTopOf="@+id/congratsPlayAgain"
+                    tools:targetApi="lollipop" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
