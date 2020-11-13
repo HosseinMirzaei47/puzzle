@@ -154,7 +154,9 @@ class PuzzleGameFragment : Fragment(R.layout.fragment_puzzle_game), AdapterCallb
 
     private fun showPuzzle() {
         binding.recyclerview.apply {
-            layoutManager = GridLayoutManager(requireContext(), 4)
+            val spanCount = sqrt(pieceNumbers.toDouble()).toInt()
+            layoutManager =
+                GridLayoutManager(requireContext(), spanCount)
             setController(controller)
         }
         controller.setData(puzzlePieces)
