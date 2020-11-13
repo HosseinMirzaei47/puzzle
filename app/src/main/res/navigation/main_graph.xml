@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/levelFragment">
+    app:startDestination="@id/puzzlesFragment">
 
     <fragment
         android:id="@+id/levelFragment"
@@ -13,7 +13,13 @@
 
         <action
             android:id="@+id/action_levelFragment_to_puzzleGameFragment"
-            app:destination="@id/puzzleGameFragment" />
+            app:destination="@id/puzzleGameFragment"
+            app:popUpTo="@id/levelFragment"
+            app:popUpToInclusive="true" />
+
+        <argument
+            android:name="puzzleSrc"
+            app:argType="integer" />
 
     </fragment>
 
@@ -25,8 +31,24 @@
 
         <argument
             android:name="difficulty"
-            android:defaultValue="4"
+            app:argType="integer" />
+
+        <argument
+            android:name="puzzleSrc"
             app:argType="integer" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/puzzlesFragment"
+        android:name="com.example.puzzleapp.PuzzlesFragment"
+        android:label="PuzzlesFragment"
+        tools:layout="@layout/fragment_puzzles">
+
+        <action
+            android:id="@+id/action_puzzlesFragment2_to_levelFragment"
+            app:destination="@id/levelFragment" />
+
+    </fragment>
+
 </navigation>

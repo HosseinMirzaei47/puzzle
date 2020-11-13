@@ -6,17 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.puzzleapp.databinding.FragmentLevelBinding
 
 class LevelFragment : Fragment(R.layout.fragment_level) {
 
     private lateinit var binding: FragmentLevelBinding
+    private val args: LevelFragmentArgs by navArgs()
+
+    private val imageSource by lazy {
+        args.puzzleSrc
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding = FragmentLevelBinding.inflate(
             inflater, container, false
         ).apply {
@@ -37,7 +44,8 @@ class LevelFragment : Fragment(R.layout.fragment_level) {
         binding.levelHardButton.setOnClickListener {
             findNavController().navigate(
                 LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
-                    Levels.LEVEL_HARD
+                    Levels.LEVEL_HARD,
+                    imageSource
                 )
             )
         }
@@ -47,7 +55,8 @@ class LevelFragment : Fragment(R.layout.fragment_level) {
         binding.levelNormalButton.setOnClickListener {
             findNavController().navigate(
                 LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
-                    Levels.LEVEL_NORMAL
+                    Levels.LEVEL_NORMAL,
+                    imageSource
                 )
             )
         }
@@ -57,7 +66,8 @@ class LevelFragment : Fragment(R.layout.fragment_level) {
         binding.levelEasyButton.setOnClickListener {
             findNavController().navigate(
                 LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
-                    Levels.LEVEL_EASY
+                    Levels.LEVEL_EASY,
+                    imageSource
                 )
             )
         }

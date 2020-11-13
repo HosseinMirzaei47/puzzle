@@ -18,9 +18,11 @@ class PuzzleGameFragment : Fragment(R.layout.fragment_puzzle_game), AdapterCallb
     private lateinit var binding: FragmentPuzzleGameBinding
     private val args: PuzzleGameFragmentArgs by navArgs()
 
-    private val puzzlePieces = mutableListOf<PuzzlePiece>()
     private val controller = Controller(this)
-    private var pieceNumbers = Levels.LEVEL_EASY /*Default value*/
+
+    private val puzzlePieces = mutableListOf<PuzzlePiece>()
+    private val pieceNumbers by lazy { args.difficulty }
+    private val puzzleSrc by lazy { args.puzzleSrc }
 
     private var anItemIsSelected = false
     private var firstSelectedPiecePosition: Int = -1
@@ -32,12 +34,12 @@ class PuzzleGameFragment : Fragment(R.layout.fragment_puzzle_game), AdapterCallb
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        pieceNumbers = args.difficulty
 
         binding = FragmentPuzzleGameBinding.inflate(
             inflater, container, false
         ).apply {
             lifecycleOwner = viewLifecycleOwner
+            imageSrc = puzzleSrc
         }
 
         return binding.root
@@ -46,10 +48,11 @@ class PuzzleGameFragment : Fragment(R.layout.fragment_puzzle_game), AdapterCallb
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val bitmapToSplit = BitmapFactory.decodeResource(resources, R.drawable.scarlett_johansson)
+        val bitmapToSplit = BitmapFactory.decodeResource(resources, puzzleSrc)
         splitImage(bitmapToSplit, pieceNumbers)
 
         showPuzzle()
+
     }
 
     override fun onPieceClicked(position: Int, id: Int) {

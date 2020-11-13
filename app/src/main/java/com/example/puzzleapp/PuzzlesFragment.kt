@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.puzzleapp.databinding.FragmentPuzzlesBinding
 
 class PuzzlesFragment : Fragment() {
@@ -38,6 +39,13 @@ class PuzzlesFragment : Fragment() {
                 itemPuzzle {
                     id(index)
                     imageSource(imageSource)
+                    onPuzzleClick { _ ->
+                        findNavController().navigate(
+                            PuzzlesFragmentDirections.actionPuzzlesFragment2ToLevelFragment(
+                                imageSource
+                            )
+                        )
+                    }
                 }
             }
         }

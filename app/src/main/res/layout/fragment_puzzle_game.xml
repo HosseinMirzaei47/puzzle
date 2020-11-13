@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="imageSrc"
+            type="Integer" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,8 +38,8 @@
             android:layout_marginEnd="@dimen/margin_normal"
             android:adjustViewBounds="true"
             android:contentDescription="@string/todo"
+            android:loadImage="@{imageSrc}"
             android:scaleType="fitXY"
-            android:src="@drawable/scarlett_johansson"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -9,11 +9,17 @@
             name="imageSource"
             type="Integer" />
 
+        <variable
+            name="onPuzzleClick"
+            type="android.view.View.OnClickListener" />
+
     </data>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:padding="@dimen/padding_normal"
         app:cardCornerRadius="@dimen/cardview_default_radius"
         app:strokeWidth="@dimen/cardview_default_radius">
 
@@ -26,7 +32,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:contentDescription="@string/todo"
-                android:loadImageInt="@{imageSource}"
+                android:loadImage="@{imageSource}"
+                android:onClick="@{onPuzzleClick}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
