@@ -10,13 +10,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.puzzleapp.databinding.FragmentPuzzleGameBinding
+import com.example.puzzleapp.databinding.FragmentGameBinding
 import kotlin.math.sqrt
 
-class PuzzleGameFragment : Fragment(R.layout.fragment_puzzle_game), AdapterCallbacks {
+class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
 
-    private lateinit var binding: FragmentPuzzleGameBinding
-    private val args: PuzzleGameFragmentArgs by navArgs()
+    private lateinit var binding: FragmentGameBinding
+    private val args: GameFragmentArgs by navArgs()
 
     private val controller = Controller(this)
 
@@ -29,13 +29,15 @@ class PuzzleGameFragment : Fragment(R.layout.fragment_puzzle_game), AdapterCallb
 
     private val correctItemsIds = mutableSetOf<Int>()
 
+    private lateinit var firstSelectedPieceView: View
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentPuzzleGameBinding.inflate(
+        binding = FragmentGameBinding.inflate(
             inflater, container, false
         ).apply {
             lifecycleOwner = viewLifecycleOwner
@@ -55,11 +57,20 @@ class PuzzleGameFragment : Fragment(R.layout.fragment_puzzle_game), AdapterCallb
 
     }
 
-    override fun onPieceClicked(position: Int, id: Int) {
+    override fun onPieceClicked(position: Int, id: Int, view: View) {
         if (!anItemIsSelected) {
             anItemIsSelected = true
             firstSelectedPiecePosition = position
+            firstSelectedPieceView = view
+
+            view.scaleX = .8f
+            view.scaleY = .8f
+
         } else {
+
+            firstSelectedPieceView.scaleX = 1f
+            firstSelectedPieceView.scaleY = 1f
+
             compareSelectedPieces(position)
         }
     }

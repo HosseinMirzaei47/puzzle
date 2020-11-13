@@ -25,9 +25,9 @@
 
     <fragment
         android:id="@+id/puzzleGameFragment"
-        android:name="com.example.puzzleapp.PuzzleGameFragment"
+        android:name="com.example.puzzleapp.GameFragment"
         android:label="PuzzleGameFragment"
-        tools:layout="@layout/fragment_puzzle_game">
+        tools:layout="@layout/fragment_game">
 
         <argument
             android:name="difficulty"

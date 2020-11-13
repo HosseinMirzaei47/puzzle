@@ -18,11 +18,10 @@ class Controller(private val callbacks: AdapterCallbacks) :
             tile {
                 id(index)
                 tile(tile)
-                onPieceClicked { _ ->
-                    callbacks.onPieceClicked(index, tile.id)
+                onPieceClicked { view ->
+                    callbacks.onPieceClicked(index, tile.id, view)
                 }
             }
         }
     }
-
 }
