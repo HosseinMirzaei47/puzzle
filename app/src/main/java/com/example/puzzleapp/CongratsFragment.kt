@@ -1,5 +1,6 @@
 package com.example.puzzleapp
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,7 @@ class CongratsFragment : Fragment() {
             inflater, container, false
         ).apply {
             lifecycleOwner = viewLifecycleOwner
-            username = getString(R.string.username) + "Hossein Mirzaei"
+            username = getString(R.string.username) + " Hossein Mirzaei"
             gameDuration = "Game duration: 01:26"
         }
 
@@ -30,7 +31,11 @@ class CongratsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        showConfetti()
+        setOnClicks()
+    }
 
+    private fun setOnClicks() {
         binding.congratsPlayAgain.setOnClickListener {
             findNavController().navigate(
                 CongratsFragmentDirections.actionCongratsFragmentToLevelFragment(
@@ -42,7 +47,17 @@ class CongratsFragment : Fragment() {
         binding.congratsHome.setOnClickListener {
             findNavController().navigate(CongratsFragmentDirections.actionCongratsFragmentToPuzzlesFragment())
         }
+    }
 
+    private fun showConfetti() {
+        binding.congratsConfetti.build()
+            .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
+            .setDirection(0.0, 359.0)
+            .setSpeed(2f, 10f)
+            .setFadeOutEnabled(true)
+            .setTimeToLive(2000L)
+            .setPosition(+60f, binding.congratsConfetti.width + 50f, -50f, 100f)
+            .streamFor(300, 3000L)
     }
 
 }

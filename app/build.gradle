@@ -85,4 +85,7 @@ dependencies {
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_viewModels"
     kapt "androidx.hilt:hilt-compiler:$hilt_viewModels"
 
+    /* Confetti */
+    implementation 'nl.dionsegijn:konfetti:1.2.5'
+
 }
