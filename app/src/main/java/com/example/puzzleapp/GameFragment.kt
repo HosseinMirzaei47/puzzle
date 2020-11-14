@@ -8,10 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.puzzleapp.databinding.FragmentGameBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.sqrt
 
 class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
@@ -53,9 +57,10 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
         super.onViewCreated(view, savedInstanceState)
 
         val bitmapToSplit = BitmapFactory.decodeResource(resources, puzzleSrc)
-        splitImage(bitmapToSplit, pieceNumbers)
 
-        showPuzzle()
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Default) {
+            splitImage(bitmapToSplit, pieceNumbers)
+        }
 
     }
 
@@ -80,7 +85,7 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
         }
     }
 
-    private fun splitImage(image: Bitmap, pieceNumbers: Int) {
+    private suspend fun splitImage(image: Bitmap, pieceNumbers: Int) {
         val rows: Int
         val pieceHeight: Int
         val pieceWidth: Int
@@ -112,13 +117,22 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
             }
             yCoord += pieceHeight
         }
-        puzzlePieces.shuffle()
+
+        val previousFist = puzzlePieces[0]
+
+        while (puzzlePieces[0] == previousFist) {
+            puzzlePieces.shuffle()
+        }
 
         (0 until puzzlePieces.size).forEach { index ->
             val element = puzzlePieces[index].id
             if (index == element) {
                 correctItemsIds.add(element)
             }
+        }
+
+        withContext(Dispatchers.Main) {
+            showPuzzle()
         }
 
     }

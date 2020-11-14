@@ -29,7 +29,14 @@ class PuzzlesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val puzzles = listOf(R.drawable.scarlett_johansson, R.drawable.puzzle_image)
+        val puzzles = listOf(
+            R.drawable.scarlett_johansson,
+            R.drawable.puzzle_image,
+            R.drawable.lawrence,
+            R.drawable.lopez,
+            R.drawable.hassan,
+            R.drawable.mahmoud
+        )
         showPuzzles(puzzles)
     }
 
