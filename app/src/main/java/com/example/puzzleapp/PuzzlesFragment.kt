@@ -35,7 +35,8 @@ class PuzzlesFragment : Fragment() {
             R.drawable.lawrence,
             R.drawable.lopez,
             R.drawable.hassan,
-            R.drawable.mahmoud
+            R.drawable.mahmoud,
+            R.drawable.vahid_moradi
         )
         showPuzzles(puzzles)
     }
