@@ -31,7 +31,7 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
 
     private var gameIsOver = false
     private var anItemIsSelected = false
-    private var firstSelectedPiecePosition: Int = -1
+    private var firstSelectedPiecePosition = Int.MIN_VALUE
 
     private val correctItemsIds = mutableSetOf<Int>()
 
@@ -65,7 +65,6 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
     }
 
     override fun onPieceClicked(position: Int, id: Int, view: View) {
-
         if (!gameIsOver) {
             if (!anItemIsSelected) {
                 anItemIsSelected = true
@@ -179,28 +178,21 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
             firstSelectedPiecePosition != secondSelectedPiecePosition
         ) {
             correctItemsIds.add(id1)
-            if (id2 == firstSelectedPiecePosition) {
-                correctItemsIds.add(id2)
-            } else {
-                correctItemsIds.remove(id2)
-            }
+        } else {
+            correctItemsIds.remove(id1)
+        }
 
-        } else if (
+        if (
             id2 == firstSelectedPiecePosition &&
             firstSelectedPiecePosition != secondSelectedPiecePosition
         ) {
             correctItemsIds.add(id2)
-            if (id1 == secondSelectedPiecePosition) {
-                correctItemsIds.add(id1)
-            } else {
-                correctItemsIds.remove(id1)
-            }
-
+        } else {
+            correctItemsIds.remove(id2)
         }
 
         if (correctItemsIds.size > pieceNumbers - 2) {
             gameIsOver = true
-            controller.setData(puzzlePieces)
         }
 
     }
