@@ -3,6 +3,7 @@ package com.example.puzzleapp
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -133,13 +134,26 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
         puzzlePieces[secondSelectedPiecePosition] = previousPiece
 
         if (gameIsOver) {
-            controller.setData(puzzlePieces)
-            findNavController().navigate(GameFragmentDirections.actionGameFragmentToCongratsFragment())
+            navigateToCongratsFragment()
         } else {
             controller.setData(puzzlePieces)
         }
 
         anItemIsSelected = false
+    }
+
+    private fun navigateToCongratsFragment() {
+        controller.setData(puzzlePieces)
+
+        val timer = object : CountDownTimer(500, 50) {
+            override fun onTick(millisUntilFinished: Long) {
+            }
+
+            override fun onFinish() {
+                findNavController().navigate(GameFragmentDirections.actionGameFragmentToCongratsFragment())
+            }
+        }
+        timer.start()
     }
 
     private fun checkResult(secondSelectedPiecePosition: Int) {
