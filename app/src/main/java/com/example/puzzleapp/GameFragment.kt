@@ -50,6 +50,8 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
             imageSrc = puzzleSrc
         }
 
+        binding.recyclerview.recycledViewPool.clear()
+
         return binding.root
     }
 
