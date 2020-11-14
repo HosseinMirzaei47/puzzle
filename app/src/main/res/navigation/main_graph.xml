@@ -13,9 +13,7 @@
 
         <action
             android:id="@+id/action_levelFragment_to_puzzleGameFragment"
-            app:destination="@id/gameFragment"
-            app:popUpTo="@id/levelFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/gameFragment" />
 
         <argument
             android:name="puzzleSrc"
@@ -36,6 +34,7 @@
         <argument
             android:name="puzzleSrc"
             app:argType="integer" />
+
         <action
             android:id="@+id/action_gameFragment_to_congratsFragment"
             app:destination="@id/congratsFragment"

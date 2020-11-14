@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.puzzleapp.databinding.FragmentCongratsBinding
@@ -12,6 +13,13 @@ import com.example.puzzleapp.databinding.FragmentCongratsBinding
 class CongratsFragment : Fragment() {
 
     private lateinit var binding: FragmentCongratsBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            findNavController().navigate(CongratsFragmentDirections.actionCongratsFragmentToPuzzlesFragment())
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
