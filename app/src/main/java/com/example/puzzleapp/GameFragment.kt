@@ -207,6 +207,7 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
             setController(controller)
         }
         controller.setData(puzzlePieces)
+        binding.progressVisibility = View.GONE
     }
 
 }

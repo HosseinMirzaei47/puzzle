@@ -88,4 +88,8 @@ dependencies {
     /* Confetti */
     implementation 'nl.dionsegijn:konfetti:1.2.5'
 
+    /* Lottie */
+    def lottie_version = "3.0.0"
+    implementation "com.airbnb.android:lottie:$lottie_version"
+
 }
