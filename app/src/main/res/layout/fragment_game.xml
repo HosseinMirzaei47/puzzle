@@ -7,7 +7,7 @@
 
         <variable
             name="imageSrc"
-            type="Integer" />
+            type="android.graphics.Bitmap" />
 
         <variable
             name="progressVisibility"

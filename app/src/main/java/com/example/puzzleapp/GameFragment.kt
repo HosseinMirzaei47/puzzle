@@ -60,13 +60,12 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
         val settings = Settings(requireContext())
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-
             settings.puzzleType.collect { srcType ->
                 if (srcType == Settings.TYPE_DEFAULT) {
 
                     settings.puzzleSrcDrawable.collect { puzzleSrc ->
                         val imageToSplit = BitmapFactory.decodeResource(resources, puzzleSrc)
-                        /*binding.imageSrc = puzzleSrc*/
+                        binding.imageSrc = imageToSplit
                         splitImage(imageToSplit, pieceNumbers)
                     }
 
@@ -74,13 +73,12 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
 
                     settings.puzzleSrcPath.collect { puzzleSrc ->
                         val imageToSplit = BitmapFactory.decodeFile(puzzleSrc)
-                        /*binding.imageSrc = puzzleSrc*/
+                        binding.imageSrc = imageToSplit
                         splitImage(imageToSplit, pieceNumbers)
                     }
 
                 }
             }
-
         }
 
     }
