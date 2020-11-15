@@ -2,6 +2,7 @@ package com.example.puzzleapp
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
@@ -20,7 +21,7 @@ import kotlinx.coroutines.withContext
 import kotlin.math.sqrt
 
 
-class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
+class GameFragment : Fragment(), AdapterCallbacks {
 
     private lateinit var binding: FragmentGameBinding
     private val args: GameFragmentArgs by navArgs()
@@ -182,14 +183,15 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
 
     private fun navigateToCongratsFragment() {
         controller.setData(puzzlePieces)
+        showConfetti()
 
-        val timer = object : CountDownTimer(500, 50) {
+        val timer = object : CountDownTimer(3000, 50) {
             override fun onTick(millisUntilFinished: Long) {
             }
 
             override fun onFinish() {
                 binding.simpleChronometer.stop()
-                val duration = binding.simpleChronometer.text
+                val duration = binding.simpleChronometer.text.removePrefix("Time Running - ")
                 findNavController().navigate(
                     GameFragmentDirections.actionGameFragmentToCongratsFragment(
                         duration.toString()
@@ -239,6 +241,17 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
         binding.simpleChronometer.format = "Time Running - %s"
         binding.simpleChronometer.start()
         binding.progressVisibility = View.GONE
+    }
+
+    private fun showConfetti() {
+        binding.gameFragmentConfetti.build()
+            .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
+            .setDirection(0.0, 359.0)
+            .setSpeed(2f, 10f)
+            .setFadeOutEnabled(true)
+            .setTimeToLive(2000L)
+            .setPosition(+60f, binding.gameFragmentConfetti.width + 50f, -50f, 100f)
+            .streamFor(300, 3000L)
     }
 
 }
