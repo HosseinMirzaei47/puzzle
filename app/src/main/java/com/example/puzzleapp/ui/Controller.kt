@@ -1,7 +1,9 @@
-package com.example.puzzleapp
+package com.example.puzzleapp.ui
 
 import com.airbnb.epoxy.EpoxyAsyncUtil
 import com.airbnb.epoxy.TypedEpoxyController
+import com.example.puzzleapp.models.PuzzlePiece
+import com.example.puzzleapp.tile
 
 class Controller(private val callbacks: AdapterCallbacks) :
     TypedEpoxyController<List<PuzzlePiece>>(

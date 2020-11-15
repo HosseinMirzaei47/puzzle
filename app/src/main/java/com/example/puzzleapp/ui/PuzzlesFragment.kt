@@ -1,4 +1,4 @@
-package com.example.puzzleapp
+package com.example.puzzleapp.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -17,7 +17,10 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.puzzleapp.R
 import com.example.puzzleapp.databinding.FragmentPuzzlesBinding
+import com.example.puzzleapp.itemPuzzle
+import com.example.puzzleapp.utils.Settings
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse

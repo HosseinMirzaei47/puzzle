@@ -1,4 +1,4 @@
-package com.example.puzzleapp
+package com.example.puzzleapp.ui
 
 import android.view.View
 

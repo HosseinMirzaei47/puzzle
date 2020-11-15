@@ -1,4 +1,4 @@
-package com.example.puzzleapp
+package com.example.puzzleapp.models
 
 import android.graphics.Bitmap
 

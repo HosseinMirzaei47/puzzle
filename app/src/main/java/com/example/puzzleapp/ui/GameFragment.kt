@@ -1,4 +1,4 @@
-package com.example.puzzleapp
+package com.example.puzzleapp.ui
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -14,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.puzzleapp.databinding.FragmentGameBinding
+import com.example.puzzleapp.models.PuzzlePiece
+import com.example.puzzleapp.utils.Settings
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect

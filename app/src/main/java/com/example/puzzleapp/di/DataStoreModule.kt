@@ -1,6 +1,7 @@
-package com.example.puzzleapp
+package com.example.puzzleapp.di
 
 import android.content.Context
+import com.example.puzzleapp.utils.Settings
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

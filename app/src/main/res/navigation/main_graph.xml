@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/levelFragment"
-        android:name="com.example.puzzleapp.LevelFragment"
+        android:name="com.example.puzzleapp.ui.LevelFragment"
         android:label="LevelFragment"
         tools:layout="@layout/fragment_level">
 
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/gameFragment"
-        android:name="com.example.puzzleapp.GameFragment"
+        android:name="com.example.puzzleapp.ui.GameFragment"
         android:label="gameFragment"
         tools:layout="@layout/fragment_game">
 
@@ -37,7 +37,7 @@
 
     <fragment
         android:id="@+id/puzzlesFragment"
-        android:name="com.example.puzzleapp.PuzzlesFragment"
+        android:name="com.example.puzzleapp.ui.PuzzlesFragment"
         android:label="PuzzlesFragment"
         tools:layout="@layout/fragment_puzzles">
 
@@ -49,7 +49,7 @@
 
     <fragment
         android:id="@+id/congratsFragment"
-        android:name="com.example.puzzleapp.CongratsFragment"
+        android:name="com.example.puzzleapp.ui.CongratsFragment"
         android:label="CongratsFragment"
         tools:layout="@layout/fragment_congrats">
 

@@ -1,4 +1,4 @@
-package com.example.puzzleapp
+package com.example.puzzleapp.utils
 
 object Levels {
     const val LEVEL_EASY = 4

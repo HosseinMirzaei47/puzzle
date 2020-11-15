@@ -1,4 +1,4 @@
-package com.example.puzzleapp
+package com.example.puzzleapp.ui
 
 import android.graphics.Color
 import android.os.Bundle
@@ -9,6 +9,7 @@ import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.puzzleapp.R
 import com.example.puzzleapp.databinding.FragmentCongratsBinding
 import dagger.hilt.android.AndroidEntryPoint
 

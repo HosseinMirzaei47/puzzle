@@ -1,4 +1,4 @@
-package com.example.puzzleapp
+package com.example.puzzleapp.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.puzzleapp.R
 import com.example.puzzleapp.databinding.FragmentLevelBinding
+import com.example.puzzleapp.utils.Levels
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
