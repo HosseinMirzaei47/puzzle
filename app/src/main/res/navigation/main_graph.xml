@@ -15,10 +15,6 @@
             android:id="@+id/action_levelFragment_to_puzzleGameFragment"
             app:destination="@id/gameFragment" />
 
-        <argument
-            android:name="puzzleSrc"
-            app:argType="integer" />
-
     </fragment>
 
     <fragment
@@ -29,10 +25,6 @@
 
         <argument
             android:name="difficulty"
-            app:argType="integer" />
-
-        <argument
-            android:name="puzzleSrc"
             app:argType="integer" />
 
         <action
@@ -50,7 +42,7 @@
         tools:layout="@layout/fragment_puzzles">
 
         <action
-            android:id="@+id/action_puzzlesFragment2_to_levelFragment"
+            android:id="@+id/action_puzzlesFragment_to_levelFragment"
             app:destination="@id/levelFragment" />
 
     </fragment>

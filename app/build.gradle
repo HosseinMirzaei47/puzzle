@@ -77,7 +77,7 @@ dependencies {
     implementation "com.airbnb.android:epoxy:$epoxyVersion"
     implementation "com.airbnb.android:epoxy-databinding:$epoxyVersion"
 
-    def hilt_version = "2.28.1-alpha"
+    def hilt_version = "2.28.3-alpha"
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
@@ -91,5 +91,9 @@ dependencies {
     /* Lottie */
     def lottie_version = "3.0.0"
     implementation "com.airbnb.android:lottie:$lottie_version"
+
+    /* Preferences DataStore */
+    def data_store_version = "1.0.0-alpha01"
+    implementation "androidx.datastore:datastore-preferences:$data_store_version"
 
 }

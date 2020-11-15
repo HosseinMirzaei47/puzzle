@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.puzzleapp.databinding.FragmentGameBinding
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.sqrt
@@ -27,7 +28,6 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
 
     private val puzzlePieces = mutableListOf<PuzzlePiece>()
     private val pieceNumbers by lazy { args.difficulty }
-    private val puzzleSrc by lazy { args.puzzleSrc }
 
     private var gameIsOver = false
     private var anItemIsSelected = false
@@ -47,7 +47,6 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
             inflater, container, false
         ).apply {
             lifecycleOwner = viewLifecycleOwner
-            imageSrc = puzzleSrc
         }
 
         binding.recyclerview.recycledViewPool.clear()
@@ -58,10 +57,30 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val bitmapToSplit = BitmapFactory.decodeResource(resources, puzzleSrc)
+        val settings = Settings(requireContext())
 
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Default) {
-            splitImage(bitmapToSplit, pieceNumbers)
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+
+            settings.puzzleType.collect { srcType ->
+                if (srcType == Settings.TYPE_DEFAULT) {
+
+                    settings.puzzleSrcDrawable.collect { puzzleSrc ->
+                        val imageToSplit = BitmapFactory.decodeResource(resources, puzzleSrc)
+                        /*binding.imageSrc = puzzleSrc*/
+                        splitImage(imageToSplit, pieceNumbers)
+                    }
+
+                } else if (srcType == Settings.TYPE_CUSTOM) {
+
+                    settings.puzzleSrcPath.collect { puzzleSrc ->
+                        val imageToSplit = BitmapFactory.decodeFile(puzzleSrc)
+                        /*binding.imageSrc = puzzleSrc*/
+                        splitImage(imageToSplit, pieceNumbers)
+                    }
+
+                }
+            }
+
         }
 
     }

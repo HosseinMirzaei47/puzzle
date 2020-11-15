@@ -46,9 +46,7 @@ class CongratsFragment : Fragment() {
     private fun setOnClicks() {
         binding.congratsPlayAgain.setOnClickListener {
             findNavController().navigate(
-                CongratsFragmentDirections.actionCongratsFragmentToLevelFragment(
-                    R.drawable.puzzle_image
-                )
+                CongratsFragmentDirections.actionCongratsFragmentToLevelFragment()
             )
         }
 

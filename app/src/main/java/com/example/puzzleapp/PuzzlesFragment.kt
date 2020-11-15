@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.database.Cursor
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -15,17 +14,21 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.puzzleapp.databinding.FragmentPuzzlesBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class PuzzlesFragment : Fragment() {
 
     private lateinit var binding: FragmentPuzzlesBinding
+
+    private lateinit var settings: Settings
 
     private lateinit var currentPhotoPath: String
 
@@ -46,6 +49,7 @@ class PuzzlesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        settings = Settings(requireContext())
 
         val puzzles = listOf(
             R.drawable.scarlett_johansson,
@@ -70,10 +74,16 @@ class PuzzlesFragment : Fragment() {
                         if (index == puzzles.lastIndex) {
                             dispatchTakePictureIntent()
                         } else {
-                            findNavController().navigate(
-                                PuzzlesFragmentDirections.actionPuzzlesFragment2ToLevelFragment(
+                            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                                settings.storePuzzleSrcType(
+                                    Settings.TYPE_DEFAULT
+                                )
+                                settings.storePuzzleSrcDrawable(
                                     imageSource
                                 )
+                            }
+                            findNavController().navigate(
+                                PuzzlesFragmentDirections.actionPuzzlesFragmentToLevelFragment()
                             )
                         }
                     }
@@ -122,9 +132,17 @@ class PuzzlesFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            /*findNavController().navigate(
-                PuzzlesFragmentDirections.actionPuzzlesFragment2ToLevelFragment(i)
-            )*/
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                settings.storePuzzleSrcType(
+                    Settings.TYPE_CUSTOM
+                )
+                settings.storePuzzleSrcPath(
+                    currentPhotoPath
+                )
+            }
+            findNavController().navigate(
+                PuzzlesFragmentDirections.actionPuzzlesFragmentToLevelFragment()
+            )
         } else if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK) {
 
             val selectedImage = data!!.data
@@ -136,12 +154,7 @@ class PuzzlesFragment : Fragment() {
             )
             cursor!!.moveToFirst()
 
-            val columnIndex: Int = cursor.getColumnIndex(filePathColumn[0])
-            val picturePath: String = cursor.getString(columnIndex)
             cursor.close()
-
-            val bitmap = BitmapFactory.decodeFile(picturePath)
-
         }
     }
 
