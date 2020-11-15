@@ -8,11 +8,14 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.puzzleapp.databinding.FragmentCongratsBinding
 
 class CongratsFragment : Fragment() {
 
     private lateinit var binding: FragmentCongratsBinding
+
+    private val args: CongratsFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +34,7 @@ class CongratsFragment : Fragment() {
         ).apply {
             lifecycleOwner = viewLifecycleOwner
             username = getString(R.string.username) + " Hossein Mirzaei"
-            gameDuration = "Game duration: 01:26"
+            gameDuration = "Game duration: " + args.gameDuration
         }
 
         return binding.root

@@ -65,6 +65,10 @@
             app:popUpTo="@id/puzzlesFragment"
             app:popUpToInclusive="true" />
 
+        <argument
+            android:name="gameDuration"
+            app:argType="string" />
+
     </fragment>
 
 </navigation>

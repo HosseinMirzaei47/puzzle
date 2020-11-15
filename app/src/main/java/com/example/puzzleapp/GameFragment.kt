@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.sqrt
 
+
 class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
 
     private lateinit var binding: FragmentGameBinding
@@ -187,7 +188,13 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
             }
 
             override fun onFinish() {
-                findNavController().navigate(GameFragmentDirections.actionGameFragmentToCongratsFragment())
+                binding.simpleChronometer.stop()
+                val duration = binding.simpleChronometer.text
+                findNavController().navigate(
+                    GameFragmentDirections.actionGameFragmentToCongratsFragment(
+                        duration.toString()
+                    )
+                )
             }
         }
         timer.start()
@@ -229,6 +236,8 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
             setController(controller)
         }
         controller.setData(puzzlePieces)
+        binding.simpleChronometer.format = "Time Running - %s"
+        binding.simpleChronometer.start()
         binding.progressVisibility = View.GONE
     }
 
