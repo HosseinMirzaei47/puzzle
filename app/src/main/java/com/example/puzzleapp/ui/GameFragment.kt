@@ -31,6 +31,7 @@ class GameFragment : Fragment(), AdapterCallbacks {
     private val args: GameFragmentArgs by navArgs()
 
     private val controller = Controller(this)
+    private lateinit var timer: CountDownTimer
 
     @Inject
     lateinit var settings: Settings
@@ -189,7 +190,7 @@ class GameFragment : Fragment(), AdapterCallbacks {
         controller.setData(puzzlePieces)
         showConfetti()
 
-        val timer = object : CountDownTimer(3000, 50) {
+        timer = object : CountDownTimer(3000, 50) {
             override fun onTick(millisUntilFinished: Long) {
             }
 
@@ -256,6 +257,11 @@ class GameFragment : Fragment(), AdapterCallbacks {
             .setTimeToLive(2000L)
             .setPosition(+60f, binding.gameFragmentConfetti.width + 50f, -50f, 100f)
             .streamFor(300, 3000L)
+    }
+
+    override fun onDestroy() {
+        timer.cancel()
+        super.onDestroy()
     }
 
 }
