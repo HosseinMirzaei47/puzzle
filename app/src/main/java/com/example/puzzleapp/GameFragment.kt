@@ -14,20 +14,24 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.puzzleapp.databinding.FragmentGameBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 import kotlin.math.sqrt
 
-
+@AndroidEntryPoint
 class GameFragment : Fragment(), AdapterCallbacks {
 
     private lateinit var binding: FragmentGameBinding
     private val args: GameFragmentArgs by navArgs()
 
     private val controller = Controller(this)
-    private lateinit var settings: Settings
+
+    @Inject
+    lateinit var settings: Settings
 
     private val puzzlePieces = mutableListOf<PuzzlePiece>()
     private val pieceNumbers by lazy { args.difficulty }
@@ -59,8 +63,6 @@ class GameFragment : Fragment(), AdapterCallbacks {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        settings = Settings(requireContext())
-
         getAndDisplayPuzzle()
     }
 

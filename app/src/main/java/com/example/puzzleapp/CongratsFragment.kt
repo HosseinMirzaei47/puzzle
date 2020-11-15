@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.puzzleapp.databinding.FragmentCongratsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CongratsFragment : Fragment() {
 
     private lateinit var binding: FragmentCongratsBinding

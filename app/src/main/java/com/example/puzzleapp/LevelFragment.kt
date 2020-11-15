@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.puzzleapp.databinding.FragmentLevelBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LevelFragment : Fragment(R.layout.fragment_level) {
 
     private lateinit var binding: FragmentLevelBinding

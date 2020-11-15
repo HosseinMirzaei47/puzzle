@@ -24,19 +24,22 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class PuzzlesFragment : Fragment() {
 
     private lateinit var binding: FragmentPuzzlesBinding
 
-    private lateinit var settings: Settings
+    @Inject
+    lateinit var settings: Settings
 
     private lateinit var currentPhotoPath: String
 
@@ -57,7 +60,6 @@ class PuzzlesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        settings = Settings(requireContext())
 
         val puzzles = listOf(
             R.drawable.scarlett_johansson,
