@@ -25,6 +25,7 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
     private val args: GameFragmentArgs by navArgs()
 
     private val controller = Controller(this)
+    private lateinit var settings: Settings
 
     private val puzzlePieces = mutableListOf<PuzzlePiece>()
     private val pieceNumbers by lazy { args.difficulty }
@@ -56,20 +57,25 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        settings = Settings(requireContext())
 
-        val settings = Settings(requireContext())
+        getAndDisplayPuzzle()
+    }
 
+    private fun getAndDisplayPuzzle() {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             settings.puzzleType.collect { srcType ->
                 if (srcType == Settings.TYPE_DEFAULT) {
 
                     settings.puzzleSrcDrawable.collect { puzzleSrc ->
-                        val imageToSplit = BitmapFactory.decodeResource(resources, puzzleSrc)
+                        val imageToSplit =
+                            BitmapFactory.decodeResource(resources, puzzleSrc)
                         binding.imageSrc = imageToSplit
                         splitImage(imageToSplit, pieceNumbers)
                     }
 
                 } else if (srcType == Settings.TYPE_CUSTOM) {
+
 
                     settings.puzzleSrcPath.collect { puzzleSrc ->
                         val imageToSplit = BitmapFactory.decodeFile(puzzleSrc)
@@ -80,7 +86,6 @@ class GameFragment : Fragment(R.layout.fragment_game), AdapterCallbacks {
                 }
             }
         }
-
     }
 
     override fun onPieceClicked(position: Int, id: Int, view: View) {

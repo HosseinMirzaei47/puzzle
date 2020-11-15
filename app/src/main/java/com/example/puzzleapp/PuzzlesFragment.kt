@@ -1,5 +1,6 @@
 package com.example.puzzleapp
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
@@ -17,12 +18,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.puzzleapp.databinding.FragmentPuzzlesBinding
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class PuzzlesFragment : Fragment() {
 
@@ -59,7 +67,8 @@ class PuzzlesFragment : Fragment() {
             R.drawable.hassan,
             R.drawable.mahmoud,
             R.drawable.vahid_moradi,
-            R.drawable.ic_add_photo
+            R.drawable.ic_add_photo,
+            R.drawable.ic_camera
         )
         showPuzzles(puzzles)
     }
@@ -71,25 +80,52 @@ class PuzzlesFragment : Fragment() {
                     id(index)
                     imageSource(imageSource)
                     onPuzzleClick { _ ->
-                        if (index == puzzles.lastIndex) {
-                            dispatchTakePictureIntent()
-                        } else {
-                            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                                settings.storePuzzleSrcType(
-                                    Settings.TYPE_DEFAULT
-                                )
-                                settings.storePuzzleSrcDrawable(
-                                    imageSource
+                        when (index) {
+                            puzzles.lastIndex -> {
+                                dispatchTakePictureIntent()
+                            }
+                            puzzles.lastIndex - 1 -> {
+                                askForGalleryPermission()
+                            }
+                            else -> {
+                                storeTypeAndSrc(Settings.TYPE_DEFAULT, null, imageSource)
+                                findNavController().navigate(
+                                    PuzzlesFragmentDirections.actionPuzzlesFragmentToLevelFragment()
                                 )
                             }
-                            findNavController().navigate(
-                                PuzzlesFragmentDirections.actionPuzzlesFragmentToLevelFragment()
-                            )
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun askForGalleryPermission() {
+        Dexter.withContext(requireActivity())
+            .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(response: PermissionGrantedResponse) {
+                    getPictureFromGallery()
+                }
+
+                override fun onPermissionDenied(response: PermissionDeniedResponse) {
+                    if (response.isPermanentlyDenied) {
+                        val intent =
+                            Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        val uri: Uri = Uri.fromParts("package", requireActivity().packageName, null)
+                        intent.data = uri
+                        startActivity(intent)
+                    }
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permission: PermissionRequest?,
+                    token: PermissionToken?
+                ) {
+                    token?.continuePermissionRequest()
+                }
+            })
+            .check()
     }
 
     @SuppressLint("QueryPermissionsNeeded")
@@ -132,14 +168,8 @@ class PuzzlesFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                settings.storePuzzleSrcType(
-                    Settings.TYPE_CUSTOM
-                )
-                settings.storePuzzleSrcPath(
-                    currentPhotoPath
-                )
-            }
+            storeTypeAndSrc(Settings.TYPE_CUSTOM, currentPhotoPath)
+
             findNavController().navigate(
                 PuzzlesFragmentDirections.actionPuzzlesFragmentToLevelFragment()
             )
@@ -154,13 +184,33 @@ class PuzzlesFragment : Fragment() {
             )
             cursor!!.moveToFirst()
 
+            val columnIndex: Int = cursor.getColumnIndex(filePathColumn[0])
+            val picturePath: String = cursor.getString(columnIndex)
             cursor.close()
+
+            storeTypeAndSrc(Settings.TYPE_CUSTOM, picturePath)
+            findNavController().navigate(PuzzlesFragmentDirections.actionPuzzlesFragmentToLevelFragment())
         }
     }
 
-    private fun getURLForResource(resourceId: Int): String? {
-        return Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + resourceId)
-            .toString()
+    private fun storeTypeAndSrc(
+        srcType: String,
+        picturePath: String? = null,
+        pictureDrawable: Int? = -1
+    ) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            settings.storePuzzleSrcType(srcType)
+
+            if (srcType == Settings.TYPE_CUSTOM) {
+                picturePath?.let { path ->
+                    settings.storePuzzleSrcPath(path)
+                }
+            } else {
+                pictureDrawable?.let { drawable ->
+                    settings.storePuzzleSrcDrawable(drawable)
+                }
+            }
+        }
     }
 
     companion object {
