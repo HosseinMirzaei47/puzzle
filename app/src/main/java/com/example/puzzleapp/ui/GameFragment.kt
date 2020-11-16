@@ -96,7 +96,7 @@ class GameFragment : Fragment(), AdapterCallbacks {
     private suspend fun createPreviewCountDown(imageToSplit: Bitmap) {
         withContext(Dispatchers.Main) { binding.progressAnimation.visibility = View.GONE }
         viewLifecycleOwner.lifecycleScope.launch {
-            previewTimer = object : CountDownTimer(3000, 900) {
+            previewTimer = object : CountDownTimer(3000, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     val previewTimer = "Preview timer: ${(millisUntilFinished / 1000)}"
                     binding.tvCountDown.text = previewTimer
