@@ -19,6 +19,11 @@ fun loadPicture(view: ImageView, url: Int) {
     Glide.with(view).load(url).into(view)
 }
 
+@BindingAdapter("android:circleImageSrc")
+fun circleImageSrc(view: ImageView, url: Int) {
+    Glide.with(view).load(url).circleCrop().into(view)
+}
+
 @BindingAdapter("android:visibleOnResult")
 fun visibleOnResult(view: View, flag: Boolean) {
     view.isVisible = flag
