@@ -30,20 +30,19 @@ class GameFragment : Fragment(), AdapterCallbacks {
     private lateinit var binding: FragmentGameBinding
     private val args: GameFragmentArgs by navArgs()
 
-    private val controller = Controller(this)
-    private lateinit var timer: CountDownTimer
-
     @Inject
     lateinit var settings: Settings
+    private val controller = Controller(this)
+    private lateinit var navigationDelay: CountDownTimer
+    private lateinit var previewTimer: CountDownTimer
 
+    private val correctItemsIds = mutableSetOf<Int>()
     private val puzzlePieces = mutableListOf<PuzzlePiece>()
     private val pieceNumbers by lazy { args.difficulty }
 
     private var gameIsOver = false
     private var anItemIsSelected = false
     private var firstSelectedPiecePosition = Int.MIN_VALUE
-
-    private val correctItemsIds = mutableSetOf<Int>()
 
     private lateinit var firstSelectedPieceView: View
 
@@ -57,6 +56,8 @@ class GameFragment : Fragment(), AdapterCallbacks {
             inflater, container, false
         ).apply {
             lifecycleOwner = viewLifecycleOwner
+            previewVisibility = View.VISIBLE
+            isPlaying = false
         }
 
         binding.recyclerview.recycledViewPool.clear()
@@ -73,25 +74,43 @@ class GameFragment : Fragment(), AdapterCallbacks {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             settings.puzzleType.collect { srcType ->
                 if (srcType == Settings.TYPE_DEFAULT) {
-
                     settings.puzzleSrcDrawable.collect { puzzleSrc ->
                         val imageToSplit =
                             BitmapFactory.decodeResource(resources, puzzleSrc)
                         binding.imageSrc = imageToSplit
-                        splitImage(imageToSplit, pieceNumbers)
+
+                        createPreviewCountDown(imageToSplit)
+
                     }
-
                 } else if (srcType == Settings.TYPE_CUSTOM) {
-
-
                     settings.puzzleSrcPath.collect { puzzleSrc ->
                         val imageToSplit = BitmapFactory.decodeFile(puzzleSrc)
                         binding.imageSrc = imageToSplit
-                        splitImage(imageToSplit, pieceNumbers)
+                        createPreviewCountDown(imageToSplit)
                     }
-
                 }
             }
+        }
+    }
+
+    private suspend fun createPreviewCountDown(imageToSplit: Bitmap) {
+        withContext(Dispatchers.Main) { binding.progressAnimation.visibility = View.GONE }
+        viewLifecycleOwner.lifecycleScope.launch {
+            previewTimer = object : CountDownTimer(3000, 900) {
+                override fun onTick(millisUntilFinished: Long) {
+                    val previewTimer = "Preview timer: ${(millisUntilFinished / 1000)}"
+                    binding.tvCountDown.text = previewTimer
+                }
+
+                override fun onFinish() {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        binding.isPlaying = true
+                        binding.previewVisibility = View.GONE
+                        splitImage(imageToSplit, pieceNumbers)
+                    }
+                }
+            }
+            previewTimer.start()
         }
     }
 
@@ -187,15 +206,15 @@ class GameFragment : Fragment(), AdapterCallbacks {
     }
 
     private fun navigateToCongratsFragment() {
+        binding.simpleChronometer.stop()
         controller.setData(puzzlePieces)
         showConfetti()
 
-        timer = object : CountDownTimer(3000, 50) {
+        navigationDelay = object : CountDownTimer(3000, 50) {
             override fun onTick(millisUntilFinished: Long) {
             }
 
             override fun onFinish() {
-                binding.simpleChronometer.stop()
                 val duration = binding.simpleChronometer.text.removePrefix("Time Running - ")
                 findNavController().navigate(
                     GameFragmentDirections.actionGameFragmentToCongratsFragment(
@@ -204,7 +223,7 @@ class GameFragment : Fragment(), AdapterCallbacks {
                 )
             }
         }
-        timer.start()
+        navigationDelay.start()
     }
 
     private fun checkResult(secondSelectedPiecePosition: Int) {
@@ -245,7 +264,6 @@ class GameFragment : Fragment(), AdapterCallbacks {
         controller.setData(puzzlePieces)
         binding.simpleChronometer.format = "Time Running - %s"
         binding.simpleChronometer.start()
-        binding.progressVisibility = View.GONE
     }
 
     private fun showConfetti() {
@@ -260,7 +278,12 @@ class GameFragment : Fragment(), AdapterCallbacks {
     }
 
     override fun onDestroy() {
-        timer.cancel()
+        try {
+            previewTimer.cancel()
+            navigationDelay.cancel()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         super.onDestroy()
     }
 

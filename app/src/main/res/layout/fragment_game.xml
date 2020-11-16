@@ -10,15 +10,19 @@
             type="android.graphics.Bitmap" />
 
         <variable
-            name="progressVisibility"
+            name="previewVisibility"
             type="Integer" />
+
+        <variable
+            name="isPlaying"
+            type="Boolean" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/whiteGlobalBackground">
+        android:background="@drawable/game_bg">
 
         <com.airbnb.epoxy.EpoxyRecyclerView
             android:id="@+id/recyclerview"
@@ -28,64 +32,65 @@
             android:layout_marginTop="@dimen/margin_normal"
             android:layout_marginEnd="@dimen/margin_normal"
             android:layout_marginBottom="@dimen/margin_small"
-            app:layout_constraintBottom_toTopOf="@+id/completeImage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/simpleChronometer"
-            tools:context=".MainActivity" />
-
-        <ImageView
-            android:id="@+id/completeImage"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginStart="@dimen/margin_normal"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:layout_marginEnd="@dimen/margin_normal"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/todo"
-            android:loadImage="@{imageSrc}"
-            android:scaleType="fitCenter"
+            android:visibleOnResult="@{isPlaying}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recyclerview" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context=".MainActivity" />
 
         <Chronometer
             android:id="@+id/simpleChronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="@color/whiteGlobalBackground"
+            android:visibleOnResult="@{isPlaying}"
             app:layout_constraintBottom_toTopOf="@id/recyclerview"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/reviewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/puzzle_preview"
+            android:textColor="@color/whiteGlobalBackground"
+            android:textSize="@dimen/text_size_h1"
+            android:textStyle="bold"
+            android:visibility="@{previewVisibility}"
+            app:layout_constraintBottom_toTopOf="@id/completeImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/completeImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/todo"
+            android:loadImage="@{imageSrc}"
+            android:visibility="@{previewVisibility}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent=".8" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvCountDown"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/whiteGlobalBackground"
-            android:visibility="@{progressVisibility}"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/whiteGlobalBackground"
+            android:textSize="@dimen/text_size_h1"
+            android:visibility="@{previewVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/lottieHome"
-                android:layout_width="400dp"
-                android:layout_height="400dp"
-                android:layout_marginTop="@dimen/margin_large"
-                android:scaleType="centerCrop"
-                android:visibility="@{progressVisibility}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:lottie_autoPlay="true"
-                app:lottie_loop="true"
-                app:lottie_rawRes="@raw/loading_animation" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@id/completeImage" />
 
         <nl.dionsegijn.konfetti.KonfettiView
             android:id="@+id/gameFragmentConfetti"
@@ -95,6 +100,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/progress_animation"
+            android:layout_width="400dp"
+            android:layout_height="400dp"
+            android:layout_marginTop="@dimen/margin_large"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading_animation" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
