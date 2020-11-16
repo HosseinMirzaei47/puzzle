@@ -38,33 +38,59 @@ class LevelFragment : Fragment(R.layout.fragment_level) {
         onHardLevelClick()
     }
 
+    private fun navigateToGameFragment(difficulty: Int) {
+        when (binding.radioGroup.checkedRadioButtonId) {
+            R.id.typeOne -> {
+                findNavController().navigate(
+                    LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
+                        difficulty,
+                        0
+                    )
+                )
+            }
+            R.id.typeTwo -> {
+                findNavController().navigate(
+                    LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
+                        difficulty,
+                        1
+                    )
+                )
+            }
+
+            R.id.typeThree -> {
+                findNavController().navigate(
+                    LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
+                        difficulty,
+                        2
+                    )
+                )
+            }
+            else -> {
+                findNavController().navigate(
+                    LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
+                        difficulty,
+                        0
+                    )
+                )
+            }
+        }
+    }
+
     private fun onHardLevelClick() {
         binding.levelHardButton.setOnClickListener {
-            findNavController().navigate(
-                LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
-                    Levels.LEVEL_HARD
-                )
-            )
+            navigateToGameFragment(Levels.LEVEL_HARD)
         }
     }
 
     private fun onNormalLevelClick() {
         binding.levelNormalButton.setOnClickListener {
-            findNavController().navigate(
-                LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
-                    Levels.LEVEL_NORMAL
-                )
-            )
+            navigateToGameFragment(Levels.LEVEL_NORMAL)
         }
     }
 
     private fun onEasyLevelClick() {
         binding.levelEasyButton.setOnClickListener {
-            findNavController().navigate(
-                LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
-                    Levels.LEVEL_EASY
-                )
-            )
+            navigateToGameFragment(Levels.LEVEL_EASY)
         }
     }
 

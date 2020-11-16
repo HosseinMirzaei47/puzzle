@@ -24,7 +24,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/game_bg">
 
-        <com.airbnb.epoxy.EpoxyRecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,6 +32,7 @@
             android:layout_marginTop="@dimen/margin_normal"
             android:layout_marginEnd="@dimen/margin_normal"
             android:layout_marginBottom="@dimen/margin_small"
+            android:overScrollMode="never"
             android:visibleOnResult="@{isPlaying}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

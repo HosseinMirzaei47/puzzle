@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Puzzle App</string>
     <string name="todo">TODO</string>
+    <string name="easy">Easy (2 X 2)</string>
+    <string name="normal">Normal (3 X 3)</string>
     <string name="hard">Hard (4 X 4)</string>
-    <string name="easy">Easy (3 X 3)</string>
-    <string name="normal">Normal (2 X 2)</string>
     <string name="level_fragment_title">Choose difficulty</string>
     <string name="congrats">Yaaay. Congrats! You won!</string>
     <string name="username">Username:</string>
@@ -11,4 +11,7 @@
     <string name="play_again">Play Again</string>
     <string name="home">Home</string>
     <string name="puzzle_preview">PUZZLE PREVIEW</string>
+    <string name="click">Click</string>
+    <string name="drag_and_drop">Drag and Drop</string>
+    <string name="swipe">Swipe</string>
 </resources>

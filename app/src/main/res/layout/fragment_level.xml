@@ -74,6 +74,45 @@
             app:layout_constraintTop_toBottomOf="@+id/levelFragmentTitle"
             tools:targetApi="lollipop" />
 
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/levelHardButton">
+
+            <RadioButton
+                android:id="@+id/typeOne"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/click"
+                android:textColor="@color/whiteGlobalBackground" />
+
+            <RadioButton
+                android:id="@+id/typeTwo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:text="@string/drag_and_drop"
+                android:textColor="@color/whiteGlobalBackground" />
+
+            <RadioButton
+                android:id="@+id/typeThree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/swipe"
+                android:textColor="@color/whiteGlobalBackground" />
+
+        </RadioGroup>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

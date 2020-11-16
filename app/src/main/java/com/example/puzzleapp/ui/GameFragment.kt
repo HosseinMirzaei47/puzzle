@@ -13,6 +13,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import com.example.puzzleapp.ItemTouchHelperDrag
+import com.example.puzzleapp.ItemTouchHelperSwipe
+import com.example.puzzleapp.OnTouchPuzzleTile
+import com.example.puzzleapp.PieceAdapter
 import com.example.puzzleapp.databinding.FragmentGameBinding
 import com.example.puzzleapp.models.PuzzlePiece
 import com.example.puzzleapp.utils.Settings
@@ -25,20 +31,23 @@ import javax.inject.Inject
 import kotlin.math.sqrt
 
 @AndroidEntryPoint
-class GameFragment : Fragment(), AdapterCallbacks {
+class GameFragment : Fragment(), OnTouchPuzzleTile {
 
     private lateinit var binding: FragmentGameBinding
     private val args: GameFragmentArgs by navArgs()
 
+    private lateinit var pieceAdapter: PieceAdapter
+
     @Inject
     lateinit var settings: Settings
-    private val controller = Controller(this)
+    private val controller = Controller()
     private lateinit var navigationDelay: CountDownTimer
     private lateinit var previewTimer: CountDownTimer
 
     private val correctItemsIds = mutableSetOf<Int>()
     private val puzzlePieces = mutableListOf<PuzzlePiece>()
     private val pieceNumbers by lazy { args.difficulty }
+    private val puzzleMode by lazy { args.puzzleMode }
 
     private var gameIsOver = false
     private var anItemIsSelected = false
@@ -114,26 +123,6 @@ class GameFragment : Fragment(), AdapterCallbacks {
         }
     }
 
-    override fun onPieceClicked(position: Int, id: Int, view: View) {
-        if (!gameIsOver) {
-            if (!anItemIsSelected) {
-                anItemIsSelected = true
-                firstSelectedPiecePosition = position
-                firstSelectedPieceView = view
-
-                view.scaleX = .8f
-                view.scaleY = .8f
-
-            } else {
-
-                firstSelectedPieceView.scaleX = 1f
-                firstSelectedPieceView.scaleY = 1f
-
-                compareSelectedPieces(position)
-            }
-        }
-    }
-
     private suspend fun splitImage(image: Bitmap, pieceNumbers: Int) {
         val rows: Int
         val pieceHeight: Int
@@ -198,16 +187,16 @@ class GameFragment : Fragment(), AdapterCallbacks {
 
         if (gameIsOver) {
             navigateToCongratsFragment()
-        } else {
-            controller.setData(puzzlePieces)
         }
+
+        pieceAdapter.notifyItemChanged(firstSelectedPiecePosition)
+        pieceAdapter.notifyItemChanged(secondSelectedPiecePosition)
 
         anItemIsSelected = false
     }
 
     private fun navigateToCongratsFragment() {
         binding.simpleChronometer.stop()
-        controller.setData(puzzlePieces)
         showConfetti()
 
         navigationDelay = object : CountDownTimer(3000, 50) {
@@ -255,13 +244,33 @@ class GameFragment : Fragment(), AdapterCallbacks {
     }
 
     private fun showPuzzle() {
+        pieceAdapter = PieceAdapter(this, puzzleMode == 0)
+        pieceAdapter.pieces = puzzlePieces
         binding.recyclerview.apply {
             val spanCount = sqrt(pieceNumbers.toDouble()).toInt()
             layoutManager =
                 GridLayoutManager(requireContext(), spanCount)
-            setController(controller)
+            adapter = pieceAdapter
+            /*setController(controller)*/
         }
-        controller.setData(puzzlePieces)
+
+        println("jalil $puzzleMode")
+
+        when (puzzleMode) {
+            1 -> {
+                val itemTouchHelperDrag = ItemTouchHelperDrag(this)
+                itemTouchHelperDrag.attachToRecyclerView(binding.recyclerview)
+            }
+            2 -> {
+                val itemTouchHelperVerticalSwipe =
+                    ItemTouchHelperSwipe(this, ItemTouchHelper.UP or ItemTouchHelper.DOWN)
+                val itemTouchHelperHorizontalSwipe =
+                    ItemTouchHelperSwipe(this, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT)
+                itemTouchHelperVerticalSwipe.attachToRecyclerView(binding.recyclerview)
+                itemTouchHelperHorizontalSwipe.attachToRecyclerView(binding.recyclerview)
+            }
+        }
+
         binding.simpleChronometer.format = "Time Running - %s"
         binding.simpleChronometer.start()
     }
@@ -286,5 +295,53 @@ class GameFragment : Fragment(), AdapterCallbacks {
         }
         super.onDestroy()
     }
+
+    private fun moveItem(oldPos: Int, newPos: Int) {
+        val temp: PuzzlePiece = puzzlePieces[oldPos]
+        puzzlePieces[oldPos] = puzzlePieces[newPos]
+        puzzlePieces[newPos] = temp
+        pieceAdapter.notifyItemChanged(newPos)
+        pieceAdapter.notifyItemChanged(oldPos)
+        //recyclerviewAdapter.list= puzzlePieces as ArrayList<PuzzlePiece>
+        //recyclerviewAdapter.notifyItemMoved(oldPos, newPos)
+        //recyclerviewAdapter.submitList(puzzlePieces)
+        //recyclerviewAdapter.notifyDataSetChanged()
+    }
+
+    /*==========    ON RECYCLER ITEMS TOUCH INTERFACES IMPLEMENTATION      ==========*/
+
+    override fun onMoveTile(oldPos: Int, newPos: Int) {
+        firstSelectedPiecePosition = oldPos
+        compareSelectedPieces(newPos)
+        // moveItem(oldPos, newPos)
+    }
+
+    override fun onSwipeTile(oldPos: Int, newPos: Int) {
+        firstSelectedPiecePosition = oldPos
+        compareSelectedPieces(newPos)
+
+    }
+
+    override fun onPieceClicked(position: Int, id: Int, view: View) {
+        if (!gameIsOver) {
+            if (!anItemIsSelected) {
+                anItemIsSelected = true
+                firstSelectedPiecePosition = position
+                firstSelectedPieceView = view
+
+                view.scaleX = .8f
+                view.scaleY = .8f
+
+            } else {
+
+                firstSelectedPieceView.scaleX = 1f
+                firstSelectedPieceView.scaleY = 1f
+
+                compareSelectedPieces(position)
+            }
+        }
+    }
+
+    override fun onDragViewHolder(viewHolder: RecyclerView.ViewHolder) {}
 
 }

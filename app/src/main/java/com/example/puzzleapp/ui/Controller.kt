@@ -5,7 +5,7 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.example.puzzleapp.models.PuzzlePiece
 import com.example.puzzleapp.tile
 
-class Controller(private val callbacks: AdapterCallbacks) :
+class Controller(/*private val callbacks: AdapterCallbacks*/) :
     TypedEpoxyController<List<PuzzlePiece>>(
         EpoxyAsyncUtil.getAsyncBackgroundHandler(),
         EpoxyAsyncUtil.getAsyncBackgroundHandler()
@@ -21,7 +21,7 @@ class Controller(private val callbacks: AdapterCallbacks) :
                 id(index)
                 tile(tile)
                 onPieceClicked { view ->
-                    callbacks.onPieceClicked(index, tile.id, view)
+                    /*callbacks.onPieceClicked(index, tile.id, view)*/
                 }
             }
         }

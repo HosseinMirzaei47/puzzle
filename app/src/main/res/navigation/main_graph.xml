@@ -27,6 +27,10 @@
             android:name="difficulty"
             app:argType="integer" />
 
+        <argument
+            android:name="puzzleMode"
+            app:argType="integer" />
+
         <action
             android:id="@+id/action_gameFragment_to_congratsFragment"
             app:destination="@id/congratsFragment"
