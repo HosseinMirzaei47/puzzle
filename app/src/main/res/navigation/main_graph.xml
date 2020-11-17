@@ -91,6 +91,12 @@
             android:name="difficulty"
             app:argType="integer" />
 
+        <action
+            android:id="@+id/action_jigsawFragment_to_congratsFragment"
+            app:destination="@id/congratsFragment"
+            app:popUpTo="@id/jigsawFragment"
+            app:popUpToInclusive="true" />
+
     </fragment>
 
 </navigation>

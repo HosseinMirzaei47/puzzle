@@ -78,9 +78,7 @@
             android:id="@+id/radioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_normal"
-            android:layout_marginEnd="@dimen/margin_normal"
-            android:gravity="center"
+            android:gravity="start"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -89,31 +87,33 @@
 
             <RadioButton
                 android:id="@+id/typeOne"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/click"
                 android:textColor="@color/whiteGlobalBackground" />
 
             <RadioButton
                 android:id="@+id/typeTwo"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_normal"
-                android:layout_marginEnd="@dimen/margin_normal"
+                android:layout_weight="1"
                 android:text="@string/drag_and_drop"
                 android:textColor="@color/whiteGlobalBackground" />
 
             <RadioButton
                 android:id="@+id/typeThree"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/swipe"
                 android:textColor="@color/whiteGlobalBackground" />
 
             <RadioButton
                 android:id="@+id/typeFour"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:checked="true"
                 android:text="@string/jigsaw"
                 android:textColor="@color/whiteGlobalBackground" />

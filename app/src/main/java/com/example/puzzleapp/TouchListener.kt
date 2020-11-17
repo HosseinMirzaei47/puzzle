@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.example.puzzleapp.models.JigsawPiece
 
-class TouchListener : OnTouchListener {
+class TouchListener(
+    private val onJigsawPiece: OnJigsawPiece
+) : OnTouchListener {
     private var xDelta = 0f
     private var yDelta = 0f
 
@@ -45,14 +47,14 @@ class TouchListener : OnTouchListener {
                     piece.layoutParams = lParams
                     piece.canMove = false
                     sendViewToBack(piece)
-                    /*activity.checkGameOver()*/
+                    onJigsawPiece.onJigsawPiece(piece)
                 }
             }
         }
         return true
     }
 
-    fun sendViewToBack(child: View) {
+    private fun sendViewToBack(child: View) {
         val parent = child.parent as ViewGroup
         parent.removeView(child)
         parent.addView(child, 0)
@@ -61,4 +63,8 @@ class TouchListener : OnTouchListener {
     /*init {
         this.activity = activity
     }*/
+}
+
+interface OnJigsawPiece {
+    fun onJigsawPiece(jigsawPiece: JigsawPiece)
 }
