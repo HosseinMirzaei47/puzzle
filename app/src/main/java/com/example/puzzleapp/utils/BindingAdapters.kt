@@ -9,9 +9,7 @@ import com.bumptech.glide.Glide
 
 @BindingAdapter("android:loadImage")
 fun loadPicture(view: ImageView, url: Bitmap?) {
-    url?.let {
-        /*Glide.with(view).asBitmap().load(it).into(view)*/
-    }
+    Glide.with(view).load(url).into(view)
 }
 
 @BindingAdapter("android:loadImage")
