@@ -8,15 +8,15 @@ import com.example.puzzleapp.models.JigsawPiece
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.roundToInt
+import kotlin.math.sqrt
 
 fun splitImage(
     context: Context,
     imageView: ImageView,
-    jigsawPiecesNumber: Int
+    piecesNumber: Int
 ): List<JigsawPiece> {
-    val piecesNumber = 12
-    val rows = 4
-    val cols = 3
+    val cr = sqrt(piecesNumber.toDouble()).toInt()
+
     val pieces: ArrayList<JigsawPiece> = ArrayList<JigsawPiece>(piecesNumber)
 
     // Get the scaled bitmap of the source image
@@ -40,14 +40,14 @@ fun splitImage(
     )
 
     // Calculate the with and height of the pieces
-    val pieceWidth = croppedImageWidth / cols
-    val pieceHeight = croppedImageHeight / rows
+    val pieceWidth = croppedImageWidth / cr
+    val pieceHeight = croppedImageHeight / cr
 
     // Create each bitmap piece and add it to the resulting array
     var yCoord = 0
-    for (row in 0 until rows) {
+    for (row in 0 until cr) {
         var xCoord = 0
-        for (col in 0 until cols) {
+        for (col in 0 until cr) {
             // calculate offset for each piece
             var offsetX = 0
             var offsetY = 0
@@ -104,7 +104,7 @@ fun splitImage(
                 )
                 path.lineTo(pieceBitmap.width.toFloat(), offsetY.toFloat())
             }
-            if (col == cols - 1) {
+            if (col == cr - 1) {
                 // right side piece
                 path.lineTo(pieceBitmap.width.toFloat(), pieceBitmap.height.toFloat())
             } else {
@@ -123,7 +123,7 @@ fun splitImage(
                 )
                 path.lineTo(pieceBitmap.width.toFloat(), pieceBitmap.height.toFloat())
             }
-            if (row == rows - 1) {
+            if (row == cr - 1) {
                 // bottom side piece
                 path.lineTo(offsetX.toFloat(), pieceBitmap.height.toFloat())
             } else {

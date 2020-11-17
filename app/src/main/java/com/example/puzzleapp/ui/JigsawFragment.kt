@@ -83,8 +83,7 @@ class JigsawFragment : Fragment() {
     }
 
     private fun createJigsaw() {
-
-        pieces = splitImage(requireContext(), binding.imageView, 4)
+        pieces = splitImage(requireContext(), binding.imageView, difficulty)
         val touchListener = TouchListener()
 
         pieces = pieces.shuffled()
@@ -97,7 +96,6 @@ class JigsawFragment : Fragment() {
             lParams.topMargin = binding.layout.height - piece.pieceHeight
             piece.layoutParams = lParams
         }
-
     }
 
 }
