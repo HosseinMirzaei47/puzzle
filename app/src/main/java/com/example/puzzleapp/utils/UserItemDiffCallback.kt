@@ -1,4 +1,4 @@
-package com.example.puzzleapp
+package com.example.puzzleapp.utils
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.puzzleapp.models.PuzzlePiece

@@ -14,11 +14,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.puzzleapp.OnJigsawPiece
-import com.example.puzzleapp.TouchListener
 import com.example.puzzleapp.databinding.FragmentJigsawBinding
 import com.example.puzzleapp.models.JigsawPiece
+import com.example.puzzleapp.utils.OnJigsawPiece
 import com.example.puzzleapp.utils.Settings
+import com.example.puzzleapp.utils.TouchListener
 import com.example.puzzleapp.utils.splitImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers

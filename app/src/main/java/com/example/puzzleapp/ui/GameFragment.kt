@@ -15,11 +15,11 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.puzzleapp.ItemTouchHelperDrag
-import com.example.puzzleapp.ItemTouchHelperSwipe
-import com.example.puzzleapp.OnTouchPuzzleTile
 import com.example.puzzleapp.databinding.FragmentGameBinding
 import com.example.puzzleapp.models.PuzzlePiece
+import com.example.puzzleapp.utils.ItemTouchHelperDrag
+import com.example.puzzleapp.utils.ItemTouchHelperSwipe
+import com.example.puzzleapp.utils.OnTouchPuzzleTile
 import com.example.puzzleapp.utils.Settings
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers

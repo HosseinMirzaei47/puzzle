@@ -1,4 +1,4 @@
-package com.example.puzzleapp
+package com.example.puzzleapp.utils
 
 import android.view.MotionEvent
 import android.view.View

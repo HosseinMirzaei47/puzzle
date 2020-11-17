@@ -3,9 +3,9 @@ package com.example.puzzleapp.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.puzzleapp.OnTouchPuzzleTile
 import com.example.puzzleapp.databinding.PieceItemRowBinding
 import com.example.puzzleapp.models.PuzzlePiece
+import com.example.puzzleapp.utils.OnTouchPuzzleTile
 
 class PieceAdapter constructor(
     private val onTouchPuzzleTile: OnTouchPuzzleTile,
