@@ -73,6 +73,9 @@ class PuzzlesFragment : Fragment() {
             R.drawable.mahmoud,
             R.drawable.vahid_moradi,
             R.drawable.margot,
+            R.drawable.taylor,
+            R.drawable.college02,
+            R.drawable.college01,
             R.drawable.ic_add_photo,
             R.drawable.ic_camera
         )

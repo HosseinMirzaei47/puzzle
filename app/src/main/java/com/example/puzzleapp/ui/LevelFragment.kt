@@ -65,6 +65,13 @@ class LevelFragment : Fragment(R.layout.fragment_level) {
                     )
                 )
             }
+            R.id.typeFour -> {
+                findNavController().navigate(
+                    LevelFragmentDirections.actionLevelFragmentToJigsawFragment(
+                        difficulty
+                    )
+                )
+            }
             else -> {
                 findNavController().navigate(
                     LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(

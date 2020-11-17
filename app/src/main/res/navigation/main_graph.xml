@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_levelFragment_to_puzzleGameFragment"
             app:destination="@id/gameFragment" />
+        <action
+            android:id="@+id/action_levelFragment_to_jigsawFragment"
+            app:destination="@id/jigsawFragment" />
 
     </fragment>
 
@@ -36,6 +39,9 @@
             app:destination="@id/congratsFragment"
             app:popUpTo="@id/gameFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_gameFragment_to_congratsFragment2"
+            app:destination="@id/congratsFragment" />
 
     </fragment>
 
@@ -72,6 +78,18 @@
         <argument
             android:name="gameDuration"
             app:argType="string" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/jigsawFragment"
+        android:name="com.example.puzzleapp.ui.JigsawFragment"
+        android:label="JigsawFragment"
+        tools:layout="@layout/fragment_jigsaw">
+
+        <argument
+            android:name="difficulty"
+            app:argType="integer" />
 
     </fragment>
 

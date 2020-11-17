@@ -1,8 +1,9 @@
-package com.example.puzzleapp
+package com.example.puzzleapp.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.puzzleapp.OnTouchPuzzleTile
 import com.example.puzzleapp.databinding.PieceItemRowBinding
 import com.example.puzzleapp.models.PuzzlePiece
 

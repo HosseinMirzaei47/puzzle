@@ -14,4 +14,5 @@
     <string name="click">Click</string>
     <string name="drag_and_drop">Drag and Drop</string>
     <string name="swipe">Swipe</string>
+    <string name="jigsaw">Jigsaw</string>
 </resources>

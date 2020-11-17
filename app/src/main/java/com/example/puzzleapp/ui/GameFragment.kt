@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.puzzleapp.ItemTouchHelperDrag
 import com.example.puzzleapp.ItemTouchHelperSwipe
 import com.example.puzzleapp.OnTouchPuzzleTile
-import com.example.puzzleapp.PieceAdapter
 import com.example.puzzleapp.databinding.FragmentGameBinding
 import com.example.puzzleapp.models.PuzzlePiece
 import com.example.puzzleapp.utils.Settings
@@ -253,8 +252,6 @@ class GameFragment : Fragment(), OnTouchPuzzleTile {
             adapter = pieceAdapter
             /*setController(controller)*/
         }
-
-        println("jalil $puzzleMode")
 
         when (puzzleMode) {
             1 -> {
