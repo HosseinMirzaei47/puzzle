@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,7 +18,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.puzzleapp.databinding.FragmentJigsawBinding
 import com.example.puzzleapp.models.JigsawPiece
 import com.example.puzzleapp.utils.*
-import com.example.puzzleapp.utils.splitImage
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -40,9 +41,22 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
     private lateinit var previewTimer: CountDownTimer
 
     private lateinit var imageToSplit: Bitmap
+    private var backPressedMills = -1L
 
     @Inject
     lateinit var settings: Settings
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            if (System.currentTimeMillis() - backPressedMills < 1000) {
+                findNavController().navigateUp()
+            } else {
+                backPressedMills = System.currentTimeMillis()
+                Snackbar.make(requireView(), "Press again to exit", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,18 +103,18 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
         pieces = splitImage(requireContext(), binding.imageView, difficulty)
         val Bitmap = splitImage1(requireContext(), binding.imageView, difficulty)
         binding.imageSrc = Bitmap
-          val touchListener = TouchListener(this)
+        val touchListener = TouchListener(this)
 
-          pieces = pieces.shuffled()
-          for (piece in pieces) {
-              piece.setOnTouchListener(touchListener)
-              binding.layout.addView(piece)
+        pieces = pieces.shuffled()
+        for (piece in pieces) {
+            piece.setOnTouchListener(touchListener)
+            binding.layout.addView(piece)
 
-              val lParams = piece.layoutParams as RelativeLayout.LayoutParams
-              lParams.leftMargin = Random().nextInt(binding.layout.width - piece.pieceWidth)
-              lParams.topMargin = binding.layout.height - piece.pieceHeight
-              piece.layoutParams = lParams
-          }
+            val lParams = piece.layoutParams as RelativeLayout.LayoutParams
+            lParams.leftMargin = Random().nextInt(binding.layout.width - piece.pieceWidth)
+            lParams.topMargin = binding.layout.height - piece.pieceHeight
+            piece.layoutParams = lParams
+        }
     }
 
     private suspend fun createPreviewCountDown() {
@@ -166,6 +180,7 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
 
     override fun onDestroy() {
         try {
+            previewTimer.cancel()
             navigationDelay.cancel()
         } catch (e: Exception) {
             e.printStackTrace()

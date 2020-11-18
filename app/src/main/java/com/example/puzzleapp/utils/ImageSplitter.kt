@@ -5,8 +5,6 @@ import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.widget.ImageView
 import com.example.puzzleapp.models.JigsawPiece
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -411,14 +409,14 @@ fun splitImage1(
             var border = Paint()
             border.color = -0x7f000001
             border.style = Paint.Style.STROKE
-            border.strokeWidth = 8.0f
+            border.strokeWidth = 25.0f
             canvas.drawPath(path, border)
 
             // draw a black border
             border = Paint()
             border.color = -0x80000000
             border.style = Paint.Style.STROKE
-            border.strokeWidth = 3.0f
+            border.strokeWidth = 12.0f
             canvas.drawPath(path, border)
 
             // set the resulting bitmap to the piece

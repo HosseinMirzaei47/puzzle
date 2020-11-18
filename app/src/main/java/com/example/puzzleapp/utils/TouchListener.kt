@@ -6,6 +6,8 @@ import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.example.puzzleapp.models.JigsawPiece
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class TouchListener(
     private val onJigsawPiece: OnJigsawPiece
@@ -16,11 +18,8 @@ class TouchListener(
     override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
         val x = motionEvent.rawX
         val y = motionEvent.rawY
-        val tolerance = Math.sqrt(
-            Math.pow(view.width.toDouble(), 2.0) + Math.pow(
-                view.height.toDouble(),
-                2.0
-            )
+        val tolerance = sqrt(
+            view.width.toDouble().pow(2.0) + view.height.toDouble().pow(2.0)
         ) / 10
         val piece: JigsawPiece = view as JigsawPiece
         if (!piece.canMove) {
@@ -41,7 +40,7 @@ class TouchListener(
             MotionEvent.ACTION_UP -> {
                 val xDiff: Int = kotlin.math.abs(piece.xCoord - lParams.leftMargin)
                 val yDiff: Int = kotlin.math.abs(piece.yCoord - lParams.topMargin)
-                if (xDiff <= tolerance && yDiff <= tolerance) {
+                if (xDiff <= tolerance + 150 && yDiff <= tolerance + 150) {
                     lParams.leftMargin = piece.xCoord
                     lParams.topMargin = piece.yCoord
                     piece.layoutParams = lParams

@@ -29,4 +29,9 @@ class MainActivity : AppCompatActivity() {
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
                     View.SYSTEM_UI_FLAG_FULLSCREEN)
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
+
 }

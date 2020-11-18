@@ -77,7 +77,7 @@ class PuzzlesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        setOnViewRootListener()
         setOnFabListeners()
 
         val puzzles = listOf(
@@ -253,6 +253,7 @@ class PuzzlesFragment : Fragment() {
         isFabOpen = true
         binding.fabLayoutGallery.visibility = View.VISIBLE
         binding.fabLayoutCamera.visibility = View.VISIBLE
+        binding.shadowRoot.visibility = View.VISIBLE
 
         binding.tvGallery.visibility = View.VISIBLE
         binding.tvCamera.visibility = View.VISIBLE
@@ -273,6 +274,7 @@ class PuzzlesFragment : Fragment() {
 
         binding.tvGallery.visibility = View.GONE
         binding.tvCamera.visibility = View.GONE
+        binding.shadowRoot.visibility = View.GONE
 
         binding.fabLayoutGallery.animate().translationY(0f)
         binding.fabLayoutCamera.animate().translationY(0f)
@@ -283,12 +285,20 @@ class PuzzlesFragment : Fragment() {
                     if (!isFabOpen) {
                         binding.fabLayoutGallery.visibility = View.GONE
                         binding.fabLayoutCamera.visibility = View.GONE
+                        binding.shadowRoot.visibility = View.GONE
                     }
                 }
 
                 override fun onAnimationCancel(animator: Animator?) {}
                 override fun onAnimationRepeat(animator: Animator?) {}
             })
+    }
+
+    private fun setOnViewRootListener() {
+        binding.shadowRoot.setOnClickListener {
+            binding.shadowRoot.visibility = View.GONE
+            closeFabMenu()
+        }
     }
 
     companion object {
