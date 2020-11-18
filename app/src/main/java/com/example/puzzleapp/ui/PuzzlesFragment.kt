@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -45,6 +46,18 @@ class PuzzlesFragment : Fragment() {
     lateinit var settings: Settings
 
     private lateinit var currentPhotoPath: String
+    private var isFabOpen = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            if (isFabOpen) {
+                closeFabMenu()
+            } else {
+                requireActivity().finish()
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +77,8 @@ class PuzzlesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setOnFabListeners()
+
         val puzzles = listOf(
             R.drawable.scarlett_johansson,
             R.drawable.puzzle_image,
@@ -76,10 +91,40 @@ class PuzzlesFragment : Fragment() {
             R.drawable.taylor,
             R.drawable.college02,
             R.drawable.college01,
-            R.drawable.ic_add_photo,
-            R.drawable.ic_camera
         )
         showPuzzles(puzzles)
+    }
+
+    private fun setOnFabListeners() {
+        binding.fabState.setOnClickListener {
+            if (isFabOpen) {
+                closeFabMenu()
+            } else {
+                showFabMenu()
+            }
+        }
+
+        binding.fabGallery.setOnClickListener {
+            askForGalleryPermission()
+        }
+
+        binding.fabCamera.setOnClickListener {
+            dispatchTakePictureIntent()
+        }
+    }
+
+    private fun showFabMenu() {
+        isFabOpen = true
+        binding.fabState.setImageResource(R.drawable.ic_close);
+        binding.fabGallery.animate().translationY(-resources.getDimension(R.dimen.standard_65))
+        binding.fabCamera.animate().translationY(-resources.getDimension(R.dimen.standard_120))
+    }
+
+    private fun closeFabMenu() {
+        isFabOpen = false
+        binding.fabState.setImageResource(R.drawable.ic_add);
+        binding.fabGallery.animate().translationY(0f)
+        binding.fabCamera.animate().translationY(0f)
     }
 
     private fun showPuzzles(puzzles: List<Int>) {
@@ -89,23 +134,13 @@ class PuzzlesFragment : Fragment() {
                     id(index)
                     imageSource(imageSource)
                     onPuzzleClick { _ ->
-                        when (index) {
-                            puzzles.lastIndex -> {
-                                dispatchTakePictureIntent()
-                            }
-                            puzzles.lastIndex - 1 -> {
-                                askForGalleryPermission()
-                            }
-                            else -> {
-                                storeTypeAndSrc(Settings.TYPE_DEFAULT, null, imageSource)
-                                try {
-                                    findNavController().navigate(
-                                        PuzzlesFragmentDirections.actionPuzzlesFragmentToLevelFragment()
-                                    )
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
-                            }
+                        storeTypeAndSrc(Settings.TYPE_DEFAULT, null, imageSource)
+                        try {
+                            findNavController().navigate(
+                                PuzzlesFragmentDirections.actionPuzzlesFragmentToLevelFragment()
+                            )
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
                     }
                 }
