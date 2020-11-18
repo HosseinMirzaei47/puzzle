@@ -1,6 +1,7 @@
 package com.example.puzzleapp.ui
 
 import android.Manifest
+import android.animation.Animator
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
@@ -104,6 +105,7 @@ class PuzzlesFragment : Fragment() {
                     onPuzzleClick { _ ->
                         storeTypeAndSrc(Settings.TYPE_DEFAULT, null, imageSource)
                         try {
+                            closeFabMenu()
                             findNavController().navigate(
                                 PuzzlesFragmentDirections.actionPuzzlesFragmentToLevelFragment()
                             )
@@ -249,16 +251,44 @@ class PuzzlesFragment : Fragment() {
 
     private fun showFabMenu() {
         isFabOpen = true
-        binding.fabState.setImageResource(R.drawable.ic_close);
-        binding.fabGallery.animate().translationY(-resources.getDimension(R.dimen.standard_65))
-        binding.fabCamera.animate().translationY(-resources.getDimension(R.dimen.standard_120))
+        binding.fabLayoutGallery.visibility = View.VISIBLE
+        binding.fabLayoutCamera.visibility = View.VISIBLE
+
+        binding.tvGallery.visibility = View.VISIBLE
+        binding.tvCamera.visibility = View.VISIBLE
+
+        binding.fabState.setImageResource(R.drawable.ic_close)
+        binding.fabState.animate().rotationBy(180f)
+
+        binding.fabLayoutGallery.animate()
+            .translationY(-resources.getDimension(R.dimen.standard_65))
+        binding.fabLayoutCamera.animate()
+            .translationY(-resources.getDimension(R.dimen.standard_130))
     }
 
     private fun closeFabMenu() {
         isFabOpen = false
-        binding.fabState.setImageResource(R.drawable.ic_add);
-        binding.fabGallery.animate().translationY(0f)
-        binding.fabCamera.animate().translationY(0f)
+        binding.fabState.setImageResource(R.drawable.ic_add)
+        binding.fabState.animate().rotationBy(180f)
+
+        binding.tvGallery.visibility = View.GONE
+        binding.tvCamera.visibility = View.GONE
+
+        binding.fabLayoutGallery.animate().translationY(0f)
+        binding.fabLayoutCamera.animate().translationY(0f)
+        binding.fabLayoutCamera.animate().translationY(0f)
+            .setListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animator: Animator?) {}
+                override fun onAnimationEnd(animator: Animator?) {
+                    if (!isFabOpen) {
+                        binding.fabLayoutGallery.visibility = View.GONE
+                        binding.fabLayoutCamera.visibility = View.GONE
+                    }
+                }
+
+                override fun onAnimationCancel(animator: Animator?) {}
+                override fun onAnimationRepeat(animator: Animator?) {}
+            })
     }
 
     companion object {

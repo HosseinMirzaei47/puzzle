@@ -15,4 +15,6 @@
     <string name="drag_and_drop">Drag and Drop</string>
     <string name="swipe">Swipe</string>
     <string name="jigsaw">Jigsaw</string>
+    <string name="choose_from_gallery">Choose from gallery</string>
+    <string name="take_a_photo">Take a photo</string>
 </resources>
