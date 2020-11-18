@@ -98,9 +98,13 @@ class PuzzlesFragment : Fragment() {
                             }
                             else -> {
                                 storeTypeAndSrc(Settings.TYPE_DEFAULT, null, imageSource)
-                                findNavController().navigate(
-                                    PuzzlesFragmentDirections.actionPuzzlesFragmentToLevelFragment()
-                                )
+                                try {
+                                    findNavController().navigate(
+                                        PuzzlesFragmentDirections.actionPuzzlesFragmentToLevelFragment()
+                                    )
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
                             }
                         }
                     }

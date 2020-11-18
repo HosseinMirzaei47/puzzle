@@ -51,13 +51,21 @@ class CongratsFragment : Fragment() {
 
     private fun setOnClicks() {
         binding.congratsPlayAgain.setOnClickListener {
-            findNavController().navigate(
-                CongratsFragmentDirections.actionCongratsFragmentToLevelFragment()
-            )
+            try {
+                findNavController().navigate(
+                    CongratsFragmentDirections.actionCongratsFragmentToLevelFragment()
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         binding.congratsHome.setOnClickListener {
-            findNavController().navigate(CongratsFragmentDirections.actionCongratsFragmentToPuzzlesFragment())
+            try {
+                findNavController().navigate(CongratsFragmentDirections.actionCongratsFragmentToPuzzlesFragment())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
