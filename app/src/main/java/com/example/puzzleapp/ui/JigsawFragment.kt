@@ -16,9 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.puzzleapp.databinding.FragmentJigsawBinding
 import com.example.puzzleapp.models.JigsawPiece
-import com.example.puzzleapp.utils.OnJigsawPiece
-import com.example.puzzleapp.utils.Settings
-import com.example.puzzleapp.utils.TouchListener
+import com.example.puzzleapp.utils.*
 import com.example.puzzleapp.utils.splitImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -89,18 +87,20 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
 
     private fun createJigsaw() {
         pieces = splitImage(requireContext(), binding.imageView, difficulty)
-        val touchListener = TouchListener(this)
+        val Bitmap = splitImage1(requireContext(), binding.imageView, difficulty)
+        binding.imageSrc = Bitmap
+          val touchListener = TouchListener(this)
 
-        pieces = pieces.shuffled()
-        for (piece in pieces) {
-            piece.setOnTouchListener(touchListener)
-            binding.layout.addView(piece)
+          pieces = pieces.shuffled()
+          for (piece in pieces) {
+              piece.setOnTouchListener(touchListener)
+              binding.layout.addView(piece)
 
-            val lParams = piece.layoutParams as RelativeLayout.LayoutParams
-            lParams.leftMargin = Random().nextInt(binding.layout.width - piece.pieceWidth)
-            lParams.topMargin = binding.layout.height - piece.pieceHeight
-            piece.layoutParams = lParams
-        }
+              val lParams = piece.layoutParams as RelativeLayout.LayoutParams
+              lParams.leftMargin = Random().nextInt(binding.layout.width - piece.pieceWidth)
+              lParams.topMargin = binding.layout.height - piece.pieceHeight
+              piece.layoutParams = lParams
+          }
     }
 
     private suspend fun createPreviewCountDown() {
