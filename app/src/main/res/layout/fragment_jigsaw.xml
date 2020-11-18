@@ -32,7 +32,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="18dp"
             android:layout_marginEnd="16dp"
-            android:alpha="0.5"
+            android:alpha="0.3"
             android:contentDescription="@string/todo"
             android:loadImage="@{imageSrc}"
             android:scaleType="centerCrop"

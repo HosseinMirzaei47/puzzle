@@ -15,33 +15,18 @@
 
     </data>
 
-    <com.google.android.material.card.MaterialCardView
+
+    <ImageView
+        android:id="@+id/itemPuzzle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_small"
-        android:elevation="@dimen/cardview_default_elevation"
-        android:padding="@dimen/padding_normal"
-        app:cardCornerRadius="@dimen/cardview_default_radius"
-        app:strokeWidth="@dimen/cardview_default_radius"
-        tools:targetApi="lollipop">
+        android:layout_height="100dp"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:circleImageSrc="@{imageSource}"
+        android:contentDescription="@string/todo"
+        android:onClick="@{onPuzzleClick}"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/scarlett_johansson" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/itemPuzzle"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:circleImageSrc="@{imageSource}"
-                android:contentDescription="@string/todo"
-                android:onClick="@{onPuzzleClick}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/scarlett_johansson" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </com.google.android.material.card.MaterialCardView>
 </layout>

@@ -80,51 +80,19 @@ class PuzzlesFragment : Fragment() {
         setOnFabListeners()
 
         val puzzles = listOf(
-            R.drawable.scarlett_johansson,
-            R.drawable.puzzle_image,
-            R.drawable.lawrence,
-            R.drawable.lopez,
-            R.drawable.hassan,
-            R.drawable.mahmoud,
-            R.drawable.vahid_moradi,
-            R.drawable.margot,
-            R.drawable.taylor,
-            R.drawable.college02,
-            R.drawable.college01,
+            R.drawable.puzzle01,
+            R.drawable.puzzle02,
+            R.drawable.puzzle03,
+            R.drawable.puzzle04,
+            R.drawable.puzzle05,
+            R.drawable.puzzle06,
+            R.drawable.puzzle07,
+            R.drawable.puzzle08,
+            R.drawable.puzzle09,
+            R.drawable.puzzle10,
+            R.drawable.puzzle11,
         )
         showPuzzles(puzzles)
-    }
-
-    private fun setOnFabListeners() {
-        binding.fabState.setOnClickListener {
-            if (isFabOpen) {
-                closeFabMenu()
-            } else {
-                showFabMenu()
-            }
-        }
-
-        binding.fabGallery.setOnClickListener {
-            askForGalleryPermission()
-        }
-
-        binding.fabCamera.setOnClickListener {
-            dispatchTakePictureIntent()
-        }
-    }
-
-    private fun showFabMenu() {
-        isFabOpen = true
-        binding.fabState.setImageResource(R.drawable.ic_close);
-        binding.fabGallery.animate().translationY(-resources.getDimension(R.dimen.standard_65))
-        binding.fabCamera.animate().translationY(-resources.getDimension(R.dimen.standard_120))
-    }
-
-    private fun closeFabMenu() {
-        isFabOpen = false
-        binding.fabState.setImageResource(R.drawable.ic_add);
-        binding.fabGallery.animate().translationY(0f)
-        binding.fabCamera.animate().translationY(0f)
     }
 
     private fun showPuzzles(puzzles: List<Int>) {
@@ -259,6 +227,38 @@ class PuzzlesFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun setOnFabListeners() {
+        binding.fabState.setOnClickListener {
+            if (isFabOpen) {
+                closeFabMenu()
+            } else {
+                showFabMenu()
+            }
+        }
+
+        binding.fabGallery.setOnClickListener {
+            askForGalleryPermission()
+        }
+
+        binding.fabCamera.setOnClickListener {
+            dispatchTakePictureIntent()
+        }
+    }
+
+    private fun showFabMenu() {
+        isFabOpen = true
+        binding.fabState.setImageResource(R.drawable.ic_close);
+        binding.fabGallery.animate().translationY(-resources.getDimension(R.dimen.standard_65))
+        binding.fabCamera.animate().translationY(-resources.getDimension(R.dimen.standard_120))
+    }
+
+    private fun closeFabMenu() {
+        isFabOpen = false
+        binding.fabState.setImageResource(R.drawable.ic_add);
+        binding.fabGallery.animate().translationY(0f)
+        binding.fabCamera.animate().translationY(0f)
     }
 
     companion object {
