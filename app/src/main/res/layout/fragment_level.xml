@@ -118,6 +118,7 @@
                 android:text="@string/swipe"
                 android:textColor="@color/whiteGlobalBackground" />
 
+
         </RadioGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

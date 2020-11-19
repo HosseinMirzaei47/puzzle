@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+
+    </data>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.DragFragment">
+
+       <ImageView
+           android:id="@+id/puzzle"
+           android:layout_width="150dp"
+           android:adjustViewBounds="true"
+           android:scaleType="fitXY"
+           android:layout_height="150dp"
+           android:src="@drawable/puzzle01"/>
+       <ImageView
+           android:id="@+id/puzzle1"
+           android:adjustViewBounds="true"
+           android:scaleType="fitXY"
+           android:layout_width="150dp"
+           android:layout_height="150dp"
+           android:src="@drawable/puzzle01"/>
+
+    </RelativeLayout>
+</layout>
