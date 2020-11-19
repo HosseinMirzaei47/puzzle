@@ -72,6 +72,14 @@ class LevelFragment : Fragment(R.layout.fragment_level) {
                     )
                 )
             }
+            R.id.typeFive -> {
+                findNavController().navigate(
+                    LevelFragmentDirections.actionLevelFragmentToNewPuzzleFragment(
+                        difficulty,
+                        0
+                    )
+                )
+            }
             else -> {
                 findNavController().navigate(
                     LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(

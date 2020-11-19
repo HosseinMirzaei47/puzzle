@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_levelFragment_to_jigsawFragment"
             app:destination="@id/jigsawFragment" />
+        <action
+            android:id="@+id/action_levelFragment_to_newPuzzleFragment"
+            app:destination="@id/newPuzzleFragment" />
 
     </fragment>
 
@@ -97,6 +100,26 @@
             app:popUpTo="@id/jigsawFragment"
             app:popUpToInclusive="true" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/dragFragment"
+        android:name="com.example.puzzleapp.ui.DragFragment"
+        android:label="DragFragment" />
+    <fragment
+        android:id="@+id/newPuzzleFragment"
+        android:name="com.example.puzzleapp.ui.NewPuzzleFragment"
+        android:label="NewPuzzleFragment"
+        tools:layout="@layout/fragment_new_puzzle">
+        <argument
+            android:name="difficulty"
+            app:argType="integer" />
+
+        <argument
+            android:name="puzzleMode"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_newPuzzleFragment_to_congratsFragment"
+            app:destination="@id/congratsFragment" />
     </fragment>
 
 </navigation>
