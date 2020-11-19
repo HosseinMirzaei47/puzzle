@@ -188,7 +188,7 @@ class NewPuzzleFragment : Fragment() {
 
                         MotionEvent.ACTION_DOWN -> {
                             println("mmb down")
-                           // println("mmb x= ${event.x} y= ${event.y} raw x= ${event.rawX} y=${event.rawY}")
+                            // println("mmb x= ${event.x} y= ${event.y} raw x= ${event.rawX} y=${event.rawY}")
                             //println("mmb x= ${p0?.x} y= ${p0?.y}")
                             //println("mmb x ${p0!!.x - event.rawX} y ${p0.y - event.rawY}")
                             _xDelta = p0!!.x - event.rawX
@@ -226,20 +226,25 @@ class NewPuzzleFragment : Fragment() {
                             println("mmb ${p0!!.x} ${p0.y}")
 
                             if (direction == 1 || direction == 3) {
-                                p0!!.animate()
-                                    .x(event.rawX + _xDelta)
-                                    .setDuration(0)
-                                    .start()
+                                if (abs(_xDolta - event.rawX) < p0.width) {
+                                    p0!!.animate()
+                                        .x(event.rawX + _xDelta)
+                                        .setDuration(0)
+                                        .start()
+                                }
+
                             } else {
-                                p0!!.animate()
-                                    .y(event.rawY + _yDelta)
-                                    .setDuration(0)
-                                    .start()
+                                if (abs(_yDolta - event.rawY) < p0.height) {
+                                    p0!!.animate()
+                                        .y(event.rawY + _yDelta)
+                                        .setDuration(0)
+                                        .start()
+                                }
                             }
                         }
                         MotionEvent.ACTION_UP -> {
 
-                            val tile=p0 as PuzzleTile
+                            val tile = p0 as PuzzleTile
                             println("mmb ${p0.x} ${p0.y}")
                             p0!!.animate()
                                 .x(tile.currentPoint!!.x)
@@ -253,7 +258,7 @@ class NewPuzzleFragment : Fragment() {
                             println("mmb up")
                             println("mmb ${p0.x} ${p0.y}")
                             println("mmb ${tile.currentPoint!!.x} ${tile.currentPoint!!.y}")
-                            when (direction-20) {
+                            when (direction - 20) {
                                 1 -> Toast.makeText(requireContext(), "chap", Toast.LENGTH_SHORT)
                                     .show()
                                 2 -> Toast.makeText(requireContext(), "hava", Toast.LENGTH_SHORT)
@@ -263,18 +268,12 @@ class NewPuzzleFragment : Fragment() {
                                 4 -> Toast.makeText(requireContext(), "bottom", Toast.LENGTH_SHORT)
                                     .show()
                             }
-
-
-
-
                             direction = -1
-
                         }
                         else -> return false
                     }
                     return true
                 }
-
             })
         }
     }
