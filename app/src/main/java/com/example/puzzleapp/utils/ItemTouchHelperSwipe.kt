@@ -29,15 +29,15 @@ class ItemTouchHelperSwipe(val onSwipeItemListener: OnTouchPuzzleTile, direction
         override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
             when (actionState) {
                 ACTION_STATE_DRAG -> {
-                    fromPos = viewHolder!!.adapterPosition;
+                    fromPos = viewHolder!!.adapterPosition
                 }
                 ACTION_STATE_IDLE -> {
                     if (fromPos != -1 && toPos != -1
                         && fromPos != toPos
                     ) {
                         onSwipeItemListener.onSwipeTile(fromPos, toPos)
-                        fromPos = -1;
-                        toPos = -1;
+                        fromPos = -1
+                        toPos = -1
                     }
                 }
             }

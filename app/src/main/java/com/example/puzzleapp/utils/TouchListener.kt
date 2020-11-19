@@ -59,11 +59,4 @@ class TouchListener(
         parent.addView(child, 0)
     }
 
-    /*init {
-        this.activity = activity
-    }*/
-}
-
-interface OnJigsawPiece {
-    fun onJigsawPiece(jigsawPiece: JigsawPiece)
 }

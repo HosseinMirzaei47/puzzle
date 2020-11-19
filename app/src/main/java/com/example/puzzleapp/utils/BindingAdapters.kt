@@ -12,11 +12,6 @@ fun loadPicture(view: ImageView, url: Bitmap?) {
     Glide.with(view).load(url).into(view)
 }
 
-@BindingAdapter("android:loadImage")
-fun loadPicture(view: ImageView, url: Int) {
-    Glide.with(view).load(url).into(view)
-}
-
 @BindingAdapter("android:circleImageSrc")
 fun circleImageSrc(view: ImageView, url: Int) {
     Glide.with(view).load(url).circleCrop().into(view)

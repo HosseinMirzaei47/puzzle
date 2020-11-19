@@ -101,8 +101,8 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
 
     private fun createJigsaw() {
         pieces = splitImage(requireContext(), binding.imageView, difficulty)
-        val Bitmap = splitImage1(requireContext(), binding.imageView, difficulty)
-        binding.imageSrc = Bitmap
+        val bitmap = splitImage1(requireContext(), binding.imageView, difficulty)
+        binding.imageSrc = bitmap
         val touchListener = TouchListener(this)
 
         pieces = pieces.shuffled()

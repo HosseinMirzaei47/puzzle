@@ -10,7 +10,7 @@ class ItemTouchHelperDrag constructor(val onDragAndDrop: OnTouchPuzzleTile) :
     ) {
         var fromPos = -1
         var toPos = -1
-        var viewholdordor: RecyclerView.ViewHolder? = null
+        var viewholder: RecyclerView.ViewHolder? = null
         override fun onMove(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
@@ -26,17 +26,17 @@ class ItemTouchHelperDrag constructor(val onDragAndDrop: OnTouchPuzzleTile) :
         override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
             when (actionState) {
                 ACTION_STATE_DRAG -> {
-                    fromPos = viewHolder!!.adapterPosition;
-                    viewholdordor = viewHolder
+                    fromPos = viewHolder!!.adapterPosition
+                    viewholder = viewHolder
                 }
                 ACTION_STATE_IDLE -> {
                     if (fromPos != -1 && toPos != -1
                         && fromPos != toPos
                     ) {
-                        onDragAndDrop.onDragViewHolder(viewholdordor!!)
+                        onDragAndDrop.onDragViewHolder(viewholder!!)
                         onDragAndDrop.onMoveTile(fromPos, toPos)
-                        fromPos = -1;
-                        toPos = -1;
+                        fromPos = -1
+                        toPos = -1
                     }
                 }
             }

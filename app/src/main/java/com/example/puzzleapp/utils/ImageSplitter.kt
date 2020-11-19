@@ -17,7 +17,7 @@ fun splitImage(
 ): ArrayList<JigsawPiece> {
     val cr = sqrt(piecesNumber.toDouble()).toInt()
 
-    val pieces: ArrayList<JigsawPiece> = ArrayList<JigsawPiece>(piecesNumber)
+    val pieces: ArrayList<JigsawPiece> = ArrayList(piecesNumber)
 
     // Get the scaled bitmap of the source image
     val drawable = imageView.drawable as BitmapDrawable
@@ -41,7 +41,7 @@ fun splitImage(
 
     val combined =
         Bitmap.createBitmap(croppedImageWidth, croppedImageWidth, Bitmap.Config.ARGB_8888)
-    val combinedcanvas = Canvas(combined)
+    val combinedCanvas = Canvas(combined)
 
 
     // Calculate the with and height of the pieces
@@ -190,7 +190,7 @@ fun splitImage(
             canvas.drawPath(path, border)
 
             // set the resulting bitmap to the piece
-            combinedcanvas.drawBitmap(
+            combinedCanvas.drawBitmap(
                 jigsawPiece,
                 (xCoord - offsetX).toFloat(),
                 (yCoord - offsetY).toFloat(),
@@ -247,7 +247,7 @@ fun splitImage1(
 ): Bitmap {
     val cr = sqrt(piecesNumber.toDouble()).toInt()
 
-    val pieces: ArrayList<JigsawPiece> = ArrayList<JigsawPiece>(piecesNumber)
+    val pieces: ArrayList<JigsawPiece> = ArrayList(piecesNumber)
 
     // Get the scaled bitmap of the source image
     val drawable = imageView.drawable as BitmapDrawable
