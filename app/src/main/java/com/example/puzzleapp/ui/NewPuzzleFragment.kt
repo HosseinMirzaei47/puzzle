@@ -1,5 +1,6 @@
 package com.example.puzzleapp.ui
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.PointF
@@ -9,8 +10,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import android.widget.RelativeLayout.LayoutParams
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -39,12 +38,8 @@ class NewPuzzleFragment : Fragment() {
 
     private lateinit var binding: FragmentNewPuzzleBinding
 
-    private val dificulity by lazy {
+    private val difficulty by lazy {
         args.difficulty
-    }
-
-    private val mode by lazy {
-        args.puzzleMode
     }
 
     private val puzzleTiles = arrayListOf<PuzzleTile>()
@@ -77,7 +72,7 @@ class NewPuzzleFragment : Fragment() {
                             BitmapFactory.decodeResource(resources, puzzleSrc)
                         binding.imageSrc = imageToSplit
                         delay(1000)
-                        splitImage(imageToSplit, dificulity)
+                        splitImage(imageToSplit, difficulty)
 
 
                     }
@@ -117,7 +112,7 @@ class NewPuzzleFragment : Fragment() {
         pieceHeight = croppedBitmap.height / rows
         pieceWidth = croppedBitmap.width / cols
 
-        var id = 0
+        var id = -1
         var yCoord = 0
         for (x in 0 until rows) {
             var xCoord = 0
@@ -138,7 +133,11 @@ class NewPuzzleFragment : Fragment() {
                             pieceHeight
                         ),
                         pieceWidth.toFloat(),
-                        pieceHeight.toFloat()
+                        pieceHeight.toFloat(),
+                        canMove(id, 1, pieceNumbers),
+                        canMove(id, 2, pieceNumbers),
+                        canMove(id, 3, pieceNumbers),
+                        canMove(id, 4, pieceNumbers),
                     )
                 )
                 xCoord += pieceWidth
@@ -146,23 +145,48 @@ class NewPuzzleFragment : Fragment() {
             yCoord += pieceHeight
         }
 
-
-        val listofpoints = arrayListOf<PointF>()
-        puzzleTiles.forEachIndexed { index, puzzleTiles ->
-            listofpoints.add(puzzleTiles.correctPoint)
-        }
-        listofpoints.shuffle()
-        puzzleTiles.forEachIndexed { index, puzzleTiles ->
-            puzzleTiles.currentPoint = listofpoints[index]
-            puzzleTiles.x = listofpoints[index].x
-            puzzleTiles.y = listofpoints[index].y
+        val listOfPoints = arrayListOf<PointF>()
+        puzzleTiles.forEachIndexed { _, puzzleTiles ->
+            listOfPoints.add(puzzleTiles.correctPoint)
         }
 
+        listOfPoints.shuffle()
+
+        puzzleTiles.forEachIndexed { index, puzzleTiles ->
+            puzzleTiles.currentPoint = listOfPoints[index]
+            puzzleTiles.x = listOfPoints[index].x
+            puzzleTiles.y = listOfPoints[index].y
+        }
 
         withContext(Dispatchers.Main) {
             showPuzzle()
         }
 
+    }
+
+    private fun canMove(index: Int, direction: Int, pieceNumbers: Int): Boolean {
+        val rows = sqrt(pieceNumbers.toDouble()).toInt()
+        if (direction == 1) {
+            if (index % rows == 0) {
+                return false
+            }
+
+        } else if (direction == 2) {
+            if (index > rows) {
+                return false
+            }
+
+        } else if (direction == 3) {
+            if ((index + 1) % rows == 0) {
+                return false
+            }
+
+        } else if (direction == 4) {
+            if (index > (pieceNumbers - rows)) {
+                return false
+            }
+        }
+        return true
     }
 
     private fun showPuzzle() {
@@ -183,91 +207,85 @@ class NewPuzzleFragment : Fragment() {
                 private var _yDolta = 0f
                 private var direction = -1
 
-                override fun onTouch(p0: View?, event: MotionEvent?): Boolean {
+                @SuppressLint("ClickableViewAccessibility")
+                override fun onTouch(view: View?, event: MotionEvent?): Boolean {
                     when (event!!.action) {
 
                         MotionEvent.ACTION_DOWN -> {
-                            println("mmb down")
-                            // println("mmb x= ${event.x} y= ${event.y} raw x= ${event.rawX} y=${event.rawY}")
-                            //println("mmb x= ${p0?.x} y= ${p0?.y}")
-                            //println("mmb x ${p0!!.x - event.rawX} y ${p0.y - event.rawY}")
-                            _xDelta = p0!!.x - event.rawX
-                            _yDelta = p0.y - event.rawY
+                            _xDelta = view!!.x - event.rawX
+                            _yDelta = view.y - event.rawY
                             _xDolta = event.rawX
                             _yDolta = event.rawY
-                            p0.bringToFront()
+                            view.bringToFront()
                         }
+
                         MotionEvent.ACTION_MOVE -> {
-                            println("mmb move")
-                            //println("mmb dolta $_xDolta  $_yDolta")
-                            // println("mmb ${abs(_xDolta - event.rawX)}  ${abs(_yDolta - event.rawY)}")
-                            //  println("mmb ${abs(_xDolta - event.rawX)}  ${abs(_yDolta - event.rawY)}")
+                            val deltaX = abs(_xDolta - event.rawX)
+                            val deltaY = abs(_yDolta - event.rawY)
+
                             if (direction < 0) {
-                                if (abs(_xDolta - event.rawX) > abs(_yDolta - event.rawY)) {
-                                    if ((_xDolta - event.rawX) < 0) {
-                                        //println("mmb chap kard")
-                                        direction = 3
+                                direction = if (deltaX <= deltaY) {
+                                    if ((_yDolta - event.rawY) < 0) {
+                                        4
                                     } else {
-                                        //println("mmb rast kard")
-                                        direction = 1
+                                        2
                                     }
                                 } else {
-                                    if ((_yDolta - event.rawY) < 0) {
-                                        //println("mmb hava kard")
-                                        direction = 4
+                                    if ((_xDolta - event.rawX) < 0) {
+                                        3
                                     } else {
-                                        // println("mmb zamin kard")
-                                        direction = 2
+                                        1
                                     }
                                 }
                             }
 
+                            val tile = view as PuzzleTile
 
-                            println("mmb ${p0!!.x} ${p0.y}")
-
-                            if (direction == 1 || direction == 3) {
-                                if (abs(_xDolta - event.rawX) < p0.width) {
-                                    p0!!.animate()
-                                        .x(event.rawX + _xDelta)
-                                        .setDuration(0)
-                                        .start()
+                            when (direction) {
+                                1 -> {
+                                    if (deltaX < tile.width && tile.canMoveLeft) {
+                                        view.animate()
+                                            .x(event.rawX + _xDelta)
+                                            .start()
+                                    }
                                 }
 
-                            } else {
-                                if (abs(_yDolta - event.rawY) < p0.height) {
-                                    p0!!.animate()
-                                        .y(event.rawY + _yDelta)
-                                        .setDuration(0)
-                                        .start()
+                                3 -> {
+                                    if (deltaX > tile.width && tile.canMoveRight) {
+                                        if (deltaX < tile.width && tile.canMoveLeft) {
+                                            view.animate()
+                                                .x(event.rawX + _xDelta)
+                                                .start()
+                                        }
+                                    }
+                                }
+
+                                2 -> {
+                                    if (deltaY < tile.height && tile.canMoveTop) {
+                                        view.animate()
+                                            .y(event.rawY + _yDelta)
+                                            .start()
+                                    }
+                                }
+                                else -> {
+                                    if (deltaY < tile.height && tile.canMoveBottom) {
+                                        view.animate()
+                                            .y(event.rawY + _yDelta)
+                                            .start()
+                                    }
                                 }
                             }
                         }
+
                         MotionEvent.ACTION_UP -> {
 
-                            val tile = p0 as PuzzleTile
-                            println("mmb ${p0.x} ${p0.y}")
-                            p0!!.animate()
+                            val tile = view as PuzzleTile
+
+                            view.animate()
                                 .x(tile.currentPoint!!.x)
                                 .y(tile.currentPoint!!.y)
-                                //.setDuration(400)
-                                //.rotationBy(360f)
                                 .start()
 
-                            //tile.x=tile.currentPoint!!.x
-                            //tile.y=tile.currentPoint!!.y
-                            println("mmb up")
-                            println("mmb ${p0.x} ${p0.y}")
-                            println("mmb ${tile.currentPoint!!.x} ${tile.currentPoint!!.y}")
-                            when (direction - 20) {
-                                1 -> Toast.makeText(requireContext(), "chap", Toast.LENGTH_SHORT)
-                                    .show()
-                                2 -> Toast.makeText(requireContext(), "hava", Toast.LENGTH_SHORT)
-                                    .show()
-                                3 -> Toast.makeText(requireContext(), "rast", Toast.LENGTH_SHORT)
-                                    .show()
-                                4 -> Toast.makeText(requireContext(), "bottom", Toast.LENGTH_SHORT)
-                                    .show()
-                            }
                             direction = -1
                         }
                         else -> return false
