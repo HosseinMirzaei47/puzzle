@@ -3,16 +3,19 @@ package com.example.puzzleapp.ui
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.PointF
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.puzzleapp.databinding.FragmentNewPuzzleBinding
@@ -21,7 +24,6 @@ import com.example.puzzleapp.utils.Settings
 import com.example.puzzleapp.utils.getBitmapPositionInsideImageView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -33,18 +35,18 @@ import kotlin.math.sqrt
 class NewPuzzleFragment : Fragment() {
 
     private lateinit var binding: FragmentNewPuzzleBinding
-
     private val args: NewPuzzleFragmentArgs by navArgs()
 
     @Inject
     lateinit var settings: Settings
+    private lateinit var navigationDelay: CountDownTimer
+    private lateinit var previewTimer: CountDownTimer
 
     private val pieceNumbers by lazy {
         args.difficulty
     }
     private val correctItemsIds = mutableSetOf<Int>()
     private val puzzleTiles = arrayListOf<PuzzleTile>()
-    private var firstSelectedPiecePosition = Int.MIN_VALUE
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,10 +75,7 @@ class NewPuzzleFragment : Fragment() {
                         val imageToSplit =
                             BitmapFactory.decodeResource(resources, puzzleSrc)
                         binding.imageSrc = imageToSplit
-                        delay(1000)
-                        splitImage(imageToSplit, pieceNumbers)
-
-
+                        createPreviewCountDown(imageToSplit)
                     }
                 } else if (srcType == Settings.TYPE_CUSTOM) {
                     settings.puzzleSrcPath.collect { puzzleSrc ->
@@ -85,6 +84,27 @@ class NewPuzzleFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private suspend fun createPreviewCountDown(imageToSplit: Bitmap) {
+        withContext(Dispatchers.Main) { binding.progressAnimation.visibility = View.GONE }
+        viewLifecycleOwner.lifecycleScope.launch {
+            previewTimer = object : CountDownTimer(3000, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    val previewTimer = "Preview timer: ${(millisUntilFinished / 1000)}"
+                    binding.tvCountDown.text = previewTimer
+                }
+
+                override fun onFinish() {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        binding.isPlaying = true
+                        binding.previewVisibility = View.GONE
+                        splitImage(imageToSplit, pieceNumbers)
+                    }
+                }
+            }
+            previewTimer.start()
         }
     }
 
@@ -147,7 +167,10 @@ class NewPuzzleFragment : Fragment() {
         puzzleTiles.forEachIndexed { _, puzzleTiles ->
             listOfPoints.add(puzzleTiles.correctPoint)
         }
-        puzzleTiles.shuffle()
+        val previousFist = puzzleTiles[0]
+        while (puzzleTiles[0] == previousFist) {
+            puzzleTiles.shuffle()
+        }
         puzzleTiles.forEachIndexed { index, puzzleTiles ->
             puzzleTiles.currentPoint = listOfPoints[index]
             puzzleTiles.x = listOfPoints[index].x
@@ -157,6 +180,12 @@ class NewPuzzleFragment : Fragment() {
             puzzleTiles.canMoveRight = canMove(index, DIRECTION_RIGHT, pieceNumbers)
             puzzleTiles.canMoveBottom = canMove(index, DIRECTION_BOTTOM, pieceNumbers)
             puzzleTiles.position = index
+        }
+        (0 until puzzleTiles.size).forEach { index ->
+            val tile = puzzleTiles[index]
+            if (tile.position == tile.correctPosition) {
+                correctItemsIds.add(tile.correctPosition)
+            }
         }
 
         withContext(Dispatchers.Main) {
@@ -182,98 +211,56 @@ class NewPuzzleFragment : Fragment() {
     }
 
     fun performMovementAction(draggedTile: PuzzleTile, direction: Int) {
+        val tileToBeReplaced: PuzzleTile?
+
         when (direction) {
             DIRECTION_LEFT -> {
                 if (!draggedTile.canMoveLeft) {
                     return
                 }
-                val tileToBeReplaced = puzzleTiles[draggedTile.position - 1]
-
+                tileToBeReplaced = puzzleTiles[draggedTile.position - 1]
                 replacePieces(draggedTile, tileToBeReplaced)
-
-                tileToBeReplaced.animate()
-                    .x(tileToBeReplaced.currentPoint!!.x)
-                    .y(tileToBeReplaced.currentPoint!!.y)
-                    .setDuration(400)
-                    .rotationBy(360f)
-                    .start()
-
-                draggedTile.animate()
-                    .x(draggedTile.currentPoint!!.x)
-                    .y(draggedTile.currentPoint!!.y)
-                    .setDuration(400)
-                    .start()
             }
 
             DIRECTION_RIGHT -> {
                 if (!draggedTile.canMoveRight) {
                     return
                 }
-                val tileToBeReplaced = puzzleTiles[draggedTile.position + 1]
-
+                tileToBeReplaced = puzzleTiles[draggedTile.position + 1]
                 replacePieces(draggedTile, tileToBeReplaced)
-
-                tileToBeReplaced.animate()
-                    .x(tileToBeReplaced.currentPoint!!.x)
-                    .y(tileToBeReplaced.currentPoint!!.y)
-                    .setDuration(400)
-                    .rotationBy(360f)
-                    .start()
-
-                draggedTile.animate()
-                    .x(draggedTile.currentPoint!!.x)
-                    .y(draggedTile.currentPoint!!.y)
-                    .setDuration(400)
-                    .start()
             }
 
             DIRECTION_TOP -> {
                 if (!draggedTile.canMoveTop) {
                     return
                 }
-                val tileToBeReplaced =
+                tileToBeReplaced =
                     puzzleTiles[draggedTile.position - sqrt(pieceNumbers.toDouble()).toInt()]
-
                 replacePieces(draggedTile, tileToBeReplaced)
-
-                tileToBeReplaced.animate()
-                    .x(tileToBeReplaced.currentPoint!!.x)
-                    .y(tileToBeReplaced.currentPoint!!.y)
-                    .setDuration(400)
-                    .rotationBy(360f)
-                    .start()
-
-                draggedTile.animate()
-                    .x(draggedTile.currentPoint!!.x)
-                    .y(draggedTile.currentPoint!!.y)
-                    .setDuration(400)
-                    .start()
             }
 
-            DIRECTION_BOTTOM -> {
+            else -> {
                 if (!draggedTile.canMoveBottom) {
                     return
                 }
-                val tileToBeReplaced =
+                tileToBeReplaced =
                     puzzleTiles[draggedTile.position + sqrt(pieceNumbers.toDouble()).toInt()]
-
                 replacePieces(draggedTile, tileToBeReplaced)
-
-                tileToBeReplaced.animate()
-                    .x(tileToBeReplaced.currentPoint!!.x)
-                    .y(tileToBeReplaced.currentPoint!!.y)
-                    .setDuration(1400)
-                    .rotationBy(360f)
-                    .alphaBy(1f)
-                    .start()
-
-                draggedTile.animate()
-                    .x(draggedTile.currentPoint!!.x)
-                    .y(draggedTile.currentPoint!!.y)
-                    .setDuration(1400)
-                    .start()
             }
         }
+
+        tileToBeReplaced.animate()
+            .x(tileToBeReplaced.currentPoint!!.x)
+            .y(tileToBeReplaced.currentPoint!!.y)
+            .setDuration(400)
+            .rotationBy(360f)
+            .start()
+
+        draggedTile.animate()
+            .x(draggedTile.currentPoint!!.x)
+            .y(draggedTile.currentPoint!!.y)
+            .setDuration(400)
+            .start()
     }
 
     private fun replacePieces(
@@ -412,6 +399,8 @@ class NewPuzzleFragment : Fragment() {
                 }
             })
         }
+        binding.simpleChronometer.base = SystemClock.elapsedRealtime()
+        binding.simpleChronometer.start()
     }
 
     private fun checkResult(
@@ -425,26 +414,63 @@ class NewPuzzleFragment : Fragment() {
             id1 == draggedTile.position
         ) {
             correctItemsIds.add(id1)
-            println("jalil if1")
         } else {
             correctItemsIds.remove(id1)
-            println("jalil if2")
         }
 
         if (
             id2 == tileToBeReplaced.position
         ) {
             correctItemsIds.add(id2)
-            println("jalil if3")
         } else {
             correctItemsIds.remove(id2)
-            println("jalil if4")
         }
 
         if (correctItemsIds.size > pieceNumbers - 2) {
-            Toast.makeText(requireContext(), "you won", Toast.LENGTH_SHORT).show()
+            navigateToCongratsFragment()
         }
 
+    }
+
+    private fun navigateToCongratsFragment() {
+        binding.simpleChronometer.stop()
+        showConfetti()
+
+        navigationDelay = object : CountDownTimer(3000, 50) {
+            override fun onTick(millisUntilFinished: Long) {
+            }
+
+            override fun onFinish() {
+                val duration = binding.simpleChronometer.text.removePrefix("Time Running - ")
+                findNavController().navigate(
+                    NewPuzzleFragmentDirections.actionNewPuzzleFragmentToCongratsFragment(
+                        duration.toString()
+                    )
+                )
+            }
+        }
+        navigationDelay.start()
+    }
+
+    private fun showConfetti() {
+        binding.newPuzzleFragmentConfetti.build()
+            .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA)
+            .setDirection(0.0, 359.0)
+            .setSpeed(2f, 10f)
+            .setFadeOutEnabled(true)
+            .setTimeToLive(2000L)
+            .setPosition(+60f, binding.newPuzzleFragmentConfetti.width + 50f, -50f, 100f)
+            .streamFor(300, 3000L)
+    }
+
+    override fun onDestroy() {
+        try {
+            previewTimer.cancel()
+            navigationDelay.cancel()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        super.onDestroy()
     }
 
     companion object {
