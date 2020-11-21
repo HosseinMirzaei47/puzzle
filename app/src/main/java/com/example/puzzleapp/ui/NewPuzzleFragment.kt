@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -133,11 +134,7 @@ class NewPuzzleFragment : Fragment() {
                             pieceHeight
                         ),
                         pieceWidth.toFloat(),
-                        pieceHeight.toFloat(),
-                        canMove(id, 1, pieceNumbers),
-                        canMove(id, 2, pieceNumbers),
-                        canMove(id, 3, pieceNumbers),
-                        canMove(id, 4, pieceNumbers),
+                        pieceHeight.toFloat()
                     )
                 )
                 xCoord += pieceWidth
@@ -150,12 +147,18 @@ class NewPuzzleFragment : Fragment() {
             listOfPoints.add(puzzleTiles.correctPoint)
         }
 
-        listOfPoints.shuffle()
+        //listOfPoints.shuffle()
+        puzzleTiles.shuffle()
+
 
         puzzleTiles.forEachIndexed { index, puzzleTiles ->
             puzzleTiles.currentPoint = listOfPoints[index]
             puzzleTiles.x = listOfPoints[index].x
             puzzleTiles.y = listOfPoints[index].y
+            puzzleTiles.canMoveLeft = canMove(index, 1, pieceNumbers)
+            puzzleTiles.canMoveTop = canMove(index, 2, pieceNumbers)
+            puzzleTiles.canMoveRight = canMove(index, 3, pieceNumbers)
+            puzzleTiles.canMoveBottom = canMove(index, 4, pieceNumbers)
         }
 
         withContext(Dispatchers.Main) {
@@ -172,7 +175,7 @@ class NewPuzzleFragment : Fragment() {
             }
 
         } else if (direction == 2) {
-            if (index > rows) {
+            if (index < rows) {
                 return false
             }
 
@@ -182,7 +185,7 @@ class NewPuzzleFragment : Fragment() {
             }
 
         } else if (direction == 4) {
-            if (index > (pieceNumbers - rows)) {
+            if (index >= (pieceNumbers - rows)) {
                 return false
             }
         }
@@ -243,36 +246,44 @@ class NewPuzzleFragment : Fragment() {
 
                             when (direction) {
                                 1 -> {
-                                    if (deltaX < tile.width && tile.canMoveLeft) {
+                                    if (deltaX <= tile.width && tile.canMoveLeft) {
                                         view.animate()
                                             .x(event.rawX + _xDelta)
+                                            .setDuration(0)
                                             .start()
                                     }
                                 }
 
                                 3 -> {
-                                    if (deltaX > tile.width && tile.canMoveRight) {
-                                        if (deltaX < tile.width && tile.canMoveLeft) {
-                                            view.animate()
-                                                .x(event.rawX + _xDelta)
-                                                .start()
-                                        }
+                                    if (deltaX <= tile.width && tile.canMoveRight) {
+                                        view.animate()
+                                            .x(event.rawX + _xDelta)
+                                            .setDuration(0)
+                                            .start()
+
                                     }
                                 }
 
                                 2 -> {
-                                    if (deltaY < tile.height && tile.canMoveTop) {
+                                    if (deltaY <= tile.height && tile.canMoveTop) {
                                         view.animate()
                                             .y(event.rawY + _yDelta)
+                                            .setDuration(0)
+                                            .start()
+                                    }
+                                }
+                                4 -> {
+                                    if (deltaY <= tile.height && tile.canMoveBottom) {
+                                        view.animate()
+                                            .y(event.rawY + _yDelta)
+                                            .setDuration(0)
+
                                             .start()
                                     }
                                 }
                                 else -> {
-                                    if (deltaY < tile.height && tile.canMoveBottom) {
-                                        view.animate()
-                                            .y(event.rawY + _yDelta)
-                                            .start()
-                                    }
+                                    Toast.makeText(requireContext(), "ridi", Toast.LENGTH_SHORT)
+                                        .show()
                                 }
                             }
                         }

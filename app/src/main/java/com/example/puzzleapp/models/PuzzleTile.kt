@@ -11,11 +11,11 @@ class PuzzleTile(
     val correctPoint: PointF,
     val bitmap: Bitmap,
     val width: Float,
-    val height: Float,
-    var canMoveLeft: Boolean = false,
-    var canMoveTop: Boolean = false,
-    var canMoveRight: Boolean = false,
-    var canMoveBottom: Boolean = false
+    val height: Float
 ) : AppCompatImageView(context) {
     var currentPoint: PointF? = null
+    var canMoveLeft: Boolean = false
+    var canMoveTop: Boolean = false
+    var canMoveRight: Boolean = false
+    var canMoveBottom: Boolean = false
 }
