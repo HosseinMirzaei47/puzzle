@@ -7,7 +7,7 @@ import androidx.appcompat.widget.AppCompatImageView
 
 class PuzzleTile(
     context: Context,
-    val idIndex: Int,
+    val correctPosition: Int,
     val correctPoint: PointF,
     val bitmap: Bitmap,
     val width: Float,
@@ -18,4 +18,5 @@ class PuzzleTile(
     var canMoveTop: Boolean = false
     var canMoveRight: Boolean = false
     var canMoveBottom: Boolean = false
+    var position = -1
 }

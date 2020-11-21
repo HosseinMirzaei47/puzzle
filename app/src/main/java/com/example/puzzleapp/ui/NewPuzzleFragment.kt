@@ -32,18 +32,19 @@ import kotlin.math.sqrt
 @AndroidEntryPoint
 class NewPuzzleFragment : Fragment() {
 
-    @Inject
-    lateinit var settings: Settings
+    private lateinit var binding: FragmentNewPuzzleBinding
 
     private val args: NewPuzzleFragmentArgs by navArgs()
 
-    private lateinit var binding: FragmentNewPuzzleBinding
+    @Inject
+    lateinit var settings: Settings
 
-    private val difficulty by lazy {
+    private val pieceNumbers by lazy {
         args.difficulty
     }
-
+    private val correctItemsIds = mutableSetOf<Int>()
     private val puzzleTiles = arrayListOf<PuzzleTile>()
+    private var firstSelectedPiecePosition = Int.MIN_VALUE
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,7 +74,7 @@ class NewPuzzleFragment : Fragment() {
                             BitmapFactory.decodeResource(resources, puzzleSrc)
                         binding.imageSrc = imageToSplit
                         delay(1000)
-                        splitImage(imageToSplit, difficulty)
+                        splitImage(imageToSplit, pieceNumbers)
 
 
                     }
@@ -146,156 +147,262 @@ class NewPuzzleFragment : Fragment() {
         puzzleTiles.forEachIndexed { _, puzzleTiles ->
             listOfPoints.add(puzzleTiles.correctPoint)
         }
-
-        //listOfPoints.shuffle()
         puzzleTiles.shuffle()
-
-
         puzzleTiles.forEachIndexed { index, puzzleTiles ->
             puzzleTiles.currentPoint = listOfPoints[index]
             puzzleTiles.x = listOfPoints[index].x
             puzzleTiles.y = listOfPoints[index].y
-            puzzleTiles.canMoveLeft = canMove(index, 1, pieceNumbers)
-            puzzleTiles.canMoveTop = canMove(index, 2, pieceNumbers)
-            puzzleTiles.canMoveRight = canMove(index, 3, pieceNumbers)
-            puzzleTiles.canMoveBottom = canMove(index, 4, pieceNumbers)
+            puzzleTiles.canMoveLeft = canMove(index, DIRECTION_LEFT, pieceNumbers)
+            puzzleTiles.canMoveTop = canMove(index, DIRECTION_TOP, pieceNumbers)
+            puzzleTiles.canMoveRight = canMove(index, DIRECTION_RIGHT, pieceNumbers)
+            puzzleTiles.canMoveBottom = canMove(index, DIRECTION_BOTTOM, pieceNumbers)
+            puzzleTiles.position = index
         }
 
         withContext(Dispatchers.Main) {
             showPuzzle()
         }
-
     }
 
     private fun canMove(index: Int, direction: Int, pieceNumbers: Int): Boolean {
         val rows = sqrt(pieceNumbers.toDouble()).toInt()
-        if (direction == 1) {
-            if (index % rows == 0) {
-                return false
-            }
+        if (direction == DIRECTION_LEFT) {
+            if (index % rows == 0) return false
 
-        } else if (direction == 2) {
-            if (index < rows) {
-                return false
-            }
+        } else if (direction == DIRECTION_TOP) {
+            if (index < rows) return false
 
-        } else if (direction == 3) {
-            if ((index + 1) % rows == 0) {
-                return false
-            }
+        } else if (direction == DIRECTION_RIGHT) {
+            if ((index + 1) % rows == 0) return false
 
-        } else if (direction == 4) {
-            if (index >= (pieceNumbers - rows)) {
-                return false
-            }
+        } else if (direction == DIRECTION_BOTTOM) {
+            if (index >= (pieceNumbers - rows)) return false
         }
         return true
     }
 
+    fun performMovementAction(draggedTile: PuzzleTile, direction: Int) {
+        when (direction) {
+            DIRECTION_LEFT -> {
+                if (!draggedTile.canMoveLeft) {
+                    return
+                }
+                val tileToBeReplaced = puzzleTiles[draggedTile.position - 1]
+
+                replacePieces(draggedTile, tileToBeReplaced)
+
+                tileToBeReplaced.animate()
+                    .x(tileToBeReplaced.currentPoint!!.x)
+                    .y(tileToBeReplaced.currentPoint!!.y)
+                    .setDuration(400)
+                    .rotationBy(360f)
+                    .start()
+
+                draggedTile.animate()
+                    .x(draggedTile.currentPoint!!.x)
+                    .y(draggedTile.currentPoint!!.y)
+                    .setDuration(400)
+                    .start()
+            }
+
+            DIRECTION_RIGHT -> {
+                if (!draggedTile.canMoveRight) {
+                    return
+                }
+                val tileToBeReplaced = puzzleTiles[draggedTile.position + 1]
+
+                replacePieces(draggedTile, tileToBeReplaced)
+
+                tileToBeReplaced.animate()
+                    .x(tileToBeReplaced.currentPoint!!.x)
+                    .y(tileToBeReplaced.currentPoint!!.y)
+                    .setDuration(400)
+                    .rotationBy(360f)
+                    .start()
+
+                draggedTile.animate()
+                    .x(draggedTile.currentPoint!!.x)
+                    .y(draggedTile.currentPoint!!.y)
+                    .setDuration(400)
+                    .start()
+            }
+
+            DIRECTION_TOP -> {
+                if (!draggedTile.canMoveTop) {
+                    return
+                }
+                val tileToBeReplaced =
+                    puzzleTiles[draggedTile.position - sqrt(pieceNumbers.toDouble()).toInt()]
+
+                replacePieces(draggedTile, tileToBeReplaced)
+
+                tileToBeReplaced.animate()
+                    .x(tileToBeReplaced.currentPoint!!.x)
+                    .y(tileToBeReplaced.currentPoint!!.y)
+                    .setDuration(400)
+                    .rotationBy(360f)
+                    .start()
+
+                draggedTile.animate()
+                    .x(draggedTile.currentPoint!!.x)
+                    .y(draggedTile.currentPoint!!.y)
+                    .setDuration(400)
+                    .start()
+            }
+
+            DIRECTION_BOTTOM -> {
+                if (!draggedTile.canMoveBottom) {
+                    return
+                }
+                val tileToBeReplaced =
+                    puzzleTiles[draggedTile.position + sqrt(pieceNumbers.toDouble()).toInt()]
+
+                replacePieces(draggedTile, tileToBeReplaced)
+
+                tileToBeReplaced.animate()
+                    .x(tileToBeReplaced.currentPoint!!.x)
+                    .y(tileToBeReplaced.currentPoint!!.y)
+                    .setDuration(1400)
+                    .rotationBy(360f)
+                    .alphaBy(1f)
+                    .start()
+
+                draggedTile.animate()
+                    .x(draggedTile.currentPoint!!.x)
+                    .y(draggedTile.currentPoint!!.y)
+                    .setDuration(1400)
+                    .start()
+            }
+        }
+    }
+
+    private fun replacePieces(
+        draggedTile: PuzzleTile,
+        tileToBeReplaced: PuzzleTile
+    ) {
+        puzzleTiles[tileToBeReplaced.position] = draggedTile
+        puzzleTiles[draggedTile.position] = tileToBeReplaced
+
+        val tempPositionHolder = draggedTile.position
+        draggedTile.position = tileToBeReplaced.position
+        tileToBeReplaced.position = tempPositionHolder
+
+        val tempPointHolder = draggedTile.currentPoint
+        draggedTile.currentPoint = tileToBeReplaced.currentPoint
+        tileToBeReplaced.currentPoint = tempPointHolder
+
+        val tempCanMoveLeftHolder = draggedTile.canMoveLeft
+        draggedTile.canMoveLeft = tileToBeReplaced.canMoveLeft
+        tileToBeReplaced.canMoveLeft = tempCanMoveLeftHolder
+
+        val tempCanMoveTopHolder = draggedTile.canMoveTop
+        draggedTile.canMoveTop = tileToBeReplaced.canMoveTop
+        tileToBeReplaced.canMoveTop = tempCanMoveTopHolder
+
+        val tempCanMoveRightHolder = draggedTile.canMoveRight
+        draggedTile.canMoveRight = tileToBeReplaced.canMoveRight
+        tileToBeReplaced.canMoveRight = tempCanMoveRightHolder
+
+        val tempCanMoveBottomHolder = draggedTile.canMoveBottom
+        draggedTile.canMoveBottom = tileToBeReplaced.canMoveBottom
+        tileToBeReplaced.canMoveBottom = tempCanMoveBottomHolder
+
+        checkResult(draggedTile, tileToBeReplaced)
+
+    }
+
     private fun showPuzzle() {
-        puzzleTiles.forEach {
+        puzzleTiles.forEach { puzzleTile ->
             val params = RelativeLayout.LayoutParams(
-                it.width.toInt(),
-                it.height.toInt()
+                puzzleTile.width.toInt(),
+                puzzleTile.height.toInt()
             )
 
-            Glide.with(requireActivity()).load(it.bitmap).into(it)
-            binding.layout.addView(it, params)
+            Glide.with(requireActivity()).load(puzzleTile.bitmap).into(puzzleTile)
+            binding.layout.addView(puzzleTile, params)
 
-            it.setOnTouchListener(object : View.OnTouchListener {
+            puzzleTile.setOnTouchListener(object : View.OnTouchListener {
 
-                private var _xDelta: Float = 0.0f
-                private var _yDelta: Float = 0.0f
-                private var _xDolta = 0f
-                private var _yDolta = 0f
+                private var previousX: Float = 0.0f
+                private var previousY: Float = 0.0f
+                private var deltaX = 0f
+                private var deltaY = 0f
                 private var direction = -1
 
                 @SuppressLint("ClickableViewAccessibility")
                 override fun onTouch(view: View?, event: MotionEvent?): Boolean {
                     when (event!!.action) {
-
                         MotionEvent.ACTION_DOWN -> {
-                            _xDelta = view!!.x - event.rawX
-                            _yDelta = view.y - event.rawY
-                            _xDolta = event.rawX
-                            _yDolta = event.rawY
+                            previousX = view!!.x - event.rawX
+                            previousY = view.y - event.rawY
+                            deltaX = event.rawX
+                            deltaY = event.rawY
                             view.bringToFront()
                         }
 
                         MotionEvent.ACTION_MOVE -> {
-                            val deltaX = abs(_xDolta - event.rawX)
-                            val deltaY = abs(_yDolta - event.rawY)
+                            val deltaX = abs(deltaX - event.rawX)
+                            val deltaY = abs(deltaY - event.rawY)
 
                             if (direction < 0) {
                                 direction = if (deltaX <= deltaY) {
-                                    if ((_yDolta - event.rawY) < 0) {
-                                        4
+                                    if ((this.deltaY - event.rawY) < 0) {
+                                        DIRECTION_BOTTOM
                                     } else {
-                                        2
+                                        DIRECTION_TOP
                                     }
                                 } else {
-                                    if ((_xDolta - event.rawX) < 0) {
-                                        3
+                                    if ((this.deltaX - event.rawX) < 0) {
+                                        DIRECTION_RIGHT
                                     } else {
-                                        1
+                                        DIRECTION_LEFT
                                     }
                                 }
                             }
 
                             val tile = view as PuzzleTile
-
                             when (direction) {
-                                1 -> {
+                                DIRECTION_LEFT -> {
                                     if (deltaX <= tile.width && tile.canMoveLeft) {
                                         view.animate()
-                                            .x(event.rawX + _xDelta)
+                                            .x(event.rawX + previousX)
                                             .setDuration(0)
                                             .start()
                                     }
                                 }
 
-                                3 -> {
+                                DIRECTION_RIGHT -> {
                                     if (deltaX <= tile.width && tile.canMoveRight) {
                                         view.animate()
-                                            .x(event.rawX + _xDelta)
+                                            .x(event.rawX + previousX)
                                             .setDuration(0)
                                             .start()
 
                                     }
                                 }
 
-                                2 -> {
+                                DIRECTION_TOP -> {
                                     if (deltaY <= tile.height && tile.canMoveTop) {
                                         view.animate()
-                                            .y(event.rawY + _yDelta)
+                                            .y(event.rawY + previousY)
                                             .setDuration(0)
                                             .start()
                                     }
                                 }
-                                4 -> {
+                                DIRECTION_BOTTOM -> {
                                     if (deltaY <= tile.height && tile.canMoveBottom) {
                                         view.animate()
-                                            .y(event.rawY + _yDelta)
+                                            .y(event.rawY + previousY)
                                             .setDuration(0)
-
                                             .start()
                                     }
-                                }
-                                else -> {
-                                    Toast.makeText(requireContext(), "ridi", Toast.LENGTH_SHORT)
-                                        .show()
                                 }
                             }
                         }
 
                         MotionEvent.ACTION_UP -> {
-
                             val tile = view as PuzzleTile
-
-                            view.animate()
-                                .x(tile.currentPoint!!.x)
-                                .y(tile.currentPoint!!.y)
-                                .start()
+                            performMovementAction(tile, direction)
 
                             direction = -1
                         }
@@ -305,5 +412,45 @@ class NewPuzzleFragment : Fragment() {
                 }
             })
         }
+    }
+
+    private fun checkResult(
+        draggedTile: PuzzleTile,
+        tileToBeReplaced: PuzzleTile
+    ) {
+        val id1 = draggedTile.correctPosition
+        val id2 = tileToBeReplaced.correctPosition
+
+        if (
+            id1 == draggedTile.position
+        ) {
+            correctItemsIds.add(id1)
+            println("jalil if1")
+        } else {
+            correctItemsIds.remove(id1)
+            println("jalil if2")
+        }
+
+        if (
+            id2 == tileToBeReplaced.position
+        ) {
+            correctItemsIds.add(id2)
+            println("jalil if3")
+        } else {
+            correctItemsIds.remove(id2)
+            println("jalil if4")
+        }
+
+        if (correctItemsIds.size > pieceNumbers - 2) {
+            Toast.makeText(requireContext(), "you won", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    companion object {
+        const val DIRECTION_LEFT = 1
+        const val DIRECTION_TOP = 2
+        const val DIRECTION_RIGHT = 3
+        const val DIRECTION_BOTTOM = 4
     }
 }
