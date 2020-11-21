@@ -5,8 +5,6 @@ import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.widget.ImageView
 import com.example.puzzleapp.models.JigsawPiece
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -192,12 +190,6 @@ fun splitImage(
             canvas.drawPath(path, border)
 
             // set the resulting bitmap to the piece
-            combinedcanvas.drawBitmap(
-                jigsawPiece,
-                (xCoord - offsetX).toFloat(),
-                (yCoord - offsetY).toFloat(),
-                null
-            )
             piece.setImageBitmap(jigsawPiece)
             pieces.add(piece)
             xCoord += pieceWidth
