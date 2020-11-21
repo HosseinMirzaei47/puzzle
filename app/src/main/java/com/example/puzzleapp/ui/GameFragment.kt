@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +40,6 @@ class GameFragment : Fragment(), OnTouchPuzzleTile {
 
     @Inject
     lateinit var settings: Settings
-    private val controller = Controller()
     private lateinit var navigationDelay: CountDownTimer
     private lateinit var previewTimer: CountDownTimer
 
@@ -86,9 +86,7 @@ class GameFragment : Fragment(), OnTouchPuzzleTile {
                         val imageToSplit =
                             BitmapFactory.decodeResource(resources, puzzleSrc)
                         binding.imageSrc = imageToSplit
-
                         createPreviewCountDown(imageToSplit)
-
                     }
                 } else if (srcType == Settings.TYPE_CUSTOM) {
                     settings.puzzleSrcPath.collect { puzzleSrc ->
@@ -269,6 +267,7 @@ class GameFragment : Fragment(), OnTouchPuzzleTile {
         }
 
         binding.simpleChronometer.format = "Time Running - %s"
+        binding.simpleChronometer.base = SystemClock.elapsedRealtime()
         binding.simpleChronometer.start()
     }
 
