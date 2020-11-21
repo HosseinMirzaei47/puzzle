@@ -54,7 +54,6 @@ class NewPuzzleFragment : Fragment() {
             .apply {
                 lifecycleOwner = viewLifecycleOwner
             }
-
         return binding.root
     }
 
@@ -136,7 +135,7 @@ class NewPuzzleFragment : Fragment() {
         for (x in 0 until rows) {
             var xCoord = 0
             for (y in 0 until cols) {
-                val bitoo = Bitmap.createBitmap(
+                val bitmap = Bitmap.createBitmap(
                     croppedBitmap,
                     xCoord,
                     yCoord,
@@ -144,7 +143,7 @@ class NewPuzzleFragment : Fragment() {
                     pieceHeight
                 )
 
-                val canvas = Canvas(bitoo)
+                val canvas = Canvas(bitmap)
                 val path = Path()
                 path.moveTo(0.1f, 0.1f)
                 path.lineTo(pieceWidth.toFloat(), 1f)
@@ -176,7 +175,7 @@ class NewPuzzleFragment : Fragment() {
                             (xCoord + binding.imageView.left).toFloat(),
                             (yCoord + binding.imageView.top).toFloat()
                         ),
-                        bitoo,
+                        bitmap,
                         pieceWidth.toFloat(),
                         pieceHeight.toFloat()
                     )
@@ -335,8 +334,8 @@ class NewPuzzleFragment : Fragment() {
 
                 private var previousX: Float = 0.0f
                 private var previousY: Float = 0.0f
-                private var deltaX = 0f
-                private var deltaY = 0f
+                private var _xDolta = 0f
+                private var _yDolta = 0f
                 private var direction = -1
 
                 @SuppressLint("ClickableViewAccessibility")
@@ -345,32 +344,34 @@ class NewPuzzleFragment : Fragment() {
                         MotionEvent.ACTION_DOWN -> {
                             previousX = view!!.x - event.rawX
                             previousY = view.y - event.rawY
-                            deltaX = event.rawX
-                            deltaY = event.rawY
+                            _xDolta = event.rawX
+                            _yDolta = event.rawY
                             view.bringToFront()
                         }
 
                         MotionEvent.ACTION_MOVE -> {
-                            val deltaX = abs(deltaX - event.rawX)
-                            val deltaY = abs(deltaY - event.rawY)
+                            val deltaX = abs(_xDolta - event.rawX)
+                            val deltaY = abs(_yDolta - event.rawY)
+
+                            val tile = view as PuzzleTile
+
 
                             if (direction < 0) {
-                                direction = if (deltaX <= deltaY) {
-                                    if ((this.deltaY - event.rawY) < 0) {
-                                        DIRECTION_BOTTOM
-                                    } else {
-                                        DIRECTION_TOP
+                                direction = ditectDirection(deltaX, deltaY, _xDolta, _yDolta, event)
+                            } else {
+                                if (direction == DIRECTION_LEFT || direction == DIRECTION_RIGHT) {
+                                    if (abs(_xDolta - deltaX) < (tile.width / 3)) {
+                                        println("mmb x")
+                                        direction = -1
                                     }
-                                } else {
-                                    if ((this.deltaX - event.rawX) < 0) {
-                                        DIRECTION_RIGHT
-                                    } else {
-                                        DIRECTION_LEFT
+                                } else if (direction == DIRECTION_TOP || direction == DIRECTION_BOTTOM) {
+                                    if (abs(_xDolta - deltaY) < (tile.height / 3)) {
+                                        println("mmb y")
+                                        direction = -1
                                     }
                                 }
                             }
 
-                            val tile = view as PuzzleTile
                             when (direction) {
                                 DIRECTION_LEFT -> {
                                     if (deltaX <= tile.width && tile.canMoveLeft) {
@@ -406,6 +407,13 @@ class NewPuzzleFragment : Fragment() {
                                             .setDuration(0)
                                             .start()
                                     }
+                                }
+                                else -> {
+//                                    view.animate()
+//                                        .x(tile.currentPoint!!.x)
+//                                        .y(tile.currentPoint!!.x)
+//                                        .setDuration(0)
+//                                        .start()
                                 }
                             }
                         }
@@ -473,6 +481,28 @@ class NewPuzzleFragment : Fragment() {
             }
         }
         navigationDelay.start()
+    }
+
+    fun ditectDirection(
+        deltaX: Float,
+        deltaY: Float,
+        _xDolta: Float,
+        _yDolta: Float,
+        event: MotionEvent
+    ): Int {
+        return if (deltaX <= deltaY) {
+            if ((_yDolta - event.rawY) < 0) {
+                DIRECTION_BOTTOM
+            } else {
+                DIRECTION_TOP
+            }
+        } else {
+            if ((_xDolta - event.rawX) < 0) {
+                DIRECTION_RIGHT
+            } else {
+                DIRECTION_LEFT
+            }
+        }
     }
 
     private fun showConfetti() {
