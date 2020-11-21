@@ -1,10 +1,7 @@
 package com.example.puzzleapp.ui
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.PointF
+import android.graphics.*
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.SystemClock
@@ -139,6 +136,38 @@ class NewPuzzleFragment : Fragment() {
         for (x in 0 until rows) {
             var xCoord = 0
             for (y in 0 until cols) {
+                val bitoo = Bitmap.createBitmap(
+                    croppedBitmap,
+                    xCoord,
+                    yCoord,
+                    pieceWidth,
+                    pieceHeight
+                )
+
+                val canvas = Canvas(bitoo)
+                val path = Path()
+                path.moveTo(0.1f, 0.1f)
+                path.lineTo(pieceWidth.toFloat(), 1f)
+                path.lineTo(pieceWidth.toFloat(), pieceHeight.toFloat())
+                path.lineTo(1f, pieceHeight.toFloat())
+                path.close()
+
+
+// draw a white border
+                var border = Paint()
+                border.color = -0x7f000001
+                border.style = Paint.Style.STROKE
+                border.strokeWidth = 10.0f
+                canvas.drawPath(path, border)
+
+                // draw a black border
+                border = Paint()
+                border.color = -0x80000000
+                border.style = Paint.Style.STROKE
+                border.strokeWidth = 5.0f
+                canvas.drawPath(path, border)
+
+
                 puzzleTiles.add(
                     PuzzleTile(
                         requireContext(),
@@ -147,13 +176,7 @@ class NewPuzzleFragment : Fragment() {
                             (xCoord + binding.imageView.left).toFloat(),
                             (yCoord + binding.imageView.top).toFloat()
                         ),
-                        Bitmap.createBitmap(
-                            croppedBitmap,
-                            xCoord,
-                            yCoord,
-                            pieceWidth,
-                            pieceHeight
-                        ),
+                        bitoo,
                         pieceWidth.toFloat(),
                         pieceHeight.toFloat()
                     )

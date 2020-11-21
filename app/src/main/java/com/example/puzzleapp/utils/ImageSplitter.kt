@@ -5,6 +5,8 @@ import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.widget.ImageView
 import com.example.puzzleapp.models.JigsawPiece
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -17,7 +19,7 @@ fun splitImage(
 ): ArrayList<JigsawPiece> {
     val cr = sqrt(piecesNumber.toDouble()).toInt()
 
-    val pieces: ArrayList<JigsawPiece> = ArrayList(piecesNumber)
+    val pieces: ArrayList<JigsawPiece> = ArrayList<JigsawPiece>(piecesNumber)
 
     // Get the scaled bitmap of the source image
     val drawable = imageView.drawable as BitmapDrawable
@@ -41,7 +43,7 @@ fun splitImage(
 
     val combined =
         Bitmap.createBitmap(croppedImageWidth, croppedImageWidth, Bitmap.Config.ARGB_8888)
-    val combinedCanvas = Canvas(combined)
+    val combinedcanvas = Canvas(combined)
 
 
     // Calculate the with and height of the pieces
@@ -190,7 +192,7 @@ fun splitImage(
             canvas.drawPath(path, border)
 
             // set the resulting bitmap to the piece
-            combinedCanvas.drawBitmap(
+            combinedcanvas.drawBitmap(
                 jigsawPiece,
                 (xCoord - offsetX).toFloat(),
                 (yCoord - offsetY).toFloat(),
@@ -247,7 +249,7 @@ fun splitImage1(
 ): Bitmap {
     val cr = sqrt(piecesNumber.toDouble()).toInt()
 
-    val pieces: ArrayList<JigsawPiece> = ArrayList(piecesNumber)
+    val pieces: ArrayList<JigsawPiece> = ArrayList<JigsawPiece>(piecesNumber)
 
     // Get the scaled bitmap of the source image
     val drawable = imageView.drawable as BitmapDrawable
@@ -409,14 +411,14 @@ fun splitImage1(
             var border = Paint()
             border.color = -0x7f000001
             border.style = Paint.Style.STROKE
-            border.strokeWidth = 25.0f
+            border.strokeWidth = 8.0f
             canvas.drawPath(path, border)
 
             // draw a black border
             border = Paint()
             border.color = -0x80000000
             border.style = Paint.Style.STROKE
-            border.strokeWidth = 12.0f
+            border.strokeWidth = 3.0f
             canvas.drawPath(path, border)
 
             // set the resulting bitmap to the piece
