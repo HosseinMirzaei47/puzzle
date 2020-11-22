@@ -4,6 +4,7 @@
     <string name="easy">Easy (2 X 2)</string>
     <string name="normal">Normal (3 X 3)</string>
     <string name="hard">Hard (4 X 4)</string>
+    <string name="dieHard">DieHard (5 X 5)</string>
     <string name="level_fragment_title">Choose difficulty</string>
     <string name="congrats">Yaaay. Congrats! You won!</string>
     <string name="username">Username:</string>

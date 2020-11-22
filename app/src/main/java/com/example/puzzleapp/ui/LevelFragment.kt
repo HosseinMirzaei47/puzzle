@@ -36,6 +36,7 @@ class LevelFragment : Fragment(R.layout.fragment_level) {
         onEasyLevelClick()
         onNormalLevelClick()
         onHardLevelClick()
+        onDieHardLevelClick()
     }
 
     private fun navigateToGameFragment(difficulty: Int) {
@@ -56,12 +57,11 @@ class LevelFragment : Fragment(R.layout.fragment_level) {
                     )
                 )
             }
-
             R.id.typeThree -> {
                 findNavController().navigate(
-                    LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
+                    LevelFragmentDirections.actionLevelFragmentToNewPuzzleFragment(
                         difficulty,
-                        2
+                        0
                     )
                 )
             }
@@ -69,14 +69,6 @@ class LevelFragment : Fragment(R.layout.fragment_level) {
                 findNavController().navigate(
                     LevelFragmentDirections.actionLevelFragmentToJigsawFragment(
                         difficulty
-                    )
-                )
-            }
-            R.id.typeFive -> {
-                findNavController().navigate(
-                    LevelFragmentDirections.actionLevelFragmentToNewPuzzleFragment(
-                        difficulty,
-                        0
                     )
                 )
             }
@@ -94,6 +86,12 @@ class LevelFragment : Fragment(R.layout.fragment_level) {
     private fun onHardLevelClick() {
         binding.levelHardButton.setOnClickListener {
             navigateToGameFragment(Levels.LEVEL_HARD)
+        }
+    }
+
+    private fun onDieHardLevelClick() {
+        binding.levelDieHardButton.setOnClickListener {
+            navigateToGameFragment(Levels.LEVEL_DIE_HARD)
         }
     }
 
