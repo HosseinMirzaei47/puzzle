@@ -38,6 +38,8 @@ class NewPuzzleFragment : Fragment() {
     lateinit var settings: Settings
     private lateinit var navigationDelay: CountDownTimer
     private lateinit var previewTimer: CountDownTimer
+    private var gameIsOver = false
+
 
     private val pieceNumbers by lazy {
         args.difficulty
@@ -151,8 +153,7 @@ class NewPuzzleFragment : Fragment() {
                 path.lineTo(1f, pieceHeight.toFloat())
                 path.close()
 
-
-// draw a white border
+                // draw a white border
                 var border = Paint()
                 border.color = -0x7f000001
                 border.style = Paint.Style.STROKE
@@ -271,18 +272,8 @@ class NewPuzzleFragment : Fragment() {
             }
         }
 
-        tileToBeReplaced.animate()
-            .x(tileToBeReplaced.currentPoint!!.x)
-            .y(tileToBeReplaced.currentPoint!!.y)
-            .setDuration(400)
-            .rotationBy(360f)
-            .start()
-
-        draggedTile.animate()
-            .x(draggedTile.currentPoint!!.x)
-            .y(draggedTile.currentPoint!!.y)
-            .setDuration(400)
-            .start()
+        animateToCorrectPosition(tileToBeReplaced)
+        animateToCorrectPosition(draggedTile)
     }
 
     private fun replacePieces(
@@ -334,47 +325,55 @@ class NewPuzzleFragment : Fragment() {
 
                 private var previousX: Float = 0.0f
                 private var previousY: Float = 0.0f
-                private var _xDolta = 0f
-                private var _yDolta = 0f
+                private var firstRawX = 0f
+                private var firstRawY = 0f
                 private var direction = -1
 
                 @SuppressLint("ClickableViewAccessibility")
                 override fun onTouch(view: View?, event: MotionEvent?): Boolean {
                     when (event!!.action) {
                         MotionEvent.ACTION_DOWN -> {
+                            if (gameIsOver) {
+                                return false
+                            }
                             previousX = view!!.x - event.rawX
                             previousY = view.y - event.rawY
-                            _xDolta = event.rawX
-                            _yDolta = event.rawY
+                            firstRawX = event.rawX
+                            firstRawY = event.rawY
                             view.bringToFront()
                         }
 
                         MotionEvent.ACTION_MOVE -> {
-                            val deltaX = abs(_xDolta - event.rawX)
-                            val deltaY = abs(_yDolta - event.rawY)
+                            val deltaX = abs(firstRawX - event.rawX)
+                            val deltaY = abs(firstRawY - event.rawY)
+                            val rawDeltaX = firstRawX - event.rawX
+                            val rawDeltaY = firstRawY - event.rawY
 
                             val tile = view as PuzzleTile
 
-
                             if (direction < 0) {
-                                direction = ditectDirection(deltaX, deltaY, _xDolta, _yDolta, event)
-                            } else {
-                                if (direction == DIRECTION_LEFT || direction == DIRECTION_RIGHT) {
-                                    if (abs(_xDolta - deltaX) < (tile.width / 3)) {
-                                        println("mmb x")
-                                        direction = -1
-                                    }
-                                } else if (direction == DIRECTION_TOP || direction == DIRECTION_BOTTOM) {
-                                    if (abs(_xDolta - deltaY) < (tile.height / 3)) {
-                                        println("mmb y")
-                                        direction = -1
+                                direction =
+                                    detectDirection(deltaX, deltaY, firstRawX, firstRawY, event)
+                            } else
+                                if (direction != -1) {
+                                    if (direction == DIRECTION_RIGHT || direction == DIRECTION_LEFT) {
+                                        if (abs(firstRawX - event.rawX) < 85) {
+                                            direction = -1
+                                            animateToCorrectPosition(tile)
+                                            return false
+                                        }
+                                    } else {
+                                        if (abs(firstRawY - event.rawY) < 85) {
+                                            direction = -1
+                                            animateToCorrectPosition(tile)
+                                            return false
+                                        }
                                     }
                                 }
-                            }
 
                             when (direction) {
                                 DIRECTION_LEFT -> {
-                                    if (deltaX <= tile.width && tile.canMoveLeft) {
+                                    if (deltaX <= tile.width && tile.canMoveLeft && rawDeltaX > 0) {
                                         view.animate()
                                             .x(event.rawX + previousX)
                                             .setDuration(0)
@@ -383,7 +382,7 @@ class NewPuzzleFragment : Fragment() {
                                 }
 
                                 DIRECTION_RIGHT -> {
-                                    if (deltaX <= tile.width && tile.canMoveRight) {
+                                    if (deltaX <= tile.width && tile.canMoveRight && rawDeltaX < 0) {
                                         view.animate()
                                             .x(event.rawX + previousX)
                                             .setDuration(0)
@@ -393,7 +392,7 @@ class NewPuzzleFragment : Fragment() {
                                 }
 
                                 DIRECTION_TOP -> {
-                                    if (deltaY <= tile.height && tile.canMoveTop) {
+                                    if (deltaY <= tile.height && tile.canMoveTop && rawDeltaY > 0) {
                                         view.animate()
                                             .y(event.rawY + previousY)
                                             .setDuration(0)
@@ -401,27 +400,32 @@ class NewPuzzleFragment : Fragment() {
                                     }
                                 }
                                 DIRECTION_BOTTOM -> {
-                                    if (deltaY <= tile.height && tile.canMoveBottom) {
+                                    if (deltaY <= tile.height && tile.canMoveBottom && rawDeltaY < 0) {
                                         view.animate()
                                             .y(event.rawY + previousY)
                                             .setDuration(0)
                                             .start()
                                     }
                                 }
-                                else -> {
-//                                    view.animate()
-//                                        .x(tile.currentPoint!!.x)
-//                                        .y(tile.currentPoint!!.x)
-//                                        .setDuration(0)
-//                                        .start()
-                                }
                             }
                         }
 
                         MotionEvent.ACTION_UP -> {
                             val tile = view as PuzzleTile
+                            if (direction == DIRECTION_TOP || direction == DIRECTION_BOTTOM) {
+                                if (abs(firstRawY - event.rawY) < tile.height / 4) {
+                                    animateToCorrectPosition(tile)
+                                    direction = -1
+                                    return false
+                                }
+                            } else {
+                                if (abs(firstRawX - event.rawX) < tile.width / 4) {
+                                    animateToCorrectPosition(tile)
+                                    direction = -1
+                                    return false
+                                }
+                            }
                             performMovementAction(tile, direction)
-
                             direction = -1
                         }
                         else -> return false
@@ -432,6 +436,14 @@ class NewPuzzleFragment : Fragment() {
         }
         binding.simpleChronometer.base = SystemClock.elapsedRealtime()
         binding.simpleChronometer.start()
+    }
+
+    fun animateToCorrectPosition(tile: PuzzleTile) {
+        tile.animate()
+            .x(tile.currentPoint!!.x)
+            .y(tile.currentPoint!!.y)
+            .setDuration(100)
+            .start()
     }
 
     private fun checkResult(
@@ -464,12 +476,12 @@ class NewPuzzleFragment : Fragment() {
     }
 
     private fun navigateToCongratsFragment() {
+        gameIsOver = true
         binding.simpleChronometer.stop()
         showConfetti()
 
         navigationDelay = object : CountDownTimer(3000, 50) {
-            override fun onTick(millisUntilFinished: Long) {
-            }
+            override fun onTick(millisUntilFinished: Long) {}
 
             override fun onFinish() {
                 val duration = binding.simpleChronometer.text.removePrefix("Time Running - ")
@@ -483,21 +495,21 @@ class NewPuzzleFragment : Fragment() {
         navigationDelay.start()
     }
 
-    fun ditectDirection(
+    fun detectDirection(
         deltaX: Float,
         deltaY: Float,
-        _xDolta: Float,
-        _yDolta: Float,
+        firstRawX: Float,
+        firstRawY: Float,
         event: MotionEvent
     ): Int {
         return if (deltaX <= deltaY) {
-            if ((_yDolta - event.rawY) < 0) {
+            if ((firstRawY - event.rawY) < 0) {
                 DIRECTION_BOTTOM
             } else {
                 DIRECTION_TOP
             }
         } else {
-            if ((_xDolta - event.rawX) < 0) {
+            if ((firstRawX - event.rawX) < 0) {
                 DIRECTION_RIGHT
             } else {
                 DIRECTION_LEFT
