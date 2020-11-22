@@ -40,34 +40,34 @@ class LevelFragment : Fragment(R.layout.fragment_level) {
 
     private fun navigateToGameFragment(difficulty: Int) {
         when (binding.radioGroup.checkedRadioButtonId) {
-            R.id.typeOne -> {
-                findNavController().navigate(
-                    LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
-                        difficulty,
-                        0
-                    )
-                )
-            }
-            R.id.typeTwo -> {
-                findNavController().navigate(
-                    LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
-                        difficulty,
-                        1
-                    )
-                )
-            }
-            R.id.typeThree -> {
-                findNavController().navigate(
-                    LevelFragmentDirections.actionLevelFragmentToNewPuzzleFragment(
-                        difficulty,
-                        0
-                    )
-                )
-            }
-            R.id.typeFour -> {
+            R.id.jigsawMode -> {
                 findNavController().navigate(
                     LevelFragmentDirections.actionLevelFragmentToJigsawFragment(
                         difficulty
+                    )
+                )
+            }
+            R.id.swipeMode -> {
+                findNavController().navigate(
+                    LevelFragmentDirections.actionLevelFragmentToNewPuzzleFragment(
+                        difficulty,
+                        MODE_SWIPE
+                    )
+                )
+            }
+            R.id.dragMode -> {
+                findNavController().navigate(
+                    LevelFragmentDirections.actionLevelFragmentToNewPuzzleFragment(
+                        difficulty,
+                        MODE_DRAG
+                    )
+                )
+            }
+            R.id.clickMode -> {
+                findNavController().navigate(
+                    LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
+                        difficulty,
+                        MODE_SWIPE
                     )
                 )
             }
@@ -75,7 +75,7 @@ class LevelFragment : Fragment(R.layout.fragment_level) {
                 findNavController().navigate(
                     LevelFragmentDirections.actionLevelFragmentToPuzzleGameFragment(
                         difficulty,
-                        0
+                        MODE_SWIPE
                     )
                 )
             }
@@ -104,6 +104,11 @@ class LevelFragment : Fragment(R.layout.fragment_level) {
         binding.levelEasyButton.setOnClickListener {
             navigateToGameFragment(Levels.LEVEL_EASY)
         }
+    }
+
+    companion object {
+        const val MODE_SWIPE = 0
+        const val MODE_DRAG = 1
     }
 
 }

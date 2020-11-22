@@ -16,11 +16,11 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.puzzleapp.databinding.FragmentGameBinding
-import com.example.puzzleapp.models.PuzzlePiece
+import com.example.puzzleapp.databinding.FragmentPuzzleClickBinding
+import com.example.puzzleapp.models.ClickPuzzlePiece
 import com.example.puzzleapp.utils.ItemTouchHelperDrag
 import com.example.puzzleapp.utils.ItemTouchHelperSwipe
-import com.example.puzzleapp.utils.OnTouchPuzzleTile
+import com.example.puzzleapp.utils.OnTouchPuzzlePiece
 import com.example.puzzleapp.utils.Settings
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -31,10 +31,10 @@ import javax.inject.Inject
 import kotlin.math.sqrt
 
 @AndroidEntryPoint
-class GameFragment : Fragment(), OnTouchPuzzleTile {
+class ClickPuzzleFragment : Fragment(), OnTouchPuzzlePiece {
 
-    private lateinit var binding: FragmentGameBinding
-    private val args: GameFragmentArgs by navArgs()
+    private lateinit var binding: FragmentPuzzleClickBinding
+    private val args: ClickPuzzleFragmentArgs by navArgs()
 
     private lateinit var pieceAdapter: PieceAdapter
 
@@ -44,7 +44,7 @@ class GameFragment : Fragment(), OnTouchPuzzleTile {
     private lateinit var previewTimer: CountDownTimer
 
     private val correctItemsIds = mutableSetOf<Int>()
-    private val puzzlePieces = mutableListOf<PuzzlePiece>()
+    private val puzzlePieces = mutableListOf<ClickPuzzlePiece>()
     private val pieceNumbers by lazy { args.difficulty }
     private val puzzleMode by lazy { args.puzzleMode }
 
@@ -60,7 +60,7 @@ class GameFragment : Fragment(), OnTouchPuzzleTile {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentGameBinding.inflate(
+        binding = FragmentPuzzleClickBinding.inflate(
             inflater, container, false
         ).apply {
             lifecycleOwner = viewLifecycleOwner
@@ -137,7 +137,7 @@ class GameFragment : Fragment(), OnTouchPuzzleTile {
             var xCoord = 0
             for (y in 0 until cols) {
                 puzzlePieces.add(
-                    PuzzlePiece(
+                    ClickPuzzlePiece(
                         id++,
                         Bitmap.createBitmap(
                             scaledBitmap,
@@ -203,7 +203,7 @@ class GameFragment : Fragment(), OnTouchPuzzleTile {
             override fun onFinish() {
                 val duration = binding.simpleChronometer.text.removePrefix("Time Running - ")
                 findNavController().navigate(
-                    GameFragmentDirections.actionGameFragmentToCongratsFragment(
+                    ClickPuzzleFragmentDirections.actionGameFragmentToCongratsFragment(
                         duration.toString()
                     )
                 )
@@ -293,29 +293,23 @@ class GameFragment : Fragment(), OnTouchPuzzleTile {
     }
 
     private fun moveItem(oldPos: Int, newPos: Int) {
-        val temp: PuzzlePiece = puzzlePieces[oldPos]
+        val temp: ClickPuzzlePiece = puzzlePieces[oldPos]
         puzzlePieces[oldPos] = puzzlePieces[newPos]
         puzzlePieces[newPos] = temp
         pieceAdapter.notifyItemChanged(newPos)
         pieceAdapter.notifyItemChanged(oldPos)
-        //recyclerviewAdapter.list= puzzlePieces as ArrayList<PuzzlePiece>
-        //recyclerviewAdapter.notifyItemMoved(oldPos, newPos)
-        //recyclerviewAdapter.submitList(puzzlePieces)
-        //recyclerviewAdapter.notifyDataSetChanged()
     }
 
     /*==========    ON RECYCLER ITEMS TOUCH INTERFACES IMPLEMENTATION      ==========*/
 
-    override fun onMoveTile(oldPos: Int, newPos: Int) {
+    override fun onMovePiece(oldPos: Int, newPos: Int) {
         firstSelectedPiecePosition = oldPos
         compareSelectedPieces(newPos)
-        // moveItem(oldPos, newPos)
     }
 
-    override fun onSwipeTile(oldPos: Int, newPos: Int) {
+    override fun onSwipePiece(oldPos: Int, newPos: Int) {
         firstSelectedPiecePosition = oldPos
         compareSelectedPieces(newPos)
-
     }
 
     override fun onPieceClicked(position: Int, id: Int, view: View) {
@@ -329,7 +323,6 @@ class GameFragment : Fragment(), OnTouchPuzzleTile {
                 view.scaleY = .8f
 
             } else {
-
                 firstSelectedPieceView.scaleX = 1f
                 firstSelectedPieceView.scaleY = 1f
 

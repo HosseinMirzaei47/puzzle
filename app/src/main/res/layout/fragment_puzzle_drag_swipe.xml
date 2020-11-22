@@ -5,7 +5,7 @@
     <data>
 
         <variable
-            name="imageSrc"
+            name="puzzleSrc"
             type="android.graphics.Bitmap" />
 
         <variable
@@ -31,7 +31,7 @@
             android:layout_marginEnd="16dp"
             android:alpha="0.1"
             android:contentDescription="@string/todo"
-            android:loadImage="@{imageSrc}"
+            android:loadImage="@{puzzleSrc}"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="H,4:5"
@@ -83,7 +83,7 @@
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/todo"
-            android:loadImage="@{imageSrc}"
+            android:loadImage="@{puzzleSrc}"
             android:visibility="@{previewVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"

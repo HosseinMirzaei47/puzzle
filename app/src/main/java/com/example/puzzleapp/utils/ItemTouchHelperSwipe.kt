@@ -3,7 +3,7 @@ package com.example.puzzleapp.utils
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-class ItemTouchHelperSwipe(val onSwipeItemListener: OnTouchPuzzleTile, directions: Int) :
+class ItemTouchHelperSwipe(val onSwipeItemListener: OnTouchPuzzlePiece, directions: Int) :
     ItemTouchHelper(object : SimpleCallback(
         directions,
         0
@@ -23,7 +23,7 @@ class ItemTouchHelperSwipe(val onSwipeItemListener: OnTouchPuzzleTile, direction
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            onSwipeItemListener.onSwipeTile(viewHolder.adapterPosition, direction)
+            onSwipeItemListener.onSwipePiece(viewHolder.adapterPosition, direction)
         }
 
         override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
@@ -35,7 +35,7 @@ class ItemTouchHelperSwipe(val onSwipeItemListener: OnTouchPuzzleTile, direction
                     if (fromPos != -1 && toPos != -1
                         && fromPos != toPos
                     ) {
-                        onSwipeItemListener.onSwipeTile(fromPos, toPos)
+                        onSwipeItemListener.onSwipePiece(fromPos, toPos)
                         fromPos = -1
                         toPos = -1
                     }

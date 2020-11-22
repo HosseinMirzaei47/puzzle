@@ -3,7 +3,7 @@ package com.example.puzzleapp.utils
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-class ItemTouchHelperDrag constructor(val onDragAndDrop: OnTouchPuzzleTile) :
+class ItemTouchHelperDrag constructor(val onDragAndDrop: OnTouchPuzzlePiece) :
     ItemTouchHelper(object : SimpleCallback(
         UP or DOWN or RIGHT or LEFT,
         0,
@@ -34,7 +34,7 @@ class ItemTouchHelperDrag constructor(val onDragAndDrop: OnTouchPuzzleTile) :
                         && fromPos != toPos
                     ) {
                         onDragAndDrop.onDragViewHolder(viewholder!!)
-                        onDragAndDrop.onMoveTile(fromPos, toPos)
+                        onDragAndDrop.onMovePiece(fromPos, toPos)
                         fromPos = -1
                         toPos = -1
                     }

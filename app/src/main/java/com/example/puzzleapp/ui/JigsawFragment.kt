@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.SystemClock
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
 import com.example.puzzleapp.databinding.FragmentJigsawBinding
 import com.example.puzzleapp.models.JigsawPiece
 import com.example.puzzleapp.utils.*
@@ -27,9 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.FileInputStream
 import java.io.FileNotFoundException
-import java.lang.ref.WeakReference
 import java.util.*
 import javax.inject.Inject
 
@@ -139,7 +135,7 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
         pieces = pieces.shuffled()
         for (piece in pieces) {
             piece.setOnTouchListener(touchListener)
-           // Glide.with(requireContext()).load(piece.bitmap).into(piece).clearOnDetach()
+            // Glide.with(requireContext()).load(piece.bitmap).into(piece).clearOnDetach()
             binding.layout.addView(piece)
 
             val lParams = piece.layoutParams as RelativeLayout.LayoutParams

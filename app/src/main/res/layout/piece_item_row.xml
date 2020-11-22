@@ -4,8 +4,8 @@
     <data>
 
         <variable
-            name="tile"
-            type="com.example.puzzleapp.models.PuzzlePiece" />
+            name="piece"
+            type="com.example.puzzleapp.models.ClickPuzzlePiece" />
 
     </data>
 
@@ -20,7 +20,7 @@
             android:layout_margin="1dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/todo"
-            android:loadImage="@{tile.bitmap}"
+            android:loadImage="@{piece.bitmap}"
             android:scaleType="fitXY" />
 
     </LinearLayout>

@@ -20,7 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.puzzleapp.R
-import com.example.puzzleapp.databinding.FragmentPuzzlesBinding
+import com.example.puzzleapp.databinding.FragmentHomeBinding
 import com.example.puzzleapp.itemPuzzle
 import com.example.puzzleapp.utils.Settings
 import com.karumi.dexter.Dexter
@@ -39,9 +39,9 @@ import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PuzzlesFragment : Fragment() {
+class HomeFragment : Fragment() {
 
-    private lateinit var binding: FragmentPuzzlesBinding
+    private lateinit var binding: FragmentHomeBinding
 
     @Inject
     lateinit var settings: Settings
@@ -66,7 +66,7 @@ class PuzzlesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentPuzzlesBinding.inflate(
+        binding = FragmentHomeBinding.inflate(
             inflater, container, false
         ).apply {
             lifecycleOwner = viewLifecycleOwner
@@ -107,7 +107,7 @@ class PuzzlesFragment : Fragment() {
                         try {
                             closeFabMenu()
                             findNavController().navigate(
-                                PuzzlesFragmentDirections.actionPuzzlesFragmentToLevelFragment()
+                                HomeFragmentDirections.actionPuzzlesFragmentToLevelFragment()
                             )
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -189,7 +189,7 @@ class PuzzlesFragment : Fragment() {
             storeTypeAndSrc(Settings.TYPE_CUSTOM, currentPhotoPath)
 
             findNavController().navigate(
-                PuzzlesFragmentDirections.actionPuzzlesFragmentToLevelFragment()
+                HomeFragmentDirections.actionPuzzlesFragmentToLevelFragment()
             )
         } else if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK) {
 
@@ -207,7 +207,7 @@ class PuzzlesFragment : Fragment() {
             cursor.close()
 
             storeTypeAndSrc(Settings.TYPE_CUSTOM, picturePath)
-            findNavController().navigate(PuzzlesFragmentDirections.actionPuzzlesFragmentToLevelFragment())
+            findNavController().navigate(HomeFragmentDirections.actionPuzzlesFragmentToLevelFragment())
         }
     }
 

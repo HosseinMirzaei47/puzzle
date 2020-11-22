@@ -4,15 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.puzzleapp.databinding.PieceItemRowBinding
-import com.example.puzzleapp.models.PuzzlePiece
-import com.example.puzzleapp.utils.OnTouchPuzzleTile
+import com.example.puzzleapp.models.ClickPuzzlePiece
+import com.example.puzzleapp.utils.OnTouchPuzzlePiece
 
 class PieceAdapter constructor(
-    private val onTouchPuzzleTile: OnTouchPuzzleTile,
+    private val onTouchPuzzlePiece: OnTouchPuzzlePiece,
     private val itemsAreReplaceable: Boolean
 ) : RecyclerView.Adapter<PuzzlePieceViewHolder>() {
 
-    var pieces = mutableListOf<PuzzlePiece>()
+    var pieces = mutableListOf<ClickPuzzlePiece>()
         set(value) {
             notifyDataSetChanged()
             field = value
@@ -32,7 +32,7 @@ class PieceAdapter constructor(
         val puzzlePiece = pieces[position]
         if (itemsAreReplaceable) {
             holder.itemView.setOnClickListener {
-                onTouchPuzzleTile.onPieceClicked(position, puzzlePiece.id, holder.itemView)
+                onTouchPuzzlePiece.onPieceClicked(position, puzzlePiece.id, holder.itemView)
             }
         }
         holder.bind(puzzlePiece)
@@ -41,30 +41,4 @@ class PieceAdapter constructor(
     override fun getItemCount(): Int {
         return pieces.size
     }
-
-    /*ListAdapter<PuzzlePiece, RecyclerviewAdapter.ViewHolder>(UserItemDiffCallback()) {
-
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-      val layoutInflater = LayoutInflater.from(parent.context)
-      val itemBinding: RecyclerviewTileBinding = RecyclerviewTileBinding.inflate(
-          layoutInflater,
-          parent,
-          false
-      )
-      return ViewHolder(itemBinding)
-  }
-
-  override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-      holder.bind(getItem(position))
-  }
-
-  override fun getItemCount(): Int {
-      val count = super.getItemCount()
-      return when (count) {
-          0 -> 1
-          else -> count
-      }
-  }
-*/
-
 }

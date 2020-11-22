@@ -25,9 +25,9 @@
 
     <fragment
         android:id="@+id/gameFragment"
-        android:name="com.example.puzzleapp.ui.GameFragment"
+        android:name="com.example.puzzleapp.ui.ClickPuzzleFragment"
         android:label="gameFragment"
-        tools:layout="@layout/fragment_game">
+        tools:layout="@layout/fragment_puzzle_click">
 
         <argument
             android:name="difficulty"
@@ -50,9 +50,9 @@
 
     <fragment
         android:id="@+id/puzzlesFragment"
-        android:name="com.example.puzzleapp.ui.PuzzlesFragment"
+        android:name="com.example.puzzleapp.ui.HomeFragment"
         android:label="PuzzlesFragment"
-        tools:layout="@layout/fragment_puzzles">
+        tools:layout="@layout/fragment_home">
 
         <action
             android:id="@+id/action_puzzlesFragment_to_levelFragment"
@@ -107,9 +107,9 @@
         android:label="DragFragment" />
     <fragment
         android:id="@+id/newPuzzleFragment"
-        android:name="com.example.puzzleapp.ui.NewPuzzleFragment"
+        android:name="com.example.puzzleapp.ui.DragAndSwipePuzzleFragment"
         android:label="NewPuzzleFragment"
-        tools:layout="@layout/fragment_new_puzzle">
+        tools:layout="@layout/fragment_puzzle_drag_swipe">
         <argument
             android:name="difficulty"
             app:argType="integer" />
