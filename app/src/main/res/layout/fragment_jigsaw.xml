@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="imageSrc"
+            name="puzzleSrc"
             type="android.graphics.Bitmap" />
 
         <variable
@@ -29,12 +29,12 @@
             android:id="@+id/imageView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_normal"
             android:alpha="0.5"
             android:contentDescription="@string/todo"
-            android:loadImage="@{imageSrc}"
+            android:loadImage="@{puzzleSrc}"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="H,4:5"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,6 +57,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/whiteGlobalBackground"
+            android:textSize="@dimen/text_size_h3"
+            android:textStyle="bold"
             android:visibleOnResult="@{isPlaying}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -82,7 +84,7 @@
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/todo"
-            android:loadImage="@{imageSrc}"
+            android:loadImage="@{puzzleSrc}"
             android:visibility="@{previewVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"

@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,6 +20,7 @@ import com.example.puzzleapp.databinding.FragmentPuzzleDragSwipeBinding
 import com.example.puzzleapp.models.PuzzlePiece
 import com.example.puzzleapp.utils.Settings
 import com.example.puzzleapp.utils.getBitmapPositionInsideImageView
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -39,12 +41,27 @@ class DragAndSwipePuzzleFragment : Fragment() {
     lateinit var settings: Settings
     private lateinit var navigationDelay: CountDownTimer
     private lateinit var previewTimer: CountDownTimer
-    private var gameIsOver = false
 
     private val pieceNumbers by lazy { args.difficulty }
     private val puzzleMode by lazy { args.puzzleMode }
+
     private val correctItemsIds = mutableSetOf<Int>()
     private val puzzlePieces = arrayListOf<PuzzlePiece>()
+
+    private var backPressedMills = -1L
+    private var gameIsOver = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            if (System.currentTimeMillis() - backPressedMills < 2000) {
+                findNavController().navigateUp()
+            } else {
+                backPressedMills = System.currentTimeMillis()
+                Snackbar.make(requireView(), "Press again to exit", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

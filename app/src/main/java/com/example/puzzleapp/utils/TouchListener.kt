@@ -1,12 +1,11 @@
 package com.example.puzzleapp.utils
 
-import android.os.Build
+import android.annotation.SuppressLint
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import androidx.annotation.RequiresApi
 import com.example.puzzleapp.models.JigsawPiece
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -17,6 +16,7 @@ class TouchListener(
     private var xDelta = 0f
     private var yDelta = 0f
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
         val x = motionEvent.rawX
         val y = motionEvent.rawY
@@ -42,7 +42,7 @@ class TouchListener(
             MotionEvent.ACTION_UP -> {
                 val xDiff: Int = kotlin.math.abs(piece.xCoord - lParams.leftMargin)
                 val yDiff: Int = kotlin.math.abs(piece.yCoord - lParams.topMargin)
-                if (xDiff <= tolerance + 150 && yDiff <= tolerance + 150) {
+                if (xDiff <= tolerance + 85 && yDiff <= tolerance + 85) {
                     lParams.leftMargin = piece.xCoord
                     lParams.topMargin = piece.yCoord
                     piece.layoutParams = lParams

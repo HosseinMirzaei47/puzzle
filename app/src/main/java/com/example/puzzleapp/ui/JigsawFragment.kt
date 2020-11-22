@@ -25,7 +25,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.FileNotFoundException
 import java.util.*
 import javax.inject.Inject
 
@@ -84,13 +83,13 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
                 if (srcType == Settings.TYPE_DEFAULT) {
                     settings.puzzleSrcDrawable.collect { puzzleSrc ->
                         imageToSplit = BitmapFactory.decodeResource(resources, puzzleSrc)
-                        binding.imageSrc = imageToSplit
+                        binding.puzzleSrc = imageToSplit
                         createPreviewCountDown()
                     }
                 } else if (srcType == Settings.TYPE_CUSTOM) {
                     settings.puzzleSrcPath.collect { puzzleSrc ->
                         imageToSplit = BitmapFactory.decodeFile(puzzleSrc)
-                        binding.imageSrc = imageToSplit
+                        binding.puzzleSrc = imageToSplit
                         // createPreviewCountDown()
 
                     }
@@ -99,37 +98,10 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
         }
     }
 
-    private fun decodeFile(f: Int): Bitmap? {
-        try {
-            // Decode image size
-            val o = BitmapFactory.Options()
-            o.inJustDecodeBounds = true
-            BitmapFactory.decodeResource(resources, f, o)
-
-            // The new size we want to scale to
-            val REQUIRED_SIZE = 70
-
-            // Find the correct scale value. It should be the power of 2.
-            var scale = 1
-            while (o.outWidth / scale / 2 >= REQUIRED_SIZE &&
-                o.outHeight / scale / 2 >= REQUIRED_SIZE
-            ) {
-                scale *= 2
-            }
-
-            // Decode with inSampleSize
-            val o2 = BitmapFactory.Options()
-            o2.inSampleSize = scale
-            return BitmapFactory.decodeResource(resources, f, o2)
-        } catch (e: FileNotFoundException) {
-        }
-        return null
-    }
-
     private fun createJigsaw() {
         pieces = splitImage(requireContext(), binding.imageView, difficulty)
         val bitmap = splitImage1(requireContext(), binding.imageView, difficulty)
-        binding.imageSrc = bitmap
+        binding.puzzleSrc = bitmap
         val touchListener = TouchListener(this)
 
         pieces = pieces.shuffled()

@@ -95,6 +95,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:checked="true"
                 android:text="@string/jigsaw"
                 android:textColor="@color/whiteGlobalBackground" />
 
@@ -111,7 +112,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:checked="true"
                 android:text="@string/drag_and_drop"
                 android:textColor="@color/whiteGlobalBackground" />
 
