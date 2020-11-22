@@ -3,102 +3,100 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/game_bg">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/levelFragmentTitle"
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/level_fragment_title"
-            android:textColor="@color/teal_700"
-            android:textSize="@dimen/text_size_h1"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/levelEasyButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/levelEasyButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_large"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:backgroundTint="@color/easyLevel"
-            android:text="@string/easy"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/levelNormalButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:targetApi="lollipop" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/levelNormalButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_large"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:backgroundTint="@color/normalLevel"
-            android:text="@string/normal"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/levelHardButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:targetApi="lollipop" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/levelHardButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_large"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:backgroundTint="@color/hardLevel"
-            android:text="@string/hard"
-            android:textAllCaps="false"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/levelFragmentTitle"
-            tools:targetApi="lollipop" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/levelFragmentTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:gravity="center"
+                android:text="@string/level_fragment_title"
+                android:textColor="@color/teal_700"
+                android:textSize="@dimen/text_size_h1"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/levelEasyButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:backgroundTint="@color/easyLevel"
+                android:text="@string/easy"
+                android:textAllCaps="false"
+                tools:targetApi="lollipop" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/levelNormalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:backgroundTint="@color/normalLevel"
+                android:text="@string/normal"
+                android:textAllCaps="false"
+                tools:targetApi="lollipop" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/levelHardButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:backgroundTint="@color/hardLevel"
+                android:text="@string/hard"
+                android:textAllCaps="false"
+                tools:targetApi="lollipop" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/levelDieHardButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:backgroundTint="@color/hardLevel"
+                android:text="@string/dieHard"
+                android:textAllCaps="false"
+                tools:targetApi="lollipop" />
+
+        </LinearLayout>
 
         <RadioGroup
             android:id="@+id/radioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="start"
+            android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/levelHardButton">
+            app:layout_constraintTop_toBottomOf="@id/linearLayout">
 
             <RadioButton
-                android:id="@+id/typeOne"
+                android:id="@+id/typeFour"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/click"
-                android:textColor="@color/whiteGlobalBackground" />
-
-            <RadioButton
-                android:id="@+id/typeTwo"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/drag_and_drop"
+                android:checked="true"
+                android:text="@string/jigsaw"
                 android:textColor="@color/whiteGlobalBackground" />
 
             <RadioButton
@@ -110,20 +108,19 @@
                 android:textColor="@color/whiteGlobalBackground" />
 
             <RadioButton
-                android:id="@+id/typeFour"
+                android:id="@+id/typeTwo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/jigsaw"
+                android:text="@string/drag_and_drop"
                 android:textColor="@color/whiteGlobalBackground" />
 
             <RadioButton
-                android:id="@+id/typeFive"
+                android:id="@+id/typeOne"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:checked="true"
-                android:text="fucking five"
+                android:text="@string/click"
                 android:textColor="@color/whiteGlobalBackground" />
 
         </RadioGroup>
