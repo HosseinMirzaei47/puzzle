@@ -320,6 +320,7 @@ class NewPuzzleFragment : Fragment() {
 
             Glide.with(requireActivity()).load(puzzleTile.bitmap).into(puzzleTile)
             binding.layout.addView(puzzleTile, params)
+            animateToCorrectPosition(puzzleTile)
 
             puzzleTile.setOnTouchListener(object : View.OnTouchListener {
 

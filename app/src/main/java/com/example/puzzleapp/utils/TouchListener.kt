@@ -1,10 +1,12 @@
 package com.example.puzzleapp.utils
 
+import android.os.Build
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import androidx.annotation.RequiresApi
 import com.example.puzzleapp.models.JigsawPiece
 import kotlin.math.pow
 import kotlin.math.sqrt

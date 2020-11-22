@@ -6,15 +6,18 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.SystemClock
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.activity.addCallback
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.example.puzzleapp.databinding.FragmentJigsawBinding
 import com.example.puzzleapp.models.JigsawPiece
 import com.example.puzzleapp.utils.*
@@ -24,6 +27,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.lang.ref.WeakReference
 import java.util.*
 import javax.inject.Inject
 
@@ -71,7 +77,6 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
             previewVisibility = View.VISIBLE
             isPlaying = false
         }
-
         return binding.root
     }
 
@@ -82,8 +87,7 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
             settings.puzzleType.collect { srcType ->
                 if (srcType == Settings.TYPE_DEFAULT) {
                     settings.puzzleSrcDrawable.collect { puzzleSrc ->
-                        imageToSplit =
-                            BitmapFactory.decodeResource(resources, puzzleSrc)
+                        imageToSplit = BitmapFactory.decodeResource(resources, puzzleSrc)
                         binding.imageSrc = imageToSplit
                         createPreviewCountDown()
                     }
@@ -91,12 +95,39 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
                     settings.puzzleSrcPath.collect { puzzleSrc ->
                         imageToSplit = BitmapFactory.decodeFile(puzzleSrc)
                         binding.imageSrc = imageToSplit
-                        createPreviewCountDown()
+                        // createPreviewCountDown()
 
                     }
                 }
             }
         }
+    }
+
+    private fun decodeFile(f: Int): Bitmap? {
+        try {
+            // Decode image size
+            val o = BitmapFactory.Options()
+            o.inJustDecodeBounds = true
+            BitmapFactory.decodeResource(resources, f, o)
+
+            // The new size we want to scale to
+            val REQUIRED_SIZE = 70
+
+            // Find the correct scale value. It should be the power of 2.
+            var scale = 1
+            while (o.outWidth / scale / 2 >= REQUIRED_SIZE &&
+                o.outHeight / scale / 2 >= REQUIRED_SIZE
+            ) {
+                scale *= 2
+            }
+
+            // Decode with inSampleSize
+            val o2 = BitmapFactory.Options()
+            o2.inSampleSize = scale
+            return BitmapFactory.decodeResource(resources, f, o2)
+        } catch (e: FileNotFoundException) {
+        }
+        return null
     }
 
     private fun createJigsaw() {
@@ -108,6 +139,7 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
         pieces = pieces.shuffled()
         for (piece in pieces) {
             piece.setOnTouchListener(touchListener)
+           // Glide.with(requireContext()).load(piece.bitmap).into(piece).clearOnDetach()
             binding.layout.addView(piece)
 
             val lParams = piece.layoutParams as RelativeLayout.LayoutParams
@@ -180,6 +212,9 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
 
     override fun onDestroy() {
         try {
+            pieces.forEachIndexed { index, puzzle ->
+                puzzle.drawable.toBitmap().recycle()
+            }
             previewTimer.cancel()
             navigationDelay.cancel()
         } catch (e: Exception) {

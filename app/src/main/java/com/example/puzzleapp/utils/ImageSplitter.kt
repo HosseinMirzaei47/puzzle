@@ -190,6 +190,7 @@ fun splitImage(
             canvas.drawPath(path, border)
 
             // set the resulting bitmap to the piece
+            //piece.bitmap=jigsawPiece
             piece.setImageBitmap(jigsawPiece)
             pieces.add(piece)
             xCoord += pieceWidth

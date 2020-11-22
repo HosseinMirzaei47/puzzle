@@ -21,7 +21,6 @@ class LevelFragment : Fragment(R.layout.fragment_level) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding = FragmentLevelBinding.inflate(
             inflater, container, false
         ).apply {
