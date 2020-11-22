@@ -72,7 +72,7 @@
                 android:layout_marginStart="@dimen/margin_large"
                 android:layout_marginEnd="@dimen/margin_large"
                 android:layout_marginBottom="@dimen/margin_small"
-                android:backgroundTint="@color/hardLevel"
+                android:backgroundTint="@color/dieHardLevel"
                 android:text="@string/dieHard"
                 android:textAllCaps="false"
                 tools:targetApi="lollipop" />
