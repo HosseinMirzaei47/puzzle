@@ -5,7 +5,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import com.example.puzzleapp.models.JigsawPiece
 
 class TouchListener(
@@ -23,7 +22,6 @@ class TouchListener(
         if (!piece.canMove) {
             return true
         }
-        val lParams = view.layoutParams as RelativeLayout.LayoutParams
         when (motionEvent.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_DOWN -> {
                 previousX = view.x - motionEvent.rawX
