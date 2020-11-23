@@ -91,8 +91,7 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
                     settings.puzzleSrcPath.collect { puzzleSrc ->
                         imageToSplit = BitmapFactory.decodeFile(puzzleSrc)
                         binding.puzzleSrc = imageToSplit
-                        // createPreviewCountDown()
-
+                        createPreviewCountDown()
                     }
                 }
             }
@@ -104,9 +103,12 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
         val bitmap = splitImage1(requireContext(), binding.imageView, difficulty)
         binding.puzzleSrc = bitmap
         val touchListener = TouchListener(this)
-        /** DataBinding needs a little bit of time to set buttons visibility
-         * we perform the operation with 100 delay so that the pieces positions
+        /**
+         * DataBinding needs a little bit of time to set buttons in the layout.
+         *
+         * We perform the constrainting operation with 100 delay so that the pieces positions
          * on the screen that are dependent on buttons dimensions are set.
+         *
          * **/
         delay(100)
         pieces = pieces.shuffled()
