@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.pow
@@ -77,6 +78,8 @@ class DragAndSwipePuzzleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setOnHintClicks()
+
         getAndDisplayPuzzle()
     }
 
@@ -249,7 +252,7 @@ class DragAndSwipePuzzleFragment : Fragment() {
         return true
     }
 
-    fun performMovementAction(draggedPiece: PuzzlePiece, direction: Int) {
+    private fun performMovementAction(draggedPiece: PuzzlePiece, direction: Int) {
         val pieceToBeReplaced: PuzzlePiece?
 
         when (direction) {
@@ -595,6 +598,38 @@ class DragAndSwipePuzzleFragment : Fragment() {
                 DIRECTION_LEFT
             }
         }
+    }
+
+    private fun setOnHintClicks() {
+        binding.showHintButton.setOnClickListener { giveAHint() }
+        binding.passLevelButton.setOnClickListener { passLevel() }
+    }
+
+    private fun giveAHint() {
+        while (true) {
+            val randomNumber = Random().nextInt(puzzlePieces.size - 1)
+            val piece = puzzlePieces[randomNumber]
+            if (!correctItemsIds.contains(piece.correctPosition)) {
+                val nearestPiece = puzzlePieces[piece.correctPosition]
+                replacePieces(piece, nearestPiece)
+                animateToCorrectPosition(piece)
+                animateToCorrectPosition(nearestPiece)
+                break
+            }
+        }
+    }
+
+    private fun passLevel() {
+        do {
+            puzzlePieces.forEachIndexed { _, piece ->
+                if (!correctItemsIds.contains(piece.correctPosition)) {
+                    val nearestPiece = puzzlePieces[piece.correctPosition]
+                    replacePieces(piece, nearestPiece)
+                    animateToCorrectPosition(piece)
+                    animateToCorrectPosition(nearestPiece)
+                }
+            }
+        } while (correctItemsIds.size < pieceNumbers - 2)
     }
 
     private fun showConfetti() {

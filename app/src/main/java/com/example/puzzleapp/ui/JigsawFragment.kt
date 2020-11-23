@@ -77,12 +77,7 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.showHintButton.setOnClickListener {
-            giveAHint()
-        }
-        binding.passLevelButton.setOnClickListener {
-            passLevel()
-        }
+        setOnHintClicks()
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             settings.puzzleType.collect { srcType ->
@@ -123,10 +118,6 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
                 piece.y = (binding.layout.height - piece.pieceHeight).toFloat()
                 piece.x =
                     java.util.Random().nextInt(binding.layout.width - piece.pieceWidth).toFloat()
-                /*val lParams = piece.layoutParams as RelativeLayout.LayoutParams
-                lParams.leftMargin = Random().nextInt(binding.layout.width - piece.pieceWidth)
-                lParams.topMargin = binding.layout.height - piece.pieceHeight
-                piece.layoutParams = lParams*/
             }
         }
     }
@@ -213,6 +204,15 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
             .setTimeToLive(2000L)
             .setPosition(+60f, binding.gameFragmentConfetti.width + 50f, -50f, 100f)
             .streamFor(300, 3000L)
+    }
+
+    private fun setOnHintClicks() {
+        binding.showHintButton.setOnClickListener {
+            giveAHint()
+        }
+        binding.passLevelButton.setOnClickListener {
+            passLevel()
+        }
     }
 
     override fun onJigsawPiece(jigsawPiece: JigsawPiece) {
