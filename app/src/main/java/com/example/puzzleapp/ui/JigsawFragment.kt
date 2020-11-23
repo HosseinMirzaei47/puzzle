@@ -16,7 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.puzzleapp.databinding.FragmentJigsawBinding
-import com.example.puzzleapp.models.JigsawPiece
+import com.example.puzzleapp.models.PuzzlePiece
 import com.example.puzzleapp.utils.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,7 +34,7 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
     private lateinit var binding: FragmentJigsawBinding
     private val args: JigsawFragmentArgs by navArgs()
 
-    private var pieces = listOf<JigsawPiece>()
+    private var pieces = listOf<PuzzlePiece>()
     private val difficulty by lazy { args.difficulty }
     private var correctPiecesCount = 0
 
@@ -100,8 +100,11 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
 
     private suspend fun createJigsaw() {
         pieces = splitImage(requireContext(), binding.imageView, difficulty)
-        val bitmap = splitImage1(requireContext(), binding.imageView, difficulty)
-        binding.puzzleSrc = bitmap
+
+        val backgroundImage =
+            createPatternedBackground(requireContext(), binding.imageView, difficulty)
+        binding.puzzleSrc = backgroundImage
+
         val touchListener = TouchListener(this)
         /**
          * DataBinding needs a little bit of time to set buttons in the layout.
@@ -117,9 +120,10 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
                 piece.setOnTouchListener(touchListener)
                 binding.layout.addView(piece)
 
-                piece.y = (binding.layout.height - piece.pieceHeight).toFloat()
+                piece.y = (binding.layout.height - piece.height)
                 piece.x =
-                    java.util.Random().nextInt(binding.layout.width - piece.pieceWidth).toFloat()
+                    java.util.Random().nextInt((binding.layout.width - piece.width.toInt()))
+                        .toFloat()
             }
         }
     }
@@ -151,8 +155,8 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
         pieces.forEach { piece ->
             if (piece.canMove) {
                 piece.animate()
-                    .x(piece.xCoord.toFloat())
-                    .y(piece.yCoord.toFloat())
+                    .x(piece.correctPoint!!.x)
+                    .y(piece.correctPoint!!.y)
                     .rotationBy(360f)
                     .setDuration(900)
                     .start()
@@ -168,8 +172,8 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
             if (piece.canMove) {
                 piece.animate()
                     .setStartDelay((50 * index).toLong())
-                    .x(piece.xCoord.toFloat())
-                    .y(piece.yCoord.toFloat())
+                    .x(piece.correctPoint!!.x)
+                    .y(piece.correctPoint!!.y)
                     .rotationBy(if (index % 2 == 0) 360f else -360f)
                     .setDuration(1500)
                     .start()
@@ -217,7 +221,7 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
         }
     }
 
-    override fun onJigsawPiece(jigsawPiece: JigsawPiece) {
+    override fun onJigsawPiece(jigsawPiece: PuzzlePiece) {
         correctPiecesCount++
         if (correctPiecesCount == difficulty) {
             navigateToCongratsFragment()

@@ -5,7 +5,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
-import com.example.puzzleapp.models.JigsawPiece
+import com.example.puzzleapp.models.PuzzlePiece
 
 class TouchListener(
     private val onJigsawPiece: OnJigsawPiece
@@ -17,7 +17,7 @@ class TouchListener(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
-        val piece: JigsawPiece = view as JigsawPiece
+        val piece: PuzzlePiece = view as PuzzlePiece
 
         if (!piece.canMove) {
             return true
@@ -39,12 +39,12 @@ class TouchListener(
                     .start()
             }
             MotionEvent.ACTION_UP -> {
-                val xDiff: Int = kotlin.math.abs(piece.xCoord - piece.x.toInt())
-                val yDiff: Int = kotlin.math.abs(piece.yCoord - piece.y.toInt())
+                val xDiff: Int = kotlin.math.abs(piece.correctPoint.x - piece.x.toInt()).toInt()
+                val yDiff: Int = kotlin.math.abs(piece.correctPoint.y - piece.y.toInt()).toInt()
                 if (xDiff <= 150 && yDiff <= 150) {
                     view.animate()
-                        .x(piece.xCoord.toFloat())
-                        .y(piece.yCoord.toFloat())
+                        .x(piece.correctPoint.x)
+                        .y(piece.correctPoint.y)
                         .setDuration(0)
                         .start()
                     piece.canMove = false

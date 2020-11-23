@@ -1,7 +1,7 @@
 package com.example.puzzleapp.utils
 
-import com.example.puzzleapp.models.JigsawPiece
+import com.example.puzzleapp.models.PuzzlePiece
 
 interface OnJigsawPiece {
-    fun onJigsawPiece(jigsawPiece: JigsawPiece)
+    fun onJigsawPiece(jigsawPiece: PuzzlePiece)
 }

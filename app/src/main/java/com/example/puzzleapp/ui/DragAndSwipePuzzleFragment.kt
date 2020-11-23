@@ -203,19 +203,18 @@ class DragAndSwipePuzzleFragment : Fragment() {
                 canvas.drawPath(path, border)
 
 
-                puzzlePieces.add(
-                    PuzzlePiece(
-                        requireContext(),
-                        id++,
-                        PointF(
-                            (xCoord + binding.imageView.left).toFloat(),
-                            (yCoord + binding.imageView.top).toFloat()
-                        ),
-                        bitmap,
-                        pieceWidth.toFloat(),
-                        pieceHeight.toFloat()
-                    )
+                val piece = PuzzlePiece(
+                    requireContext(),
+                    pieceWidth.toFloat(),
+                    pieceHeight.toFloat()
                 )
+                piece.correctPoint = PointF(
+                    (xCoord + binding.imageView.left).toFloat(),
+                    (yCoord + binding.imageView.top).toFloat()
+                )
+                piece.correctPosition = id++
+                piece.bitmap = bitmap
+                puzzlePieces.add(piece)
                 xCoord += pieceWidth
             }
             yCoord += pieceHeight
@@ -223,10 +222,10 @@ class DragAndSwipePuzzleFragment : Fragment() {
 
         val listOfPoints = arrayListOf<PointF>()
         puzzlePieces.forEachIndexed { _, puzzlePieces ->
-            listOfPoints.add(puzzlePieces.correctPoint)
+            puzzlePieces.correctPoint.let { pointF -> listOfPoints.add(pointF) }
         }
-        val previousFist = puzzlePieces[0]
-        while (puzzlePieces[0] == previousFist) {
+        val previousFistIndex = puzzlePieces[0]
+        while (puzzlePieces[0] == previousFistIndex) {
             puzzlePieces.shuffle()
         }
         puzzlePieces.forEachIndexed { index, puzzlePieces ->
@@ -241,7 +240,7 @@ class DragAndSwipePuzzleFragment : Fragment() {
         }
         (0 until puzzlePieces.size).forEach { index ->
             val piece = puzzlePieces[index]
-            if (piece.position == piece.correctPosition) {
+            if (piece.correctPosition == piece.position) {
                 correctItemsIds.add(piece.correctPosition)
             }
         }
@@ -470,7 +469,6 @@ class DragAndSwipePuzzleFragment : Fragment() {
                     }
                 })
             } else if (puzzleMode == LevelFragment.MODE_DRAG) {
-
                 puzzlePiece.setOnTouchListener(object : View.OnTouchListener {
 
                     private var previousX: Float = 0.0f
@@ -623,8 +621,8 @@ class DragAndSwipePuzzleFragment : Fragment() {
             unScramblePuzzleJob.cancel()
             do {
                 puzzlePieces.forEachIndexed { _, piece ->
-                    if (!correctItemsIds.contains(piece.correctPosition)) {
-                        val nearestPiece = puzzlePieces[piece.correctPosition]
+                    if (!correctItemsIds.contains(piece.position)) {
+                        val nearestPiece = puzzlePieces[piece.position]
                         replacePieces(piece, nearestPiece)
                         animateToCorrectPosition(piece)
                         animateToCorrectPosition(nearestPiece)
@@ -636,7 +634,7 @@ class DragAndSwipePuzzleFragment : Fragment() {
 
     private fun giveAHint() {
         if (puzzleMode == LevelFragment.MODE_DRAG) {
-            while (true) {
+            while (correctItemsIds.size < pieceNumbers - 1) {
                 val randomNumber = Random().nextInt(puzzlePieces.size - 1)
                 val piece = puzzlePieces[randomNumber]
                 if (!correctItemsIds.contains(piece.correctPosition)) {
@@ -675,7 +673,7 @@ class DragAndSwipePuzzleFragment : Fragment() {
             unScramblePuzzleJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 do {
                     puzzlePieces.forEachIndexed { _, piece ->
-                        if (!correctItemsIds.contains(piece.correctPosition)) {
+                        if (!correctItemsIds.contains(piece.position)) {
                             delay(10)
                             when (Random().nextInt(3) + 1) {
                                 1 -> {
@@ -751,3 +749,14 @@ class DragAndSwipePuzzleFragment : Fragment() {
         const val DIRECTION_BOTTOM = 4
     }
 }
+
+/*
+
+
+preview
+chronometer
+touchCounter
+hints
+
+
+* */
