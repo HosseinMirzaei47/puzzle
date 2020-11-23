@@ -629,7 +629,7 @@ class DragAndSwipePuzzleFragment : Fragment() {
                     animateToCorrectPosition(nearestPiece)
                 }
             }
-        } while (correctItemsIds.size < pieceNumbers - 2)
+        } while (correctItemsIds.size < pieceNumbers - 1)
     }
 
     private fun showConfetti() {

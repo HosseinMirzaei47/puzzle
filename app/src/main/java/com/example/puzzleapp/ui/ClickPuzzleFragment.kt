@@ -308,7 +308,7 @@ class ClickPuzzleFragment : Fragment(), OnTouchPuzzlePiece {
                     compareSelectedPieces(index)
                 }
             }
-        } while (correctItemsIds.size < pieceNumbers - 2)
+        } while (correctItemsIds.size <= pieceNumbers - 2)
     }
 
     override fun onDestroy() {
