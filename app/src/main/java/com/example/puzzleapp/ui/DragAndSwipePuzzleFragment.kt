@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.activity.addCallback
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -22,10 +24,8 @@ import com.example.puzzleapp.utils.Settings
 import com.example.puzzleapp.utils.getBitmapPositionInsideImageView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
@@ -42,6 +42,8 @@ class DragAndSwipePuzzleFragment : Fragment() {
     lateinit var settings: Settings
     private lateinit var navigationDelay: CountDownTimer
     private lateinit var previewTimer: CountDownTimer
+
+    private lateinit var unScramblePuzzleJob: Job
 
     private val pieceNumbers by lazy { args.difficulty }
     private val puzzleMode by lazy { args.puzzleMode }
@@ -72,6 +74,7 @@ class DragAndSwipePuzzleFragment : Fragment() {
             .inflate(inflater, container, false)
             .apply {
                 lifecycleOwner = viewLifecycleOwner
+                isPlaying = false
             }
         return binding.root
     }
@@ -114,14 +117,27 @@ class DragAndSwipePuzzleFragment : Fragment() {
                 }
 
                 override fun onFinish() {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        binding.isPlaying = true
-                        binding.previewVisibility = View.GONE
-                        splitImage(puzzleSrc, pieceNumbers)
-                    }
+                    configureViewParamsAndShowPuzzle(puzzleSrc)
                 }
             }
             previewTimer.start()
+        }
+    }
+
+    private fun configureViewParamsAndShowPuzzle(puzzleSrc: Bitmap) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (puzzleMode == LevelFragment.MODE_DRAG) {
+                binding.showHintButton.isVisible = true
+            } else {
+                val layoutParams =
+                    binding.passLevelButton.layoutParams as ConstraintLayout.LayoutParams
+                layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+                layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                binding.passLevelButton.layoutParams = layoutParams
+            }
+            binding.isPlaying = true
+            binding.previewVisibility = View.GONE
+            splitImage(puzzleSrc, pieceNumbers)
         }
     }
 
@@ -603,33 +619,102 @@ class DragAndSwipePuzzleFragment : Fragment() {
     private fun setOnHintClicks() {
         binding.showHintButton.setOnClickListener { giveAHint() }
         binding.passLevelButton.setOnClickListener { passLevel() }
-    }
-
-    private fun giveAHint() {
-        while (true) {
-            val randomNumber = Random().nextInt(puzzlePieces.size - 1)
-            val piece = puzzlePieces[randomNumber]
-            if (!correctItemsIds.contains(piece.correctPosition)) {
-                val nearestPiece = puzzlePieces[piece.correctPosition]
-                replacePieces(piece, nearestPiece)
-                animateToCorrectPosition(piece)
-                animateToCorrectPosition(nearestPiece)
-                break
-            }
+        binding.btnSkipCorrection.setOnClickListener {
+            unScramblePuzzleJob.cancel()
+            do {
+                puzzlePieces.forEachIndexed { _, piece ->
+                    if (!correctItemsIds.contains(piece.correctPosition)) {
+                        val nearestPiece = puzzlePieces[piece.correctPosition]
+                        replacePieces(piece, nearestPiece)
+                        animateToCorrectPosition(piece)
+                        animateToCorrectPosition(nearestPiece)
+                    }
+                }
+            } while (correctItemsIds.size < pieceNumbers - 1)
         }
     }
 
-    private fun passLevel() {
-        do {
-            puzzlePieces.forEachIndexed { _, piece ->
+    private fun giveAHint() {
+        if (puzzleMode == LevelFragment.MODE_DRAG) {
+            while (true) {
+                val randomNumber = Random().nextInt(puzzlePieces.size - 1)
+                val piece = puzzlePieces[randomNumber]
                 if (!correctItemsIds.contains(piece.correctPosition)) {
                     val nearestPiece = puzzlePieces[piece.correctPosition]
                     replacePieces(piece, nearestPiece)
                     animateToCorrectPosition(piece)
                     animateToCorrectPosition(nearestPiece)
+                    break
                 }
             }
-        } while (correctItemsIds.size < pieceNumbers - 2)
+        }
+    }
+
+    private fun passLevel() {
+        if (puzzleMode == LevelFragment.MODE_DRAG) {
+            do {
+                puzzlePieces.forEachIndexed { _, piece ->
+                    if (!correctItemsIds.contains(piece.correctPosition)) {
+                        val nearestPiece = puzzlePieces[piece.correctPosition]
+                        replacePieces(piece, nearestPiece)
+                        animateToCorrectPosition(piece)
+                        animateToCorrectPosition(nearestPiece)
+                    }
+                }
+            } while (correctItemsIds.size < pieceNumbers - 1)
+        } else {
+            binding.btnSkipCorrection.visibility = View.VISIBLE
+            binding.passLevelButton.visibility = View.GONE
+            binding.showHintButton.visibility = View.GONE
+            unScramblePuzzleJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                do {
+                    puzzlePieces.forEachIndexed { _, piece ->
+                        if (!correctItemsIds.contains(piece.correctPosition)) {
+                            delay(10)
+                            when (Random().nextInt(3) + 1) {
+                                1 -> {
+                                    /**
+                                     * For the unscramble algorithm to work, one direction
+                                     * scope must be empty
+                                     * **/
+                                }
+                                2 -> {
+                                    if (piece.canMoveTop) {
+                                        withContext(Dispatchers.Main) {
+                                            performMovementAction(piece, DIRECTION_TOP)
+                                        }
+                                    }
+                                }
+                                3 -> {
+                                    if (piece.canMoveRight) {
+                                        withContext(Dispatchers.Main) {
+                                            performMovementAction(piece, DIRECTION_RIGHT)
+                                        }
+                                    }
+                                }
+                                4 -> {
+                                    if (piece.canMoveBottom) {
+                                        withContext(Dispatchers.Main) {
+                                            performMovementAction(piece, DIRECTION_BOTTOM)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } while (correctItemsIds.size < pieceNumbers - 2)
+                puzzlePieces.forEachIndexed { _, piece ->
+                    if (!correctItemsIds.contains(piece.correctPosition)) {
+                        val nearestPiece = puzzlePieces[piece.correctPosition]
+                        withContext(Dispatchers.Main) {
+                            replacePieces(piece, nearestPiece)
+                            animateToCorrectPosition(piece)
+                            animateToCorrectPosition(nearestPiece)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun showConfetti() {

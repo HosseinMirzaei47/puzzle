@@ -20,4 +20,5 @@
     <string name="take_a_photo">Take a photo</string>
     <string name="show_hint">Show hint</string>
     <string name="pass_this_level">Pass this level</string>
+    <string name="skip">Skip</string>
 </resources>

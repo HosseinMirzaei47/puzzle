@@ -11,8 +11,6 @@ import com.example.puzzleapp.models.JigsawPiece
 class TouchListener(
     private val onJigsawPiece: OnJigsawPiece
 ) : OnTouchListener {
-    private var xDelta = 0f
-    private var yDelta = 0f
     private var previousX: Float = 0.0f
     private var previousY: Float = 0.0f
     private var firstRawX = 0f
@@ -20,8 +18,6 @@ class TouchListener(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
-        val x = motionEvent.rawX
-        val y = motionEvent.rawY
         val piece: JigsawPiece = view as JigsawPiece
 
         if (!piece.canMove) {
@@ -35,8 +31,6 @@ class TouchListener(
                 firstRawX = motionEvent.rawX
                 firstRawY = motionEvent.rawY
 
-                xDelta = x - lParams.leftMargin
-                yDelta = y - lParams.topMargin
                 piece.bringToFront()
             }
             MotionEvent.ACTION_MOVE -> {
