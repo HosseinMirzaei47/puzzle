@@ -18,4 +18,6 @@
     <string name="jigsaw">Jigsaw</string>
     <string name="choose_from_gallery">Choose from gallery</string>
     <string name="take_a_photo">Take a photo</string>
+    <string name="show_hint">Show hint</string>
+    <string name="pass_this_level">Pass this level</string>
 </resources>

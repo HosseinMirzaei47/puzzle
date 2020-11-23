@@ -75,6 +75,8 @@ class ClickPuzzleFragment : Fragment(), OnTouchPuzzlePiece {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setOnHintClicks()
+
         getAndDisplayPuzzle()
     }
 
@@ -248,7 +250,6 @@ class ClickPuzzleFragment : Fragment(), OnTouchPuzzlePiece {
             layoutManager =
                 GridLayoutManager(requireContext(), spanCount)
             adapter = pieceAdapter
-            /*setController(controller)*/
         }
 
         when (puzzleMode) {
@@ -280,6 +281,34 @@ class ClickPuzzleFragment : Fragment(), OnTouchPuzzlePiece {
             .setTimeToLive(2000L)
             .setPosition(+60f, binding.gameFragmentConfetti.width + 50f, -50f, 100f)
             .streamFor(300, 3000L)
+    }
+
+    private fun setOnHintClicks() {
+        binding.showHintButton.setOnClickListener { giveAHint() }
+        binding.passLevelButton.setOnClickListener { passLevel() }
+    }
+
+    private fun giveAHint() {
+        puzzlePieces.forEachIndexed { index, piece ->
+            if (!correctItemsIds.contains(piece.id)) {
+                val id = piece.id
+                firstSelectedPiecePosition = id
+                compareSelectedPieces(index)
+                return
+            }
+        }
+    }
+
+    private fun passLevel() {
+        do {
+            puzzlePieces.forEachIndexed { index, piece ->
+                if (!correctItemsIds.contains(piece.id)) {
+                    val id = piece.id
+                    firstSelectedPiecePosition = id
+                    compareSelectedPieces(index)
+                }
+            }
+        } while (correctItemsIds.size < pieceNumbers - 2)
     }
 
     override fun onDestroy() {
