@@ -7,9 +7,6 @@ import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.example.puzzleapp.models.JigsawPiece
-import kotlin.math.abs
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 class TouchListener(
     private val onJigsawPiece: OnJigsawPiece
@@ -27,16 +24,13 @@ class TouchListener(
         val y = motionEvent.rawY
         val piece: JigsawPiece = view as JigsawPiece
 
-        val tolerance = sqrt(
-            piece.xCoord.toDouble().pow(2.0) + piece.yCoord.toDouble().pow(2.0)
-        )
         if (!piece.canMove) {
             return true
         }
         val lParams = view.layoutParams as RelativeLayout.LayoutParams
         when (motionEvent.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_DOWN -> {
-                previousX = view!!.x - motionEvent.rawX
+                previousX = view.x - motionEvent.rawX
                 previousY = view.y - motionEvent.rawY
                 firstRawX = motionEvent.rawX
                 firstRawY = motionEvent.rawY
@@ -46,16 +40,11 @@ class TouchListener(
                 piece.bringToFront()
             }
             MotionEvent.ACTION_MOVE -> {
-                val deltaX = abs(firstRawX - motionEvent.rawX)
-                val deltaY = abs(firstRawY - motionEvent.rawY)
-
                 view.animate()
                     .x(motionEvent.rawX + previousX)
                     .y(motionEvent.rawY + previousY)
                     .setDuration(0)
                     .start()
-
-                view.layoutParams = lParams
             }
             MotionEvent.ACTION_UP -> {
                 val xDiff: Int = kotlin.math.abs(piece.xCoord - piece.x.toInt())
@@ -66,7 +55,6 @@ class TouchListener(
                         .y(piece.yCoord.toFloat())
                         .setDuration(0)
                         .start()
-                    //piece.layoutParams = lParams
                     piece.canMove = false
                     sendViewToBack(piece)
                     onJigsawPiece.onJigsawPiece(piece)

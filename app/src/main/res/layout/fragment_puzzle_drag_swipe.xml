@@ -128,6 +128,38 @@
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/loading_animation" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/showHintButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_marginBottom="@dimen/margin_normal"
+            android:text="@string/show_hint"
+            android:textAllCaps="false"
+            android:textColor="@color/whiteGlobalBackground"
+            android:textStyle="bold"
+            android:visibleOnResult="@{isPlaying}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/passLevelButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_marginBottom="@dimen/margin_normal"
+            android:text="@string/pass_this_level"
+            android:textAllCaps="false"
+            android:textColor="@color/whiteGlobalBackground"
+            android:textStyle="bold"
+            android:visibleOnResult="@{isPlaying}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

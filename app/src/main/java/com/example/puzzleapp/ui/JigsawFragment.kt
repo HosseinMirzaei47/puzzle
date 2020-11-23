@@ -9,7 +9,6 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import androidx.activity.addCallback
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
@@ -22,10 +21,11 @@ import com.example.puzzleapp.utils.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -77,6 +77,12 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.showHintButton.setOnClickListener {
+            giveAHint()
+        }
+        binding.passLevelButton.setOnClickListener {
+            passLevel()
+        }
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             settings.puzzleType.collect { srcType ->
@@ -98,27 +104,35 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
         }
     }
 
-    private fun createJigsaw() {
+    private suspend fun createJigsaw() {
         pieces = splitImage(requireContext(), binding.imageView, difficulty)
         val bitmap = splitImage1(requireContext(), binding.imageView, difficulty)
         binding.puzzleSrc = bitmap
         val touchListener = TouchListener(this)
-
+        /** DataBinding needs a little bit of time to set buttons visibility
+         * we perform the operation with 100 delay so that the pieces positions
+         * on the screen that are dependent on buttons dimensions are set.
+         * **/
+        delay(100)
         pieces = pieces.shuffled()
-        for (piece in pieces) {
-            piece.setOnTouchListener(touchListener)
-            // Glide.with(requireContext()).load(piece.bitmap).into(piece).clearOnDetach()
-            binding.layout.addView(piece)
+        withContext(Main) {
+            for (piece in pieces) {
+                piece.setOnTouchListener(touchListener)
+                binding.layout.addView(piece)
 
-            val lParams = piece.layoutParams as RelativeLayout.LayoutParams
-            lParams.leftMargin = Random().nextInt(binding.layout.width - piece.pieceWidth)
-            lParams.topMargin = binding.layout.height - piece.pieceHeight
-            piece.layoutParams = lParams
+                piece.y = (binding.layout.height - piece.pieceHeight).toFloat()
+                piece.x =
+                    java.util.Random().nextInt(binding.layout.width - piece.pieceWidth).toFloat()
+                /*val lParams = piece.layoutParams as RelativeLayout.LayoutParams
+                lParams.leftMargin = Random().nextInt(binding.layout.width - piece.pieceWidth)
+                lParams.topMargin = binding.layout.height - piece.pieceHeight
+                piece.layoutParams = lParams*/
+            }
         }
     }
 
     private suspend fun createPreviewCountDown() {
-        withContext(Dispatchers.Main) { binding.progressAnimation.visibility = View.GONE }
+        withContext(Main) { binding.progressAnimation.visibility = View.GONE }
         viewLifecycleOwner.lifecycleScope.launch {
             previewTimer = object : CountDownTimer(3000, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
@@ -130,9 +144,7 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
                     viewLifecycleOwner.lifecycleScope.launch {
                         binding.isPlaying = true
                         binding.previewVisibility = View.GONE
-                        withContext(Dispatchers.Main) {
-                            createJigsaw()
-                        }
+                        createJigsaw()
                         binding.simpleChronometer.base = SystemClock.elapsedRealtime()
                         binding.simpleChronometer.start()
                     }
@@ -142,11 +154,43 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
         }
     }
 
+    private fun giveAHint() {
+        pieces.forEach { piece ->
+            if (piece.canMove) {
+                piece.animate()
+                    .x(piece.xCoord.toFloat())
+                    .y(piece.yCoord.toFloat())
+                    .rotationBy(360f)
+                    .setDuration(900)
+                    .start()
+                piece.canMove = false
+                onJigsawPiece(piece)
+                return
+            }
+        }
+    }
+
+    private fun passLevel() {
+        pieces.forEachIndexed { index, piece ->
+            if (piece.canMove) {
+                piece.animate()
+                    .setStartDelay((50 * index).toLong())
+                    .x(piece.xCoord.toFloat())
+                    .y(piece.yCoord.toFloat())
+                    .rotationBy(if (index % 2 == 0) 360f else -360f)
+                    .setDuration(1500)
+                    .start()
+                piece.canMove = false
+                onJigsawPiece(piece)
+            }
+        }
+    }
+
     private fun navigateToCongratsFragment() {
         binding.simpleChronometer.stop()
         showConfetti()
 
-        navigationDelay = object : CountDownTimer(3000, 50) {
+        navigationDelay = object : CountDownTimer(4000, 50) {
             override fun onTick(millisUntilFinished: Long) {
             }
 
@@ -180,7 +224,7 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
 
     override fun onDestroy() {
         try {
-            pieces.forEachIndexed { index, puzzle ->
+            pieces.forEachIndexed { _, puzzle ->
                 puzzle.drawable.toBitmap().recycle()
             }
             previewTimer.cancel()
