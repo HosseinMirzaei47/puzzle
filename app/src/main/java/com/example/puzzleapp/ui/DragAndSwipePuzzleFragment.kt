@@ -651,17 +651,23 @@ class DragAndSwipePuzzleFragment : Fragment() {
     }
 
     private fun passLevel() {
+        gameIsOver = true
         if (puzzleMode == LevelFragment.MODE_DRAG) {
-            do {
-                puzzlePieces.forEachIndexed { _, piece ->
-                    if (!correctItemsIds.contains(piece.correctPosition)) {
-                        val nearestPiece = puzzlePieces[piece.correctPosition]
-                        replacePieces(piece, nearestPiece)
-                        animateToCorrectPosition(piece)
-                        animateToCorrectPosition(nearestPiece)
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                do {
+                    puzzlePieces.forEachIndexed { _, piece ->
+                        if (!correctItemsIds.contains(piece.correctPosition)) {
+                            delay(50)
+                            val nearestPiece = puzzlePieces[piece.correctPosition]
+                            withContext(Dispatchers.Main) {
+                                replacePieces(piece, nearestPiece)
+                                animateToCorrectPosition(piece)
+                                animateToCorrectPosition(nearestPiece)
+                            }
+                        }
                     }
-                }
-            } while (correctItemsIds.size < pieceNumbers - 1)
+                } while (correctItemsIds.size < pieceNumbers - 1)
+            }
         } else {
             binding.btnSkipCorrection.visibility = View.VISIBLE
             binding.passLevelButton.visibility = View.GONE

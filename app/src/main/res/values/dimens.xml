@@ -32,8 +32,8 @@
     <dimen name="design_fab_content_size" tools:override="true">48dp</dimen>
     <dimen name="standard_45">45dp</dimen>
     <dimen name="standard_21">21dp</dimen>
-    <dimen name="standard_65">75dp</dimen>
-    <dimen name="standard_130">140dp</dimen>
+    <dimen name="standard_68">68dp</dimen>
+    <dimen name="standard_133">133dp</dimen>
     <dimen name="standard_12">12dp</dimen>
     <dimen name="standard_23">23dp</dimen>
 

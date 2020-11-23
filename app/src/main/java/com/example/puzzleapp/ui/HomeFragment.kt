@@ -262,9 +262,9 @@ class HomeFragment : Fragment() {
         binding.fabState.animate().rotationBy(180f)
 
         binding.fabLayoutGallery.animate()
-            .translationY(-resources.getDimension(R.dimen.standard_65))
+            .translationY(-resources.getDimension(R.dimen.standard_68))
         binding.fabLayoutCamera.animate()
-            .translationY(-resources.getDimension(R.dimen.standard_130))
+            .translationY(-resources.getDimension(R.dimen.standard_133))
     }
 
     private fun closeFabMenu() {
