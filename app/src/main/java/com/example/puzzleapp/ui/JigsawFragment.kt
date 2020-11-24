@@ -155,8 +155,8 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
         pieces.forEach { piece ->
             if (piece.canMove) {
                 piece.animate()
-                    .x(piece.correctPoint!!.x)
-                    .y(piece.correctPoint!!.y)
+                    .x(piece.correctPoint.x)
+                    .y(piece.correctPoint.y)
                     .rotationBy(360f)
                     .setDuration(900)
                     .start()
@@ -170,11 +170,12 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
     private fun passLevel() {
         pieces.forEachIndexed { index, piece ->
             if (piece.canMove) {
+                val randomRotationValue = if (index % 2 == 0) 360f else -360f
                 piece.animate()
                     .setStartDelay((50 * index).toLong())
-                    .x(piece.correctPoint!!.x)
-                    .y(piece.correctPoint!!.y)
-                    .rotationBy(if (index % 2 == 0) 360f else -360f)
+                    .x(piece.correctPoint.x)
+                    .y(piece.correctPoint.y)
+                    .rotationBy(randomRotationValue)
                     .setDuration(1500)
                     .start()
                 piece.canMove = false
