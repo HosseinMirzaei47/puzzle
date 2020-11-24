@@ -14,13 +14,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.example.puzzleapp.databinding.FragmentPuzzleClickBinding
 import com.example.puzzleapp.models.ClickPuzzlePiece
-import com.example.puzzleapp.utils.ItemTouchHelperDrag
-import com.example.puzzleapp.utils.ItemTouchHelperSwipe
-import com.example.puzzleapp.utils.OnTouchPuzzlePiece
 import com.example.puzzleapp.utils.Settings
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +26,7 @@ import javax.inject.Inject
 import kotlin.math.sqrt
 
 @AndroidEntryPoint
-class ClickPuzzleFragment : Fragment(), OnTouchPuzzlePiece {
+class ClickPuzzleFragment : Fragment() {
 
     private lateinit var binding: FragmentPuzzleClickBinding
     private val args: ClickPuzzleFragmentArgs by navArgs()
@@ -246,28 +241,16 @@ class ClickPuzzleFragment : Fragment(), OnTouchPuzzlePiece {
     }
 
     private fun showPuzzle() {
-        pieceAdapter = PieceAdapter(this, puzzleMode == 0)
+        pieceAdapter = PieceAdapter(
+            { position: Int, view: View -> onTouchPiece(position, view) },
+            puzzleMode == 0
+        )
         pieceAdapter.pieces = puzzlePieces
         binding.recyclerview.apply {
             val spanCount = sqrt(pieceNumbers.toDouble()).toInt()
             layoutManager =
                 GridLayoutManager(requireContext(), spanCount)
             adapter = pieceAdapter
-        }
-
-        when (puzzleMode) {
-            1 -> {
-                val itemTouchHelperDrag = ItemTouchHelperDrag(this)
-                itemTouchHelperDrag.attachToRecyclerView(binding.recyclerview)
-            }
-            2 -> {
-                val itemTouchHelperVerticalSwipe =
-                    ItemTouchHelperSwipe(this, ItemTouchHelper.UP or ItemTouchHelper.DOWN)
-                val itemTouchHelperHorizontalSwipe =
-                    ItemTouchHelperSwipe(this, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT)
-                itemTouchHelperVerticalSwipe.attachToRecyclerView(binding.recyclerview)
-                itemTouchHelperHorizontalSwipe.attachToRecyclerView(binding.recyclerview)
-            }
         }
 
         binding.simpleChronometer.format = "Time Running - %s"
@@ -324,27 +307,7 @@ class ClickPuzzleFragment : Fragment(), OnTouchPuzzlePiece {
         super.onDestroy()
     }
 
-    private fun moveItem(oldPos: Int, newPos: Int) {
-        val temp: ClickPuzzlePiece = puzzlePieces[oldPos]
-        puzzlePieces[oldPos] = puzzlePieces[newPos]
-        puzzlePieces[newPos] = temp
-        pieceAdapter.notifyItemChanged(newPos)
-        pieceAdapter.notifyItemChanged(oldPos)
-    }
-
-    /*==========    ON RECYCLER ITEMS TOUCH INTERFACES IMPLEMENTATION      ==========*/
-
-    override fun onMovePiece(oldPos: Int, newPos: Int) {
-        firstSelectedPiecePosition = oldPos
-        compareSelectedPieces(newPos)
-    }
-
-    override fun onSwipePiece(oldPos: Int, newPos: Int) {
-        firstSelectedPiecePosition = oldPos
-        compareSelectedPieces(newPos)
-    }
-
-    override fun onPieceClicked(position: Int, id: Int, view: View) {
+    private fun onTouchPiece(position: Int, view: View) {
         if (!gameIsOver) {
             if (!anItemIsSelected) {
                 anItemIsSelected = true
@@ -362,7 +325,4 @@ class ClickPuzzleFragment : Fragment(), OnTouchPuzzlePiece {
             }
         }
     }
-
-    override fun onDragViewHolder(viewHolder: RecyclerView.ViewHolder) {}
-
 }

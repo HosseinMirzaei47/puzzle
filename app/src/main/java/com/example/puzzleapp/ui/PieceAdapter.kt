@@ -1,14 +1,14 @@
 package com.example.puzzleapp.ui
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.puzzleapp.databinding.PieceItemRowBinding
 import com.example.puzzleapp.models.ClickPuzzlePiece
-import com.example.puzzleapp.utils.OnTouchPuzzlePiece
 
 class PieceAdapter constructor(
-    private val onTouchPuzzlePiece: OnTouchPuzzlePiece,
+    private val onTouchPiece: (position: Int, view: View) -> Unit,
     private val itemsAreReplaceable: Boolean
 ) : RecyclerView.Adapter<PuzzlePieceViewHolder>() {
 
@@ -32,7 +32,7 @@ class PieceAdapter constructor(
         val puzzlePiece = pieces[position]
         if (itemsAreReplaceable) {
             holder.itemView.setOnClickListener {
-                onTouchPuzzlePiece.onPieceClicked(position, puzzlePiece.id, holder.itemView)
+                onTouchPiece(position, holder.itemView)
             }
         }
         holder.bind(puzzlePiece)

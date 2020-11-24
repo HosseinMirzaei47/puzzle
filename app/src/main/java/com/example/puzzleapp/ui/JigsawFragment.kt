@@ -17,7 +17,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.puzzleapp.databinding.FragmentJigsawBinding
 import com.example.puzzleapp.models.PuzzlePiece
-import com.example.puzzleapp.utils.*
+import com.example.puzzleapp.utils.JigsawPieceTouchListener
+import com.example.puzzleapp.utils.Settings
+import com.example.puzzleapp.utils.createPatternedBackground
+import com.example.puzzleapp.utils.splitImage
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +32,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class JigsawFragment : Fragment(), OnJigsawPiece {
+class JigsawFragment : Fragment() {
 
     private lateinit var binding: FragmentJigsawBinding
     private val args: JigsawFragmentArgs by navArgs()
@@ -105,7 +108,7 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
             createPatternedBackground(requireContext(), binding.imageView, difficulty)
         binding.puzzleSrc = backgroundImage
 
-        val touchListener = TouchListener(this)
+        val touchListener = JigsawPieceTouchListener { onJigsawPiece() }
         /**
          * DataBinding needs a little bit of time to set buttons in the layout.
          *
@@ -161,7 +164,7 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
                     .setDuration(900)
                     .start()
                 piece.canMove = false
-                onJigsawPiece(piece)
+                onJigsawPiece()
                 return
             }
         }
@@ -179,7 +182,7 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
                     .setDuration(1500)
                     .start()
                 piece.canMove = false
-                onJigsawPiece(piece)
+                onJigsawPiece()
             }
         }
     }
@@ -224,7 +227,7 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
         }
     }
 
-    override fun onJigsawPiece(jigsawPiece: PuzzlePiece) {
+    private fun onJigsawPiece() {
         correctPiecesCount++
         if (correctPiecesCount == difficulty) {
             navigateToCongratsFragment()

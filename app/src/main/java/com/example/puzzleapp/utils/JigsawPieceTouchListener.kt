@@ -7,8 +7,8 @@ import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import com.example.puzzleapp.models.PuzzlePiece
 
-class TouchListener(
-    private val onJigsawPiece: OnJigsawPiece
+class JigsawPieceTouchListener(
+    private val onJigsawPieceTouch: (puzzlePiece: PuzzlePiece) -> Unit
 ) : OnTouchListener {
     private var previousX: Float = 0.0f
     private var previousY: Float = 0.0f
@@ -49,7 +49,7 @@ class TouchListener(
                         .start()
                     piece.canMove = false
                     sendViewToBack(piece)
-                    onJigsawPiece.onJigsawPiece(piece)
+                    onJigsawPieceTouch(piece)
                 }
             }
         }
