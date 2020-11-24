@@ -196,6 +196,9 @@ class ClickPuzzleFragment : Fragment(), OnTouchPuzzlePiece {
 
     private fun navigateToCongratsFragment() {
         binding.simpleChronometer.stop()
+        binding.passLevelButton.visibility = View.GONE
+        binding.showHintButton.visibility = View.GONE
+
         showConfetti()
 
         navigationDelay = object : CountDownTimer(3000, 50) {

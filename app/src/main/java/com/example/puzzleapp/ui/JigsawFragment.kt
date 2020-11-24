@@ -186,6 +186,8 @@ class JigsawFragment : Fragment(), OnJigsawPiece {
 
     private fun navigateToCongratsFragment() {
         binding.simpleChronometer.stop()
+        binding.showHintButton.visibility = View.INVISIBLE
+        binding.passLevelButton.visibility = View.INVISIBLE
         showConfetti()
 
         navigationDelay = object : CountDownTimer(4000, 50) {

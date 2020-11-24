@@ -577,6 +577,9 @@ class DragAndSwipePuzzleFragment : Fragment() {
     private fun navigateToCongratsFragment() {
         gameIsOver = true
         binding.simpleChronometer.stop()
+        binding.btnSkipCorrection.visibility = View.GONE
+        binding.passLevelButton.visibility = View.GONE
+        binding.showHintButton.visibility = View.GONE
         showConfetti()
 
         navigationDelay = object : CountDownTimer(3000, 50) {
@@ -618,11 +621,12 @@ class DragAndSwipePuzzleFragment : Fragment() {
         binding.showHintButton.setOnClickListener { giveAHint() }
         binding.passLevelButton.setOnClickListener { passLevel() }
         binding.btnSkipCorrection.setOnClickListener {
+            binding.btnSkipCorrection.visibility = View.GONE
             unScramblePuzzleJob.cancel()
             do {
                 puzzlePieces.forEachIndexed { _, piece ->
-                    if (!correctItemsIds.contains(piece.position)) {
-                        val nearestPiece = puzzlePieces[piece.position]
+                    if (!correctItemsIds.contains(piece.correctPosition)) {
+                        val nearestPiece = puzzlePieces[piece.correctPosition]
                         replacePieces(piece, nearestPiece)
                         animateToCorrectPosition(piece)
                         animateToCorrectPosition(nearestPiece)
@@ -723,7 +727,6 @@ class DragAndSwipePuzzleFragment : Fragment() {
                 }
             }
         }
-        unScramblePuzzleJob.start()
     }
 
     private fun detectVerticalDirection(
