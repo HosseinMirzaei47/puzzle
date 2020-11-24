@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.collect
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
-import kotlin.math.pow
+import kotlin.math.hypot
 import kotlin.math.sqrt
 
 @AndroidEntryPoint
@@ -521,7 +521,7 @@ class DragAndSwipePuzzleFragment : Fragment() {
             val deltaX = abs(puzzlePiece.currentPoint!!.x - piece.x)
             val deltaY = abs(puzzlePiece.currentPoint!!.y - piece.y)
 
-            val hypotenuse = sqrt(deltaX.toDouble().pow(2.0) + deltaY.toDouble().pow(2.0))
+            val hypotenuse = hypot(deltaX, deltaY).toDouble()
             if (hypotenuse < nearestHypotenuseValue) {
                 nearestPiece = puzzlePiece
                 nearestHypotenuseValue = hypotenuse
