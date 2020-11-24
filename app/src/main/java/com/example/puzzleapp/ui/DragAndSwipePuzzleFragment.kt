@@ -670,55 +670,113 @@ class DragAndSwipePuzzleFragment : Fragment() {
             binding.btnSkipCorrection.visibility = View.VISIBLE
             binding.passLevelButton.visibility = View.GONE
             binding.showHintButton.visibility = View.GONE
-            unScramblePuzzleJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                do {
-                    puzzlePieces.forEachIndexed { _, piece ->
-                        if (!correctItemsIds.contains(piece.position)) {
-                            delay(10)
-                            when (Random().nextInt(3) + 1) {
-                                1 -> {
-                                    /**
-                                     * For the unscramble algorithm to work, one direction
-                                     * scope must be empty
-                                     * **/
-                                }
-                                2 -> {
-                                    if (piece.canMoveTop) {
-                                        withContext(Dispatchers.Main) {
-                                            performMovementAction(piece, DIRECTION_TOP)
-                                        }
-                                    }
-                                }
-                                3 -> {
-                                    if (piece.canMoveRight) {
-                                        withContext(Dispatchers.Main) {
-                                            performMovementAction(piece, DIRECTION_RIGHT)
-                                        }
-                                    }
-                                }
-                                4 -> {
-                                    if (piece.canMoveBottom) {
-                                        withContext(Dispatchers.Main) {
-                                            performMovementAction(piece, DIRECTION_BOTTOM)
-                                        }
-                                    }
-                                }
-                            }
+            unScramblePuzzleSwipe()
+        }
+    }
+
+    private fun unScramblePuzzleSwipe() {
+        unScramblePuzzleJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            val rowLength = sqrt(pieceNumbers.toDouble())
+            var lastCorrectPiecePosition = -1
+            var puzzlePiece: PuzzlePiece = puzzlePieces[0]
+            while (correctItemsIds.size < pieceNumbers - 1 && lastCorrectPiecePosition < pieceNumbers) {
+                lastCorrectPiecePosition++
+                for (x in 0 until puzzlePieces.size) {
+                    if (puzzlePieces[x].correctPosition == lastCorrectPiecePosition) {
+                        puzzlePiece = puzzlePieces[x]
+                        break
+                    }
+                }
+
+                if (detectVerticalDirection(puzzlePiece, rowLength) != -1) {
+                    while (puzzlePiece.canMoveRight) {
+                        delay(80)
+                        withContext(Dispatchers.Main) {
+                            performMovementAction(puzzlePiece, DIRECTION_RIGHT)
                         }
                     }
-                } while (correctItemsIds.size < pieceNumbers - 2)
-                puzzlePieces.forEachIndexed { _, piece ->
-                    if (!correctItemsIds.contains(piece.correctPosition)) {
-                        val nearestPiece = puzzlePieces[piece.correctPosition]
+                }
+
+                var direction: Int
+                do {
+                    delay(80)
+                    direction = -1
+                    direction = detectVerticalDirection(puzzlePiece, rowLength)
+                    if (direction != -1) {
                         withContext(Dispatchers.Main) {
-                            replacePieces(piece, nearestPiece)
-                            animateToCorrectPosition(piece)
-                            animateToCorrectPosition(nearestPiece)
+                            performMovementAction(puzzlePiece, direction)
+                        }
+                    }
+                } while (direction != -1)
+
+                while (puzzlePiece.position != puzzlePiece.correctPosition) {
+                    delay(80)
+                    if (puzzlePiece.position < puzzlePiece.correctPosition) {
+                        withContext(Dispatchers.Main) {
+                            performMovementAction(puzzlePiece, DIRECTION_RIGHT)
+                        }
+                    } else if (puzzlePiece.position > puzzlePiece.correctPosition) {
+                        withContext(Dispatchers.Main) {
+                            performMovementAction(puzzlePiece, DIRECTION_LEFT)
                         }
                     }
                 }
             }
         }
+        unScramblePuzzleJob.start()
+    }
+
+    private fun detectVerticalDirection(
+        puzzlePiece: PuzzlePiece,
+        rowLength: Double,
+    ): Int {
+        var currentRow = -1
+        var correctRow = -1
+        var direction = -1
+
+        when {
+            puzzlePiece.position < rowLength -> {
+                currentRow = 1
+            }
+            puzzlePiece.position < rowLength * 2 -> {
+                currentRow = 2
+            }
+            puzzlePiece.position < rowLength * 3 -> {
+                currentRow = 3
+            }
+            puzzlePiece.position < rowLength * 4 -> {
+                currentRow = 4
+            }
+            puzzlePiece.position < rowLength * 5 -> {
+                currentRow = 5
+            }
+        }
+        when {
+            puzzlePiece.correctPosition < rowLength -> {
+                correctRow = 1
+            }
+            puzzlePiece.correctPosition < rowLength * 2 -> {
+                correctRow = 2
+            }
+            puzzlePiece.correctPosition < rowLength * 3 -> {
+                correctRow = 3
+            }
+            puzzlePiece.correctPosition < rowLength * 4 -> {
+                correctRow = 4
+            }
+            puzzlePiece.correctPosition < rowLength * 5 -> {
+                correctRow = 5
+            }
+        }
+        when {
+            currentRow < correctRow -> {
+                direction = DIRECTION_BOTTOM
+            }
+            currentRow > correctRow -> {
+                direction = DIRECTION_TOP
+            }
+        }
+        return direction
     }
 
     private fun showConfetti() {
