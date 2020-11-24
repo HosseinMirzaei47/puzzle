@@ -749,14 +749,3 @@ class DragAndSwipePuzzleFragment : Fragment() {
         const val DIRECTION_BOTTOM = 4
     }
 }
-
-/*
-
-
-preview
-chronometer
-touchCounter
-hints
-
-
-* */
